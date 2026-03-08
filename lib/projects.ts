@@ -24,4 +24,22 @@ export const PROJECTS: Project[] = [
     githubUrl: "https://github.com/dbtmdgks7897",
     order: 1,
   },
+  {
+    slug: "placeholder-1",
+    title: "Project B",
+    summary: "준비중",
+    stack: [],
+    status: "planned",
+    period: "2026~",
+    order: 3,
+  },
+  {
+    slug: "placeholder-2",
+    title: "Project C",
+    summary: "준비중",
+    stack: [],
+    status: "planned",
+    period: "2026~",
+    order: 4,
+  },
 ];
