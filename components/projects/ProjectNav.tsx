@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { PROJECTS } from "@/lib/projects";
 
 interface ProjectNavProps {
@@ -7,6 +8,7 @@ interface ProjectNavProps {
 }
 
 export default function ProjectNav({ slugPath, locale }: ProjectNavProps) {
+  const t = useTranslations("projectNav");
   const isSubProject = slugPath.length > 1;
 
   if (isSubProject) {
@@ -17,7 +19,7 @@ export default function ProjectNav({ slugPath, locale }: ProjectNavProps) {
           href={`/${locale}/projects/${parentSlug}`}
           className="text-sm text-taupe hover:text-sage transition-colors"
         >
-          ← 상위 프로젝트로
+          {t("parentProject")}
         </Link>
       </nav>
     );
@@ -34,7 +36,7 @@ export default function ProjectNav({ slugPath, locale }: ProjectNavProps) {
         href={`/${locale}/`}
         className="text-sm text-taupe hover:text-sage transition-colors"
       >
-        ← 모든 프로젝트
+        {t("allProjects")}
       </Link>
       <div className="flex gap-6">
         {prev && (

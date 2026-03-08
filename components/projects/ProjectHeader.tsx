@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, Github } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ProjectFrontmatter } from "@/lib/markdown";
 import TechTag from "@/components/ui/TechTag";
 import StatusBadge from "@/components/ui/StatusBadge";
@@ -15,6 +16,7 @@ export default function ProjectHeader({
   slugPath,
   locale,
 }: ProjectHeaderProps) {
+  const t = useTranslations("projectHeader");
   const isSubProject = slugPath.length > 1;
   const parentSlug = slugPath.slice(0, -1);
 
@@ -53,7 +55,7 @@ export default function ProjectHeader({
               className="inline-flex items-center gap-1.5 text-sm text-sage hover:text-dark-sage transition-colors"
             >
               <ExternalLink size={14} />
-              라이브
+              {t("live")}
             </a>
           )}
           {frontmatter.githubUrl && (
@@ -64,7 +66,7 @@ export default function ProjectHeader({
               className="inline-flex items-center gap-1.5 text-sm text-taupe hover:text-charcoal transition-colors"
             >
               <Github size={14} />
-              GitHub
+              {t("github")}
             </a>
           )}
         </div>

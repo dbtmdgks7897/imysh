@@ -11,7 +11,7 @@ export default function Navigation({ locale }: { locale: string }) {
         >
           imysh
         </Link>
-        <LanguageSwitcher locale={locale} />
+        <LanguageSwitcher />
       </nav>
     </header>
   );

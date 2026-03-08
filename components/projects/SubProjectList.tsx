@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { ProjectFrontmatter } from "@/lib/markdown";
 import { ProjectStatus } from "@/lib/projects";
 import ProjectCard from "@/components/projects/ProjectCard";
@@ -13,6 +14,7 @@ export default function SubProjectList({
   subProjects,
   locale,
 }: SubProjectListProps) {
+  const t = useTranslations("subProjectList");
   if (subProjects.length === 0) return null;
 
   // ProjectCard가 기대하는 Project 타입으로 변환
@@ -33,7 +35,7 @@ export default function SubProjectList({
   return (
     <section className="mt-16">
       <h2 className="text-xl font-bold text-charcoal pb-4 border-b border-lavender mb-8">
-        하위 프로젝트
+        {t("heading")}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {cards.map((card) => (

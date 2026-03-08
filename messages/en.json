@@ -1,0 +1,27 @@
+{
+  "hero": {
+    "tagline": "Romance, Values"
+  },
+  "home": {
+    "projectsHeading": "Projects"
+  },
+  "projectHeader": {
+    "live": "Live",
+    "github": "GitHub"
+  },
+  "projectNav": {
+    "allProjects": "← All Projects",
+    "parentProject": "← Parent Project"
+  },
+  "subProjectList": {
+    "heading": "Sub-projects"
+  },
+  "status": {
+    "deployed": "Deployed",
+    "inProgress": "In Progress",
+    "planned": "Planned"
+  },
+  "footer": {
+    "copyright": "© 2026 imysh"
+  }
+}

@@ -1,21 +1,10 @@
+import { useTranslations } from "next-intl";
 import { ProjectStatus } from "@/lib/projects";
 
-const STATUS_CONFIG: Record<
-  ProjectStatus,
-  { label: string; className: string }
-> = {
-  deployed: {
-    label: "배포 완료",
-    className: "bg-sage text-white",
-  },
-  "in-progress": {
-    label: "개발 중",
-    className: "border border-taupe text-taupe",
-  },
-  planned: {
-    label: "예정",
-    className: "border border-mid-gray text-mid-gray",
-  },
+const STATUS_CLASS: Record<ProjectStatus, string> = {
+  deployed: "bg-sage text-white",
+  "in-progress": "border border-taupe text-taupe",
+  planned: "border border-mid-gray text-mid-gray",
 };
 
 interface StatusBadgeProps {
@@ -23,10 +12,17 @@ interface StatusBadgeProps {
 }
 
 export default function StatusBadge({ status }: StatusBadgeProps) {
-  const { label, className } = STATUS_CONFIG[status];
+  const t = useTranslations("status");
+  const labelMap: Record<ProjectStatus, string> = {
+    deployed: t("deployed"),
+    "in-progress": t("inProgress"),
+    planned: t("planned"),
+  };
   return (
-    <span className={`text-xs px-2 py-0.5 rounded font-medium ${className}`}>
-      {label}
+    <span
+      className={`text-xs px-2 py-0.5 rounded font-medium ${STATUS_CLASS[status]}`}
+    >
+      {labelMap[status]}
     </span>
   );
 }

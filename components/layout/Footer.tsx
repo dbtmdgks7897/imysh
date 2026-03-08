@@ -1,4 +1,5 @@
 import { Github, Mail } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const SOCIAL_LINKS = [
   {
@@ -14,10 +15,11 @@ const SOCIAL_LINKS = [
 ];
 
 export default function Footer() {
+  const t = useTranslations("footer");
   return (
     <footer className="border-t border-lavender bg-light-lavender">
       <div className="mx-auto flex max-w-[960px] items-center justify-between px-6 py-8">
-        <p className="text-sm text-taupe">© 2026 imysh</p>
+        <p className="text-sm text-taupe">{t("copyright")}</p>
         <div className="flex items-center gap-4">
           {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
             <a

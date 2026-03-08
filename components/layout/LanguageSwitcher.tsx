@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { usePathname, useRouter } from "next/navigation";
 
 const locales = [
   { code: "ko", label: "KO" },
@@ -6,23 +8,34 @@ const locales = [
   { code: "en", label: "EN" },
 ];
 
-export default function LanguageSwitcher({ locale }: { locale: string }) {
+export default function LanguageSwitcher() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const currentLocale = pathname.split("/")[1] ?? "ko";
+
+  function switchLocale(newLocale: string) {
+    const segments = pathname.split("/");
+    segments[1] = newLocale;
+    localStorage.setItem("locale", newLocale);
+    router.push(segments.join("/"));
+  }
+
   return (
     <div className="flex items-center gap-1 text-sm font-mono">
       {locales.map((l, i) => (
         <span key={l.code} className="flex items-center gap-1">
           {i > 0 && <span className="text-mid-gray select-none">|</span>}
-          <Link
-            href={`/${l.code}/`}
+          <button
+            onClick={() => switchLocale(l.code)}
             className={
-              l.code === locale
+              l.code === currentLocale
                 ? "text-sage font-semibold"
                 : "text-taupe hover:text-charcoal transition-colors"
             }
-            aria-current={l.code === locale ? "page" : undefined}
+            aria-pressed={l.code === currentLocale}
           >
             {l.label}
-          </Link>
+          </button>
         </span>
       ))}
     </div>

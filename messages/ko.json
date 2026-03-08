@@ -1,0 +1,27 @@
+{
+  "hero": {
+    "tagline": "낭만, 가치"
+  },
+  "home": {
+    "projectsHeading": "Projects"
+  },
+  "projectHeader": {
+    "live": "라이브",
+    "github": "GitHub"
+  },
+  "projectNav": {
+    "allProjects": "← 모든 프로젝트",
+    "parentProject": "← 상위 프로젝트로"
+  },
+  "subProjectList": {
+    "heading": "하위 프로젝트"
+  },
+  "status": {
+    "deployed": "배포 완료",
+    "inProgress": "개발 중",
+    "planned": "예정"
+  },
+  "footer": {
+    "copyright": "© 2026 imysh"
+  }
+}

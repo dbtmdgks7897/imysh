@@ -1,0 +1,27 @@
+{
+  "hero": {
+    "tagline": "ロマン、価値"
+  },
+  "home": {
+    "projectsHeading": "プロジェクト"
+  },
+  "projectHeader": {
+    "live": "ライブ",
+    "github": "GitHub"
+  },
+  "projectNav": {
+    "allProjects": "← すべてのプロジェクト",
+    "parentProject": "← 上位プロジェクトへ"
+  },
+  "subProjectList": {
+    "heading": "サブプロジェクト"
+  },
+  "status": {
+    "deployed": "公開中",
+    "inProgress": "開発中",
+    "planned": "予定"
+  },
+  "footer": {
+    "copyright": "© 2026 imysh"
+  }
+}

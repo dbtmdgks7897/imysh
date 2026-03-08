@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
 import {
   getAllProjectSlugs,
   getProjectContent,
@@ -24,6 +25,7 @@ export default async function ProjectDetailPage({
   params: Promise<{ locale: string; slug: string[] }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
 
   const content = await getProjectContent(slug, locale);
   if (!content) notFound();
