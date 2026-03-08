@@ -12,9 +12,11 @@
   --color-dark-gray: #4a4643;
   --color-mid-gray: #9e9a96;
 
-  /* 폰트 (M1에서 실제 폰트 로딩 후 교체) */
-  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* 폰트 — next/font CSS 변수 참조 (--next-* 는 layout.tsx에서 주입) */
+  --font-pretendard: "Pretendard Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-inter: var(--next-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-noto-sans-jp: var(--next-noto-jp), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--next-jetbrains-mono), ui-monospace, "Courier New", monospace;
 }
 
 body {
