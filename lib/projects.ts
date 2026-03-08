@@ -8,6 +8,9 @@ export interface Project {
   status: ProjectStatus;
   period: string;
   thumbnail?: string; // /images/projects/[slug]/thumbnail.jpg
+  liveUrl?: string;
+  githubUrl?: string;
+  order?: number;
 }
 
 export const PROJECTS: Project[] = [
@@ -18,5 +21,7 @@ export const PROJECTS: Project[] = [
     stack: ["Next.js", "FastAPI", "React", "Tailwind CSS", "Gemini Flash"],
     status: "in-progress",
     period: "2026.03~",
+    githubUrl: "https://github.com/dbtmdgks7897",
+    order: 1,
   },
 ];

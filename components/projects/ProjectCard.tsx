@@ -7,12 +7,14 @@ import StatusBadge from "@/components/ui/StatusBadge";
 interface ProjectCardProps {
   project: Project;
   locale: string;
+  overrideHref?: string;
 }
 
-export default function ProjectCard({ project, locale }: ProjectCardProps) {
+export default function ProjectCard({ project, locale, overrideHref }: ProjectCardProps) {
+  const href = overrideHref ?? `/${locale}/projects/${project.slug}`;
   return (
     <Link
-      href={`/${locale}/projects/${project.slug}`}
+      href={href}
       className="group block rounded-lg border border-lavender bg-snow overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5"
     >
       <div className="relative aspect-video bg-light-lavender">
