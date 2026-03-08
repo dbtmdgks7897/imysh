@@ -17,6 +17,9 @@
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
+  "overrides": {
+    "@swc/helpers": "0.5.19"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/mdx": "^2.0.13",
