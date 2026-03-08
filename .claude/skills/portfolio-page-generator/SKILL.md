@@ -1,188 +1,276 @@
 ---
 name: portfolio-page-generator
-description: 포트폴리오 프로젝트 마크다운 파일을 받아 포트폴리오 웹사이트의 상세 페이지 콘텐츠 파일을 생성하는 스킬. 사용자가 portfolio-*.md 형태의 프로젝트 설명 파일을 제공하면, 3개 국어(KO/JA/EN) 콘텐츠 마크다운 파일과 frontmatter 메타데이터를 자동으로 생성한다. /n 트리거: "프로젝트 페이지 추가", "포트폴리오에 프로젝트 추가", "이 md로 상세 페이지 만들어", portfolio-*.md 파일이 업로드되었을 때, 콘텐츠 마크다운 생성 요청 시 반드시 이 스킬을 사용할 것.
+description: 사용자가 채팅에 붙여넣은 portfolio-*.md 형식의 텍스트(notion-to-portfolio 스킬의 출력물)를 받아 imysh 포트폴리오 사이트에 새 프로젝트 페이지를 생성하는 Claude Code 스킬. /n content/projects 디렉토리에 3개 국어(ko/ja/en) 마크다운 파일을 만들고, lib/projects.ts의 PROJECTS 배열에 카드 항목을 자동 삽입하며, 라우팅이 정상 동작하는지 검증한다. /n 트리거: "이 md로 상세 페이지 만들어", "포트폴리오 페이지 생성", "portfolio-*.md 적용", "프로젝트 추가", "새 프로젝트 페이지",사용자가 portfolio-*.md 형식의 마크다운 텍스트를 붙여넣었을 때, 사용자가 프로젝트 추가/페이지 생성을 요청할 때 반드시 이 스킬을 사용할 것.
 ---
 
 # Portfolio Page Generator
 
-포트폴리오 프로젝트 마크다운(portfolio-*.md)을 입력받아, imysh 포트폴리오 웹사이트의 콘텐츠 파일을 생성한다.
+사용자가 채팅에 붙여넣은 portfolio-*.md 형식의 마크다운 텍스트를 받아
+imysh Next.js 포트폴리오 사이트에 새 프로젝트를 완전히 통합하는 스킬이다.
 
 ---
 
-## 입력
+## 파이프라인 위치
 
-사용자가 제공하는 파일:
-- `portfolio-[slug].md` — 프로젝트 설명 마크다운 (한국어 기준)
-- 하위 프로젝트인 경우: `portfolio-[parent]-[child].md`
-
-## 출력
-
-### 1. 콘텐츠 파일 (3개 국어)
-
-**일반 프로젝트:**
 ```
-content/projects/[slug]/ko.md    ← 한국어 (원본 기반)
-content/projects/[slug]/ja.md    ← 일본어 (번역)
-content/projects/[slug]/en.md    ← 영어 (번역)
-```
-
-**하위 프로젝트:**
-```
-content/projects/[parent]/[child]/ko.md
-content/projects/[parent]/[child]/ja.md
-content/projects/[parent]/[child]/en.md
-```
-
-### 2. 각 파일의 구조
-
-```markdown
----
-slug: "[slug]"
-title:
-  ko: "프로젝트 제목"
-  ja: "プロジェクトタイトル"
-  en: "Project Title"
-summary:
-  ko: "한 줄 설명"
-  ja: "一行説明"
-  en: "One-line description"
-thumbnail: "/images/projects/[slug]/thumbnail.png"
-stack: ["Next.js", "React", "..."]
-status: "deployed" | "in-progress" | "planned"
-period: "2026.03~"
-liveUrl: "https://..."
-githubUrl: "https://github.com/..."
-order: 1
-parent: null | "[parent-slug]"
-children: ["child-slug"] | []
----
-
-[마크다운 본문 — 해당 locale 언어로]
+[사용자가 채팅에 portfolio-*.md 텍스트 붙여넣기]
+    │
+    ▼  ← 이 스킬 (Claude Code에서 실행)
+    │
+    ├─ content/projects/[slug]/ko.md   ← frontmatter + 본문
+    ├─ content/projects/[slug]/ja.md   ← AI 번역
+    ├─ content/projects/[slug]/en.md   ← AI 번역
+    ├─ lib/projects.ts                 ← PROJECTS 배열에 항목 삽입
+    └─ 빌드 검증
 ```
 
 ---
 
-## 변환 규칙
+## 전제 조건
 
-### Step 1: 원본 마크다운 분석
+- 사용자가 채팅 메시지에 portfolio-*.md 형식의 마크다운 텍스트를 붙여넣어야 한다
+- imysh 프로젝트의 디렉토리 구조가 아래와 일치해야 한다:
+  - `content/projects/` — 프로젝트 콘텐츠 디렉토리
+  - `lib/projects.ts` — PROJECTS 배열이 포함된 파일
+  - `lib/markdown.ts` — 마크다운 파싱 유틸리티
 
-입력 파일에서 다음을 추출한다:
+---
 
-| 추출 항목 | 소스 위치 | frontmatter 필드 |
-|---|---|---|
-| 프로젝트명 | `## 헤더` 아래 `### 제목` | `title` |
-| 한 줄 설명 | 헤더 아래 첫 번째 설명 문장 | `summary` |
-| 기간 | 헤더 테이블의 "기간" 행 | `period` |
-| 기술 스택 | 헤더 테이블의 "스택" 행 | `stack` (배열로 파싱) |
-| 상태 | 헤더 테이블의 "상태" 행 | `status` (deployed/in-progress/planned 매핑) |
-| 사이트 URL | 헤더 테이블의 "사이트" 행 | `liveUrl` |
-| 상위 프로젝트 | 헤더 테이블의 "상위 프로젝트" 행 (있는 경우) | `parent` |
+## 실행 순서
 
-### Step 2: frontmatter 생성
+### Step 1: 붙여넣은 텍스트 파싱
 
-추출한 정보로 frontmatter를 구성한다.
+사용자가 채팅에 붙여넣은 마크다운 텍스트를 portfolio-*.md 형식으로 인식하고 파싱한다.
+
+**입력 인식 기준:**
+사용자 메시지에 아래 패턴이 포함되어 있으면 portfolio-*.md 텍스트로 간주한다:
+- `# [slug] — 프로젝트 포트폴리오` 형태의 첫 번째 h1
+- `## 헤더` 섹션 + 메타데이터 테이블
+- `## 1. 배경 — WHY` 등 번호가 붙은 섹션 제목
+
+**slug 추출:**
+- 첫 번째 h1의 `# [slug] — 프로젝트 포트폴리오` 에서 slug를 추출한다
+- slug가 불분명하면 사용자에게 확인한다
+
+**헤더 테이블에서 추출할 메타데이터:**
+
+| 필드 | frontmatter 키 | 필수 여부 |
+|------|----------------|-----------|
+| 프로젝트명 | `title` | 필수 |
+| 한 줄 설명 | `summary` | 필수 |
+| 기간 | `period` | 필수 |
+| 스택 | `stack` (배열) | 필수 |
+| 상태 | `status` | 필수 |
+| 사이트 | `liveUrl` | 선택 |
+| GitHub | `githubUrl` | 선택 |
+| 상위 프로젝트 | parent slug | 선택 |
+
+**slug 추출 (보조):**
+- 헤더 테이블의 `상위 프로젝트` 행이 있으면 → 하위 프로젝트로 판단
+- 하위 프로젝트: parent slug 아래 child slug 경로로 처리
 
 **status 매핑:**
-- "MVP 배포 완료", "배포 완료", "라이브" → `deployed`
-- "진행중", "개발중", "기능 추가 진행중" → `in-progress`
-- "기획중", "구상중", "기획 전" → `planned`
 
-**stack 파싱:**
-- "Next.js 16 · React 19 · Tailwind v4 · FastAPI · Gemini 2.0 Flash"
-- → `["Next.js", "React", "Tailwind", "FastAPI", "Gemini Flash"]`
-- 버전 번호는 제거 (카드 태그에서 간결하게 표시하기 위해)
+| portfolio-*.md 값 | frontmatter 값 |
+|-------------------|----------------|
+| 운영중, 배포됨, deployed, live | `deployed` |
+| 개발중, 진행중, in-progress | `in-progress` |
+| 기획중, 예정, planned | `planned` |
 
-**order:**
-- 사용자에게 확인 요청. 기본값은 기존 프로젝트 수 + 1
+**본문 섹션:**
+- `## 1. 배경 — WHY` 이후 텍스트 → 본문 시작
+- 각 `## N. 섹션명` 구분자를 유지한 채 본문으로 사용
+- 헤더 테이블 위의 내용(slug 주석, 프로젝트명 등)은 제거하고 frontmatter로 이동
 
-### Step 3: 본문 변환
+### Step 2: ko.md 생성
 
-원본 마크다운의 섹션을 포트폴리오 상세 페이지 구조에 맞게 재편집한다.
+`content/projects/[slug]/ko.md` 파일을 생성한다.
 
-**포트폴리오 상세 페이지 표준 구조:**
+**frontmatter 형식** (기존 프로젝트와 동일):
 
-```markdown
-## 배경 — WHY
-[원본의 "1. 배경" 섹션]
-
-## 프로세스 — HOW
-[원본의 "2. 프로세스" 섹션]
-
-## 결과물 — WHAT
-[원본의 "3. 결과물" 섹션]
-
-## 기술 판단
-[원본에 기술 판단 테이블이 있으면 포함]
-
-## 회고
-[원본의 "5. 회고" 또는 "회고" 섹션]
+```yaml
+---
+title: "[프로젝트명]"
+summary: "[한 줄 설명]"
+stack: ["기술1", "기술2", "기술3"]
+status: "[deployed|in-progress|planned]"
+period: "[기간]"
+liveUrl: "[URL]"          # 있을 때만
+githubUrl: "[GitHub URL]" # 있을 때만
+thumbnail: "/images/projects/[slug]/thumbnail.jpg"  # 있을 때만
+order: [숫자]
+---
 ```
 
-**변환 시 주의:**
-- `## 헤더` 섹션은 본문에 포함하지 않음 (frontmatter로 이동)
-- 원본에 없는 섹션은 생략 (빈 섹션 만들지 않음)
-- 원본의 섹션 번호(1., 2., 3...)는 제거
-- 스크린샷 플레이스홀더 (`> [스크린샷 삽입: ...]`)는 유지 — 이미지 추가는 별도 작업
-- 코드 블록, 테이블, 다이어그램은 그대로 유지
-- 하위 프로젝트 관련 섹션 (예: "4. 하위 프로젝트")은 본문에 포함하지 않음 — 사이트에서 자동 렌더링
+**본문 변환 규칙:**
+- portfolio-*.md의 `## N. 섹션명` 형식을 그대로 유지
+- 이미지 플레이스홀더 `> [스크린샷: 설명]` 은 그대로 유지
+- 테이블, 코드 블록, 리스트 등 마크다운 문법 보존
+- 불필요한 구분선(`---`)은 섹션 사이에서 제거 (frontmatter 구분선만 유지)
 
-### Step 4: 번역
+**하위 프로젝트인 경우:**
+- 경로: `content/projects/[parent]/[child]/ko.md`
+- 부모 디렉토리가 이미 존재해야 함 (없으면 에러)
 
-한국어 본문을 일본어와 영어로 번역한다.
+### Step 3: ja.md / en.md 번역 생성
 
-**번역 원칙:**
-- 기술 용어(Next.js, FastAPI, Gemini 등)는 번역하지 않음
-- 프로젝트 고유명(kigaru, kaouranai 등)은 번역하지 않음
-- 일본어: 자연스러운 일본어, です/ます 체 사용
-- 영어: 간결하고 프로페셔널한 톤
-- 코드 블록 내 주석도 번역
-- 테이블 내용도 번역
-- 한국 관상학 관련 용어는 일본어 한자(韓国人相学) + 원어 병기
+ko.md를 기반으로 ja.md와 en.md를 생성한다.
 
-### Step 5: 파일 생성 및 배치
+**번역 규칙:**
+- frontmatter의 `title`, `summary` 를 번역한다
+- frontmatter의 `stack`, `status`, `period`, URL 필드들은 번역하지 않는다 (그대로 유지)
+- 본문 전체를 해당 언어로 번역한다
+- 섹션 제목도 번역한다:
+  - `## 1. 배경 — WHY` → ja: `## 1. 背景 — WHY` / en: `## 1. Background — WHY`
+  - `## 2. 프로세스 — HOW` → ja: `## 2. プロセス — HOW` / en: `## 2. Process — HOW`
+  - `## 3. 결과물 — WHAT` → ja: `## 3. 成果物 — WHAT` / en: `## 3. Results — WHAT`
+  - `## 4. 기술 판단` → ja: `## 4. 技術判断` / en: `## 4. Technical Decisions`
+  - `## 5. 회고` → ja: `## 5. 振り返り` / en: `## 5. Retrospective`
+- 테이블 내 한국어 텍스트도 번역한다
+- 코드 블록 내부는 번역하지 않는다
+- 이미지 플레이스홀더의 설명 텍스트는 번역한다
+- 고유명사(프로젝트명, 기술명 등)는 번역하지 않는다
 
-1. 디렉토리 생성: `content/projects/[slug]/` (또는 `content/projects/[parent]/[child]/`)
-2. `ko.md` 생성 (한국어 frontmatter + 한국어 본문)
-3. `ja.md` 생성 (일본어 frontmatter + 일본어 본문)
-4. `en.md` 생성 (영어 frontmatter + 영어 본문)
-5. 이미지 디렉토리 생성: `public/images/projects/[slug]/` (빈 폴더, 스크린샷 추가용)
+**번역 품질 기준:**
+- 자연스러운 문장으로 번역 (직역 금지)
+- 일본어: 입니다/합니다 체 (です・ます調)
+- 영어: 전문적이지만 읽기 쉬운 톤
+
+### Step 4: lib/projects.ts PROJECTS 배열에 항목 삽입
+
+`lib/projects.ts` 파일의 `PROJECTS` 배열에 새 항목을 추가한다.
+
+**삽입 규칙:**
+- `order` 값 기준으로 올바른 위치에 삽입한다
+- order가 지정되지 않은 경우, 기존 최대 order + 1 을 할당한다
+- placeholder 항목(status가 planned이고 title이 "Project ..."인 항목)보다 앞에 배치한다
+
+**삽입할 객체 형식:**
+
+```typescript
+{
+  slug: "[slug]",
+  title: "[프로젝트명]",
+  summary: "[한 줄 설명]",
+  stack: ["기술1", "기술2"],
+  status: "[status]",
+  period: "[기간]",
+  githubUrl: "[URL]",       // 있을 때만
+  liveUrl: "[URL]",         // 있을 때만
+  thumbnail: "[경로]",      // 있을 때만
+  order: [숫자],
+}
+```
+
+**AST 수정이 아닌 텍스트 기반 삽입 방식:**
+1. `lib/projects.ts` 파일을 읽는다
+2. `PROJECTS` 배열의 마지막 항목 `}` 뒤, 배열 닫는 `]` 앞에 새 항목을 삽입한다
+3. 기존 코드 스타일(들여쓰기 2칸, trailing comma)을 유지한다
+4. order 기준 정렬이 필요하면 배열 전체를 재정렬한다
+
+### Step 5: 검증
+
+생성된 파일과 수정된 코드를 검증한다.
+
+**파일 존재 확인:**
+```bash
+ls -la content/projects/[slug]/ko.md
+ls -la content/projects/[slug]/ja.md
+ls -la content/projects/[slug]/en.md
+```
+
+**frontmatter 유효성:**
+- 필수 필드(title, summary, stack, status, period) 존재 여부
+- status 값이 `deployed | in-progress | planned` 중 하나인지
+- stack이 배열 형태인지
+
+**PROJECTS 배열 검증:**
+- TypeScript 구문 오류 없는지 확인:
+```bash
+npx tsc --noEmit lib/projects.ts 2>&1 | head -20
+```
+- 새로 추가된 slug가 배열에 존재하는지 확인
+
+**빌드 검증:**
+```bash
+npm run build 2>&1 | tail -30
+```
+- 빌드 성공 시 → 완료
+- 빌드 실패 시 → 에러 메시지 분석 후 수정하고 재빌드
+
+**라우트 검증:**
+- 빌드 출력에서 `/ko/projects/[slug]` 경로가 생성되었는지 확인
+- 3개 locale 모두 생성되었는지 확인
+
+### Step 6: 완료 보고
+
+**완료 보고:**
+
+```
+✅ 프로젝트 "[프로젝트명]" 페이지 생성 완료
+
+생성된 파일:
+  - content/projects/[slug]/ko.md
+  - content/projects/[slug]/ja.md
+  - content/projects/[slug]/en.md
+
+수정된 파일:
+  - lib/projects.ts (PROJECTS 배열에 항목 추가)
+
+라우트:
+  - /ko/projects/[slug]
+  - /ja/projects/[slug]
+  - /en/projects/[slug]
+
+빌드: ✅ 성공
+
+다음 할 일:
+  - (선택) public/images/projects/[slug]/ 에 썸네일 이미지 추가
+  - (선택) 번역 내용 직접 검수
+```
+
+---
+
+## 엣지 케이스
+
+### 텍스트가 portfolio-*.md 형식이 아닐 때
+- 사용자에게 형식을 안내하고, notion-to-portfolio 스킬을 통해 변환할 것을 권장한다
+- 필수 요소: h1(slug), 헤더 테이블(메타데이터), 본문 섹션 최소 1개
+
+### 여러 프로젝트를 한 번에 붙여넣었을 때
+- `# [slug] — 프로젝트 포트폴리오` 패턴으로 각 프로젝트를 분리한다
+- 하나씩 순서대로 처리하고 중간 결과를 보고한다
+
+### 같은 slug의 프로젝트가 이미 존재할 때
+- `content/projects/[slug]/`가 이미 있으면 사용자에게 알리고 덮어쓸지 확인한다
+- `PROJECTS` 배열에 같은 slug가 있으면 기존 항목을 업데이트한다
+
+### 하위 프로젝트 (parent가 있는 경우)
+- parent slug에 해당하는 디렉토리가 존재하는지 확인한다
+- 존재하지 않으면 에러: "상위 프로젝트 [parent]가 존재하지 않습니다"
+- 하위 프로젝트는 PROJECTS 배열에 추가하지 않는다
+  (상위 프로젝트 페이지의 SubProjectList에서 자동으로 스캔됨)
+
+### order 충돌
+- 기존 항목과 같은 order 값이면, 기존 항목들의 order를 +1씩 밀어낸다
+
+### 빌드 실패 시
+- 에러 메시지를 분석하고 자동 수정을 시도한다
+- 자동 수정 불가한 경우 에러 내용을 사용자에게 보고한다
 
 ---
 
 ## 체크리스트
 
-생성 완료 후 다음을 확인:
+스킬 실행 완료 후 확인:
 
-- [ ] frontmatter의 모든 필수 필드가 채워져 있는가
-- [ ] 3개 locale 파일이 모두 생성되었는가
-- [ ] slug가 기존 프로젝트와 충돌하지 않는가
-- [ ] parent/children 관계가 올바른가 (하위 프로젝트인 경우)
-- [ ] 본문이 표준 구조(WHY → HOW → WHAT → 회고)를 따르는가
-- [ ] 기술 용어/고유명이 번역되지 않았는가
-- [ ] 빌드가 정상적으로 되는가 (`npm run build`)
-
----
-
-## 예시
-
-### 입력: portfolio-kigaru-kaouranai.md
-
-(헤더 테이블에서 추출)
-```
-slug: "kaouranai"
-title.ko: "한국 관상학 AI 진단"
-title.ja: "韓国人相学AI診断"
-title.en: "Korean Physiognomy AI Diagnosis"
-stack: ["Next.js", "React", "Tailwind", "FastAPI", "Gemini Flash"]
-status: "in-progress"
-period: "2026.03.03~"
-parent: "kigaru"
-```
-
-### 출력 파일 경로
-```
-content/projects/kigaru/kaouranai/ko.md
-content/projects/kigaru/kaouranai/ja.md
-content/projects/kigaru/kaouranai/en.md
-public/images/projects/kaouranai/   (빈 폴더)
-```
+- [ ] content/projects/[slug]/ko.md 생성됨 (frontmatter + 본문)
+- [ ] content/projects/[slug]/ja.md 생성됨 (자연스러운 일본어 번역)
+- [ ] content/projects/[slug]/en.md 생성됨 (자연스러운 영어 번역)
+- [ ] 3개 파일의 frontmatter 스키마가 기존 프로젝트(kigaru)와 동일
+- [ ] lib/projects.ts PROJECTS 배열에 새 항목 삽입됨
+- [ ] 삽입된 항목의 타입이 Project 인터페이스와 일치
+- [ ] order 기준 정렬이 올바름
+- [ ] TypeScript 컴파일 에러 없음
+- [ ] npm run build 성공
+- [ ] 3개 locale × slug 라우트가 빌드 출력에 존재

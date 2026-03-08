@@ -25,6 +25,15 @@ export const PROJECTS: Project[] = [
     order: 1,
   },
   {
+    slug: "everyai",
+    title: "EveryAI",
+    summary: "생성 AI 작품 거래 사이트",
+    stack: ["Java", "Spring Boot", "JPA", "Spring Security", "Next.js"],
+    status: "deployed",
+    period: "2023.10 ~ 2023.12",
+    order: 2,
+  },
+  {
     slug: "placeholder-1",
     title: "Project B",
     summary: "준비중",
