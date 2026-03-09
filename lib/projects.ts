@@ -31,6 +31,7 @@ export const PROJECTS: Project[] = [
     stack: ["Java 17", "Spring Boot 3.1", "JPA", "Spring Security", "Next.js", "JWT", "BootPay"],
     status: "deployed",
     period: "2023.10 – 2023.12",
+    thumbnail: "https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/logo.jpg",
     order: 2,
   },
 ];

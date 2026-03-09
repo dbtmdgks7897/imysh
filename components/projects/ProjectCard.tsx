@@ -17,14 +17,23 @@ export default function ProjectCard({ project, locale, overrideHref }: ProjectCa
       href={href}
       className="group block rounded-lg border border-lavender bg-snow overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5"
     >
-      <div className="relative aspect-video bg-light-lavender">
-        {project.thumbnail && (
+      <div className="relative aspect-video bg-light-lavender overflow-hidden">
+        {project.thumbnail ? (
           <Image
             src={project.thumbnail}
             alt={project.title}
             fill
             className="object-cover"
           />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span
+              className="text-4xl font-bold text-lavender select-none"
+              aria-label={project.title}
+            >
+              {project.title.charAt(0).toUpperCase()}
+            </span>
+          </div>
         )}
       </div>
       <div className="p-4 flex flex-col gap-3">
