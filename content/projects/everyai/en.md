@@ -1,218 +1,94 @@
 ---
-title: "EveryAI"
-summary: "Generative AI marketplace for digital works and services"
-stack: ["Java", "Spring Boot", "JPA", "Spring Security", "Next.js"]
+title: "EveryAI - AI Works & Services Marketplace"
+summary: "A marketplace for trading works and services created with generative AI. A 6-week real-world project."
+stack: ["Java 17", "Spring Boot 3.1", "JPA", "Spring Security", "Next.js", "JWT", "BootPay"]
 status: "deployed"
-period: "2023.10 ~ 2023.12"
+period: "2023.10 – 2023.12"
 order: 2
 ---
 
 ## 1. Background — WHY
 
-### Theme
+A real-world project to build a platform where AI-generated works and services can be bought and sold.
+The goal was to let consumers access AI services at reasonable prices while giving creators a new revenue channel.
 
-A platform for trading diverse works and services created using AI technology.
+## 2. Results — WHAT
 
-### Goals
+I was responsible for the entire backend — authentication, service CRUD, real-time messaging, payments, and admin features.
 
-- Enable consumers to access AI-powered services at reasonable prices through an open marketplace
-- Create new monetization opportunities for both emerging and established creators leveraging AI
+### Authentication System
 
-## 2. Process — HOW
+Implemented the full auth flow: email verification → sign-up → JWT login → social login.
 
-### Tech Stack
+- Email verification code sent via spring-boot-starter-mail, validated against DB
+- JWT issued and stored in cookies; JwtFilter validates the token on every request
+- accessToken (1 day) / refreshToken (7 days) with automatic re-authentication flow
+- Social login (Kakao, etc.) — routes to sign-up or login based on whether the user already exists
 
-**Frontend:**
-- Next.js
-- HTML, CSS, JS
+![Sign Up](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/signup.gif)
 
-**Backend:**
-- Java (JDK 17)
-- Spring Boot (3.1.4)
-- JPA
-- Spring Security
+![JWT Login](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/login-jwt.gif)
 
-### Design
+![Social Login](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/social-login-signup.gif)
 
-DB schema and UI designs are kept confidential as this was a professional project.
+### Service & Project Management
 
-## 3. Results — WHAT
+Full CRUD for AI services and projects — including image upload.
 
-### My Contributions (Backend)
+![Register Service](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/service-register.gif)
 
-#### Authentication
+![Edit Service](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/service-edit.gif)
 
-- **Email Duplicate Check**
+### Payments (BootPay)
 
-> [Screenshot: Email duplicate check — success (이메일_중복_체크_(성공).gif)]
+Integrated BootPay for secure payments. Full flow: payment request in a message room → payment processing → success message sent.
 
-> [Screenshot: Email duplicate check — failure (이메일_중복_체크.gif)]
+![BootPay Payment](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/bootpay-1.gif)
 
-- **Email Verification** — Sends a verification code to the user's email address (using spring-boot-starter-mail)
+![Payment Completion](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/bootpay-2.gif)
 
-> [Screenshot: Verification code sent (이메일_인증.gif)]
+### Real-Time Messaging
 
-- Validates the code against the stored verification record in the DB
+Built 1:1 message rooms with text, attachments, and secure payment request messages, plus read receipts and response rate stats.
 
-> [Screenshot: Verification code validation (인증_코드_검증.gif)]
+- Creates a new room or loads an existing one based on whether the two users already have a conversation
+- Automatically marks the other user's messages as read upon room entry
+- Message reporting feature
 
-- **Sign Up** — Registration is only allowed when an email verification record exists in the DB. On success, a random nickname is generated automatically.
+![Create Message Room](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/message-room-create.gif)
 
-> [Screenshot: Sign up (회원가입.gif)]
+![Send Text Message](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/text-message.gif)
 
-- **Password Change** — Change password after email verification
+![Secure Payment Request Message](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/safe-payment-send.gif)
 
-> [Screenshot: Password change (비밀번호_변경.gif)]
+### Admin Features
 
-- **Login (JWT)** — The backend issues a JWT, returns it to the frontend, and stores it in a cookie. Subsequent authenticated requests send the JWT via cookie, which is validated by JwtFilter. [(velog post)](https://velog.io/@dbtmdgks7897/Spring-Boot-Jwt-3-%EA%B5%AC%ED%98%84-%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85-%EB%A1%9C%EA%B7%B8%EC%9D%B8)
+User management (restrict/unrestrict), service approval/rejection, expert grade management, and ad banner management.
 
-> [Screenshot: JWT login (로그인(JWT).gif)]
+![Restrict User](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/user-restrict.gif)
 
-- **Token Refresh** — accessToken expires in 1 day; refreshToken in 7 days. On a 401 error, the client retries with the refreshToken. If the refreshToken is expired or invalid, the user is redirected to the login page.
+![Approve Service](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/service-approve.gif)
 
-- **Social Login** — Checks the server for existing user data from the social login provider, then performs sign-up or login accordingly.
+## 3. Technical Decisions
 
-> [Screenshot: Social login — sign up (소셜로그인(회원가입).gif)]
+### JWT Authentication Design
 
-> [Screenshot: Social login — login (소셜로그인(로그인).gif)]
+Dual-token strategy: accessToken (1 day) + refreshToken (7 days).
+When the frontend receives a 401, it requests a re-login using the refreshToken; if that also fails, it redirects to the login page.
+Added a custom JwtFilter to Spring Security's filter chain to validate the token on every request.
 
-#### Service/Project CRUD
+### Social Login Integration
 
-- **Create Service**
+Queries the server DB using social login credentials — logs in the user if they exist, or auto-registers them with a random nickname if they don't.
+Unified both standard login and social login into the same JWT issuance flow.
 
-> [Screenshot: Service creation (서비스_등록.gif)]
+### Secure Payment Flow
 
-- **Edit Service**
-
-> [Screenshot: Service edit (서비스_수정.gif)]
-
-- **Delete Service**
-
-> [Screenshot: Service deletion (서비스_삭제.gif)]
-
-#### Payment
-
-- **Bootpay** integration [(velog post)](https://velog.io/@dbtmdgks7897/spring-boot-%EB%B6%80%ED%8A%B8%ED%8E%98%EC%9D%B4-4-%EA%B5%AC%ED%98%84)
-
-> [Screenshot: Bootpay payment 1 (부트페이_1.gif)]
-
-> [Screenshot: Bootpay payment 2 (부트페이_2.gif)]
-
-#### Messaging
-
-- **Room List**
-
-> [Screenshot: Room list (방_리스트.png)]
-
-- **Response Rate & Average Response Time**
-
-> [Screenshot: Message response rate and average response time (메시지_응답률_평균_응답_시간.gif)]
-
-- **Create Room** — Creates a new room or retrieves an existing one depending on whether a room already exists between the two users.
-
-> [Screenshot: Message room creation (메시지_방_생성.gif)]
-
-- **Load History & Info**
-
-> [Screenshot: Load history and info (기록_정보_불러오기.gif)]
-
-- **Leave Room**
-
-> [Screenshot: Leave room (방_나가기.gif)]
-
-- **Report Message**
-
-> [Screenshot: Report message (메시지_신고.gif)]
-
-- **Send Message**
-  - Text message
-
-> [Screenshot: Text message (일반_메시지.gif)]
-
-  - File attachment message
-
-> [Screenshot: File attachment message (첨부파일_메시지.gif)]
-
-  - Escrow payment request message — shows list of own services / adopted projects
-
-> [Screenshot: Escrow payment request screen (안전_결제_요청_메시지_내_서비스_프로젝트_리스트.gif)]
-
-> [Screenshot: Escrow payment request sent (안전_결제_요청_메시지_전송.gif)]
-
-  - Escrow payment success message
-
-> [Screenshot: Escrow payment 1 (안전_결제_1.gif)]
-
-> [Screenshot: Escrow payment success message sent (안전_결제_2.gif)]
-
-- **Read Status** — Marks all messages from other users as read upon entering a message room
-
-#### Wishlist
-
-- **View List**
-
-> [Screenshot: Wishlist (찜_목록_보기.png)]
-
-- **Add/Remove from Wishlist**
-
-> [Screenshot: Add/remove wishlist (찜(해제)하기.gif)]
-
-#### Admin
-
-- **Expert Tier** — Number of users per expert tier
-
-> [Screenshot: Users by expert tier (전문가_등급별_유저_수.png)]
-
-- Expert tier list
-
-> [Screenshot: Expert tier list (전문가_등급_리스트.gif)]
-
-- **User Management** — User list
-
-> [Screenshot: User list (유저_리스트.png)]
-
-- Restrict / unrestrict user
-
-> [Screenshot: Restrict user (유저_제한.gif)]
-
-> [Screenshot: Unrestrict user (유저_제한_해제.gif)]
-
-- **Service & Project Management** — Count by service status
-
-> [Screenshot: Service count by status (서비스_상태_별_개수.png)]
-
-- Service list
-
-> [Screenshot: Service list (서비스_리스트.gif)]
-
-- Approve / reject service
-
-> [Screenshot: Service approval (서비스_승인.gif)]
-
-> [Screenshot: Service rejection (서비스_미승인.gif)]
-
-- **Ad Banner Management** — Banner list
-
-> [Screenshot: Ad banner list (광고_배너_리스트.png)]
-
-- Delete banner
-
-> [Screenshot: Delete banner (광고_배너_삭제.gif)]
-
-- Create banner
-
-> [Screenshot: Create banner (광고_배너_작성.gif)]
-
-- Reorder banners
-
-> [Screenshot: Reorder banners (광고_배너_순서_변경.gif)]
-
-### Additional Features
-
-- [FCM (Firebase Cloud Messaging)](https://velog.io/@dbtmdgks7897/spring-boot-fcm-4-%EA%B5%AC%ED%98%84) — Implemented but not shipped to production
+Linked the messaging system with the payment system. Within a message room, the user selects a service or an accepted project to send a payment request message → BootPay handles the payment → a success message is automatically sent.
 
 ## 4. Retrospective
 
-- Unlike training programs, this project gave me real **industry experience** and invaluable insight into what companies actually need.
-- Beyond basic CRUD, implementing **team collaboration** via Git, and real-world integrations like S3, Bootpay, and FCM deepened my understanding of the **theoretical foundations** behind each technology.
-- More people don't always mean more productivity. It's essential to find and apply ways to **maximize each person's individual output**.
+- Getting to experience real-world development, rather than coursework, gave me invaluable insight into what companies actually need.
+- Beyond basic CRUD, integrating real-world technologies like security, Git collaboration, S3, BootPay, and FCM into the project deepened my theoretical understanding of each.
+- I came to realize that more people doesn't mean more productivity. Finding and applying ways to maximize each person's individual output is what matters.
+- Implemented but not shipped: FCM push notifications
