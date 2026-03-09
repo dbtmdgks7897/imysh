@@ -9,26 +9,28 @@ interface ProjectHeaderProps {
   frontmatter: ProjectFrontmatter;
   slugPath: string[];
   locale: string;
+  parentTitle?: string;
 }
 
 export default function ProjectHeader({
   frontmatter,
   slugPath,
   locale,
+  parentTitle,
 }: ProjectHeaderProps) {
   const t = useTranslations("projectHeader");
   const isSubProject = slugPath.length > 1;
   const parentSlug = slugPath.slice(0, -1);
 
   return (
-    <header>
+    <header className="pb-6 border-b border-lavender">
       {isSubProject && (
         <div className="mb-4">
           <Link
             href={`/${locale}/projects/${parentSlug.join("/")}`}
             className="text-sm text-taupe hover:text-sage transition-colors flex items-center gap-1"
           >
-            ← {parentSlug[parentSlug.length - 1]}
+            ← {parentTitle ?? parentSlug[parentSlug.length - 1]}
           </Link>
         </div>
       )}
@@ -36,14 +38,16 @@ export default function ProjectHeader({
         {frontmatter.title}
       </h1>
       <p className="mt-2 text-lg text-taupe">{frontmatter.summary}</p>
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <span className="text-sm text-mid-gray">{frontmatter.period}</span>
+      <div className="mt-4 space-y-2">
+        <div className="flex flex-wrap items-center gap-3">
+          <StatusBadge status={frontmatter.status} />
+          <span className="text-sm text-mid-gray">{frontmatter.period}</span>
+        </div>
         <div className="flex flex-wrap gap-1">
           {frontmatter.stack.map((tech) => (
             <TechTag key={tech} label={tech} />
           ))}
         </div>
-        <StatusBadge status={frontmatter.status} />
       </div>
       {(frontmatter.liveUrl || frontmatter.githubUrl) && (
         <div className="mt-4 flex items-center gap-3">

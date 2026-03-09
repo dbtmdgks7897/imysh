@@ -32,12 +32,18 @@ export default async function ProjectDetailPage({
 
   const subProjects = await getSubProjects(slug, locale);
 
+  const parentTitle =
+    slug.length > 1
+      ? (await getProjectContent(slug.slice(0, -1), locale))?.frontmatter.title
+      : undefined;
+
   return (
     <div className="mx-auto max-w-[960px] px-6 py-12">
       <ProjectHeader
         frontmatter={content.frontmatter}
         slugPath={slug}
         locale={locale}
+        parentTitle={parentTitle}
       />
       <div className="mt-8">
         <ProjectContent source={content.source} />

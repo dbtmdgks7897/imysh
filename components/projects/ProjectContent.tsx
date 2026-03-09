@@ -10,7 +10,7 @@ const components = {
   ),
   h3: (props: JSX.IntrinsicElements["h3"]) => (
     <h3
-      className="text-lg font-semibold text-charcoal mt-6 mb-3"
+      className="text-lg font-semibold text-charcoal mt-6 mb-3 pl-3 border-l-2 border-taupe/40"
       {...props}
     />
   ),
@@ -23,9 +23,15 @@ const components = {
       {...props}
     />
   ),
-  code: (props: JSX.IntrinsicElements["code"]) => (
-    <code className="font-mono text-sm text-charcoal" {...props} />
-  ),
+  code: (props: JSX.IntrinsicElements["code"]) => {
+    const isInline = !props.className?.startsWith("language-");
+    return (
+      <code
+        className={`font-mono text-sm text-charcoal${isInline ? " bg-light-lavender px-1.5 py-0.5 rounded" : ""}`}
+        {...props}
+      />
+    );
+  },
   table: (props: JSX.IntrinsicElements["table"]) => (
     <div className="overflow-x-auto mb-4">
       <table className="border-collapse w-full text-sm" {...props} />
@@ -44,19 +50,33 @@ const components = {
     />
   ),
   img: (props: JSX.IntrinsicElements["img"]) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      className="rounded-lg shadow-sm max-w-full my-4"
-      alt={props.alt ?? ""}
+    <figure className="my-6">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        className="rounded-lg shadow-sm max-w-full block mx-auto"
+        alt={props.alt ?? ""}
+        {...props}
+      />
+      {props.alt && (
+        <figcaption className="text-center text-xs text-mid-gray mt-2">
+          {props.alt}
+        </figcaption>
+      )}
+    </figure>
+  ),
+  ul: (props: JSX.IntrinsicElements["ul"]) => (
+    <ul className="list-disc list-outside pl-5 mb-4 text-dark-gray space-y-1" {...props} />
+  ),
+  ol: (props: JSX.IntrinsicElements["ol"]) => (
+    <ol className="list-decimal list-outside pl-5 mb-4 text-dark-gray space-y-1" {...props} />
+  ),
+  blockquote: (props: JSX.IntrinsicElements["blockquote"]) => (
+    <blockquote
+      className="border-l-4 border-lavender pl-4 my-4 text-taupe italic text-sm"
       {...props}
     />
   ),
-  ul: (props: JSX.IntrinsicElements["ul"]) => (
-    <ul className="list-disc list-inside mb-4 text-dark-gray space-y-1" {...props} />
-  ),
-  ol: (props: JSX.IntrinsicElements["ol"]) => (
-    <ol className="list-decimal list-inside mb-4 text-dark-gray space-y-1" {...props} />
-  ),
+  hr: () => <hr className="my-8 border-lavender" />,
 };
 
 interface ProjectContentProps {
