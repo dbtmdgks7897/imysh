@@ -3,6 +3,7 @@ period: "2026.03 – 2026.04"
 stack: ["Next.js", "FastAPI", "Gemini", "Cloudflare KV"]
 status: deployed
 links:
+  github: "https://github.com/dbtmdgks7897/kigaru-matsuri"
   live: "https://ki-garu.com/code/"
 order: 2
 hero: /images/projects/kigaru/code-top.webp

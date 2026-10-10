@@ -7,6 +7,6 @@ hero: /images/projects/kigaru/landing.webp
 # HOW and 技術判断 both fold into the tech <details>.
 sections: [why, what, tech, tech, thought]
 links:
-  # Points at the GitHub profile root, not a repo — whether the repo is public is an open owner question.
-  github: "https://github.com/dbtmdgks7897"
+  # Public, sanitized snapshot of the private kigaru repo (2026-10-10).
+  github: "https://github.com/dbtmdgks7897/kigaru-matsuri"
   live: "https://ki-garu.com/"

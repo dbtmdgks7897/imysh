@@ -2,6 +2,7 @@ period: "2026.03"
 stack: ["React", "Gemini Flash", "Tailwind CSS"]
 status: deployed
 links:
+  github: "https://github.com/dbtmdgks7897/kigaru-matsuri"
   live: "https://ki-garu.com/kaouranai/"
 order: 1
 hero: /images/projects/kigaru/kaouranai-top.webp

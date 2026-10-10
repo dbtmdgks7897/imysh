@@ -2,9 +2,12 @@
 
 ## Where things stand (2026-10-10)
 
-**Phase 4 (pre-launch) is done locally on `redesign` (5 commits, not
-pushed). Phases 1–3 are pushed (`9623c42`), CI is green, and the preview at
-<https://redesign.imysh.pages.dev> works.** `main` (imysh.pages.dev) still
+**Phase 4 (pre-launch) is pushed (`b19304a`), CI is green, and the preview at
+<https://redesign.imysh.pages.dev> works.** Verified on the preview by the
+command post: `/` → 302 `/ja`, `/en/*` → 301, immutable cache on
+`/_next/static`, absolute og:image, and 4 images on `/ja`. A follow-up commit
+on top (not pushed) points the kigaru repository links at the public
+snapshot <https://github.com/dbtmdgks7897/kigaru-matsuri>. `main` (imysh.pages.dev) still
 serves the March site; it gets merged after the owner's phone check.
 
 The site is the "who I am" redesign: ja default + ko, maker identity, visual
@@ -48,8 +51,9 @@ Re-measure on the preview after pushing.
 
 ### Before merging `redesign` into `main` (merge checklist)
 
-- [ ] Push `redesign`; CI green (it now includes `check:meta`).
-- [ ] Preview `https://redesign.imysh.pages.dev`: `/` → 302 `/ja`, `/en/projects/kigaru` → 301; `curl -I` on `/_next/static/...` shows the `_headers` cache rule.
+- [x] Push `redesign`; CI green (it now includes `check:meta`) — `b19304a`.
+- [x] Preview checks: `/` → 302 `/ja`, `/en/*` → 301, `_headers` cache rule on `/_next/static`, og:image absolute.
+- [ ] Push the kigaru-matsuri link commit.
 - [ ] Re-run Lighthouse mobile on the preview for `/ja`, `/ja/projects/everyai` and `/ko/projects/kigaru/kaouranai` (target ≥90).
 - [ ] OG preview: paste a page URL into a link-preview tool or a chat app (LINE, X, Slack). The card must show the C3 image, title and description.
 - [ ] **Owner — real phone (iPhone Safari, and Android Chrome if available)**, ja and ko:
@@ -117,7 +121,7 @@ Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
   diagram; R2 removed [24].
 - [x] Owner answered the 9 open questions; applied in ko and ja.
 - [x] Owner's 6 small confirmations applied; ja unified on です・ます.
-- [ ] **Owner:** kigaru repo public or not, which decides whether its GitHub link (now the profile root) stays.
+- [x] kigaru repository is public as `kigaru-matsuri` (a sanitized snapshot). kigaru, 韓国式AI顔占い and AI自販機 link to it (checked: 200). No copy change was needed, because no sentence talks about the source code.
 - [ ] Second Brain 02 says capture is "from the phone via Telegram". The bot README says the bot has been dormant since 2026-10-02 and capture moved to the Claude app. Owner to confirm or correct this line.
 - [ ] **Owner:** review the Japanese, using `docs/phase3-translation-notes.md`.
 - [x] ki-garu.com live links added to kigaru, 韓国式AI顔占い and AI自販機 (owner approved; all three URLs checked and return 200).
@@ -386,6 +390,7 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: Pointed the kigaru, 韓国式AI顔占い and AI自販機 repository links at the public snapshot `kigaru-matsuri` (200), replacing the GitHub profile root. No copy change. Checks and Playwright pass.
 - 2026-10-10: **Phase 4 pre-launch, 5 local commits on `redesign` (not pushed).**
   - Second Brain copy now says capture goes through the Claude app; Fly.io dropped from its stack.
   - Hub path rows that are projects show the project thumbnail.
