@@ -13,9 +13,11 @@ interface PathTableProps {
   projectThumbnails: Record<string, string | undefined>;
 }
 
-// Static class strings so Tailwind can see them.
-const GRID_PHOTO = "md:grid-cols-[110px_200px_minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)]";
-const GRID_PLAIN = "md:grid-cols-[110px_minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)]";
+// Static class strings so Tailwind can see them. The table layout starts at xl (1280px): the
+// 320px photo column fits two photos side by side (~157px each) and still leaves the thought
+// column ~275px. Below xl every row stacks into a single column (photos side by side, max 448px).
+const GRID_PHOTO = "xl:grid-cols-[110px_320px_minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)]";
+const GRID_PLAIN = "xl:grid-cols-[110px_minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)]";
 
 // "2026 前半" → big "2026" + small "前半".
 function YearLabel({ label, small }: { label: string; small?: boolean }) {
@@ -47,12 +49,21 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
   const headerHasPhotos = topGrid === GRID_PHOTO;
   const gridOfChild = (node: PathChild) => (photosOf(node).length > 0 ? GRID_PHOTO : GRID_PLAIN);
 
+  // Below xl: two photos up to 448px, one up to 320px. At xl: own photos fill the 320px column;
+  // project thumbnails keep their earlier 200px size so sub-rows do not grow.
+  const sizeOf = (photos: { own: boolean }[]) =>
+    photos.length > 1
+      ? "grid-cols-2 max-w-md xl:max-w-none"
+      : photos[0]?.own
+        ? "max-w-xs xl:max-w-none"
+        : "max-w-xs xl:max-w-[200px]";
+
   function Photos({ node, top }: { node: PathNode | PathChild; top?: boolean }) {
     const photos = photosOf(node);
-    if (photos.length === 0) return top && headerHasPhotos ? <div aria-hidden="true" className="hidden md:block" /> : null;
+    if (photos.length === 0) return top && headerHasPhotos ? <div aria-hidden="true" className="hidden xl:block" /> : null;
     return (
-      // Several photos: side by side on phones, stacked in the 200px desktop column, in timeline order.
-      <div className={`grid gap-1.5 ${photos.length > 1 ? "grid-cols-2 md:grid-cols-1" : ""}`}>
+      // Several photos: side by side at every width, in timeline order.
+      <div className={`grid gap-1.5 ${sizeOf(photos)}`}>
         {photos.map(({ src, alt, own }) => (
           <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-placeholder">
             <ResponsiveImage
@@ -92,7 +103,7 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
         {text.heading}
       </h2>
 
-      <div aria-hidden="true" className={`hidden gap-6 px-6 pb-3 text-xs text-text-muted md:grid ${grid}`}>
+      <div aria-hidden="true" className={`hidden gap-6 px-6 pb-3 text-xs text-text-muted xl:grid ${grid}`}>
         <span>{t("colYear")}</span>
         {headerHasPhotos && <span>{t("colPhoto")}</span>}
         <span>{t("colDoing")}</span>
@@ -107,7 +118,7 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
             <li key={node.id}>
               <div
                 id={`path-${node.id}`}
-                className={`grid scroll-mt-4 items-start gap-3 rounded-[20px] bg-surface p-5 md:gap-6 md:p-6 ${topGrid} ${
+                className={`grid scroll-mt-4 items-start gap-3 rounded-[20px] bg-surface p-5 md:p-6 xl:gap-6 ${topGrid} ${
                   node.current ? "ring-2 ring-accent" : ""
                 }`}
               >
@@ -138,7 +149,7 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
                       <li
                         key={child.id}
                         id={`path-${child.id}`}
-                        className={`ml-6 grid scroll-mt-4 items-center gap-2 rounded-2xl bg-surface-sub px-5 py-4 md:ml-10 md:gap-6 md:px-6 ${gridOfChild(child)}`}
+                        className={`ml-6 grid scroll-mt-4 items-center gap-2 rounded-2xl bg-surface-sub px-5 py-4 md:ml-10 md:px-6 xl:gap-6 ${gridOfChild(child)}`}
                       >
                         <YearLabel label={c.label} small />
                         <Photos node={child} />

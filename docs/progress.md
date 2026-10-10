@@ -15,9 +15,10 @@ life photos: a factory photo in path row 2024, a working-holiday photo in
 row 2025 (the only place it is used), and the hub portrait, a mirror selfie
 cropped 4:5. The hub now has 9 images. A further local commit adds two
 more owner photos: the online clothing shop to row 2024 and Olive Young to
-row 2025. Each of those rows now shows two photos in timeline order,
-stacked in the desktop photo column and side by side on phones. The hub
-has 11 images. Source
+row 2025. Each of those rows shows two photos in timeline order, side by
+side at every width (owner correction). The path table now starts at
+1280px with a 320px photo column; below 1280 every row stacks into one
+column. The hub has 11 images. Source
 files and crops are recorded in `images-src/images.json`. `main` (imysh.pages.dev) still
 serves the March site; it gets merged after the owner's phone check.
 
@@ -403,6 +404,15 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **Two-photo path rows now show their photos side by side on desktop too (owner correction, local commit).**
+  - Column widths at 1440/1280 (year / photo / doing / thought / next):
+    - before: 110 / 200 / 218 / 327 / 218 px
+    - after: 110 / 320 / 183 / 275 / 183 px
+  - Each photo in a two-photo row is now 157 px wide; before, they were 200 px but stacked.
+  - Project thumbnails keep 200 px. A single own photo fills the 320 px cell.
+  - The table layout moved from 768 px to 1280 px. At 1024 the old table squeezed the text columns to 145 / 217 / 145 px. Below 1280 each row now stacks into one column: two photos at 221 px each (max 448), one at max 320.
+  - At 375 the photos are 149 px each, as before.
+  - No overflow at ja/ko × 1440/1280/1024/375. Checks and Playwright pass.
 - 2026-10-10: **Added two more owner photos (local commit on `redesign`).**
   - Row 2024: factory, then online clothing shop (the shop photo is cropped 4:3 around the stacks of stock; no people).
   - Row 2025: Olive Young (mirror selfie, cropped 4:3 to head, phone and shoulders), then the working holiday.
