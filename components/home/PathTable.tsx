@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -19,12 +20,27 @@ interface PathTableProps {
 const GRID_PHOTO = "xl:grid-cols-[110px_320px_minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)]";
 const GRID_PLAIN = "xl:grid-cols-[110px_minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)]";
 
+// A thought as sentence spans, so the hub thread can reveal it one sentence at a time.
+// The spans are inline: the static layout is unchanged.
+function Sentences({ text }: { text: string }) {
+  const parts = text.match(/[^。.!?！？]+[。.!?！？]?/g) ?? [text];
+  return (
+    <>
+      {parts.map((s, i) => (
+        <span key={i} className="path-ln" style={{ "--d": `${0.2 + i * 0.18}s` } as CSSProperties}>
+          {s}
+        </span>
+      ))}
+    </>
+  );
+}
+
 // "2026 前半" → big "2026" + small "前半".
 function YearLabel({ label, small }: { label: string; small?: boolean }) {
-  if (small) return <p className="text-sm text-accent-text">{label}</p>;
+  if (small) return <p className="path-year text-sm text-accent-text">{label}</p>;
   const [year, ...rest] = label.split(" ");
   return (
-    <p className="text-[28px] leading-tight font-bold">
+    <p className="path-year text-[28px] leading-tight font-bold">
       {year}
       {rest.length > 0 && <span className="block text-sm font-bold">{rest.join(" ")}</span>}
     </p>
@@ -63,7 +79,7 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
     if (photos.length === 0) return top && headerHasPhotos ? <div aria-hidden="true" className="hidden xl:block" /> : null;
     return (
       // Several photos: side by side at every width, in timeline order.
-      <div className={`grid gap-1.5 ${sizeOf(photos)}`}>
+      <div className={`path-photos grid gap-1.5 ${sizeOf(photos)}`}>
         {photos.map(({ src, alt, own }) => (
           <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-placeholder">
             <ResponsiveImage
@@ -81,7 +97,7 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
   function Doing({ node }: { node: PathNode | PathChild }) {
     const copy = text.nodes[node.id];
     return (
-      <div>
+      <div className="path-doing">
         <p className="font-bold">{copy.doing}</p>
         {node.projects.map((slug) => (
           <Link
@@ -98,12 +114,13 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
 
   return (
     <section id="path" aria-labelledby="path-heading" className="scroll-mt-4 border-t border-border pt-14 pb-10 md:pt-16">
-      <p className="mb-4 text-sm text-text-muted">{t("label")}</p>
-      <h2 id="path-heading" className="mb-10 text-[clamp(28px,4vw,52px)] leading-tight font-bold md:mb-14">
+      <p data-avoid className="mb-4 text-sm text-text-muted">{t("label")}</p>
+      <h2 id="path-heading" data-avoid className="mb-10 text-[clamp(28px,4vw,52px)] leading-tight font-bold md:mb-14">
         {text.heading}
       </h2>
 
-      <div aria-hidden="true" className={`hidden gap-6 px-6 pb-3 text-xs text-text-muted xl:grid ${grid}`}>
+      {/* The left lane (30px / 72px) is where the hub thread runs and ties its knots. */}
+      <div aria-hidden="true" data-avoid className={`hidden gap-6 px-6 pb-3 text-xs text-text-muted xl:ml-[72px] xl:grid ${grid}`}>
         <span>{t("colYear")}</span>
         {headerHasPhotos && <span>{t("colPhoto")}</span>}
         <span>{t("colDoing")}</span>
@@ -111,13 +128,14 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
         <span>{t("colNext")}</span>
       </div>
 
-      <ol className="flex flex-col gap-3">
+      <ol className="flex flex-col gap-3 pl-[30px] md:pl-[72px]">
         {path.nodes.map((node) => {
           const copy = text.nodes[node.id];
           return (
             <li key={node.id}>
               <div
                 id={`path-${node.id}`}
+                data-path-row
                 className={`grid scroll-mt-4 items-start gap-3 rounded-[20px] bg-surface p-5 md:p-6 xl:gap-6 ${topGrid} ${
                   node.current ? "ring-2 ring-accent" : ""
                 }`}
@@ -125,40 +143,42 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
                 <YearLabel label={copy.label} />
                 <Photos node={node} top />
                 <Doing node={node} />
-                <p className="text-xl leading-normal font-bold md:text-[22px]">
-                  {copy.thought}
-                  {copy.thoughtNote && <span className="mt-1 block text-[15px] font-normal">{copy.thoughtNote}</span>}
+                <p className="path-thought text-xl leading-normal font-bold md:text-[22px]">
+                  <Sentences text={copy.thought} />
+                  {copy.thoughtNote && <span className="path-note mt-1 block text-[15px] font-normal">{copy.thoughtNote}</span>}
                 </p>
                 {node.current ? (
                   <Link
                     href={`/${locale}#now`}
-                    className="flex min-h-11 items-center self-start text-sm text-accent-text underline decoration-accent decoration-2 underline-offset-4 hover:text-text"
+                    className="path-next flex min-h-11 items-center self-start text-sm text-accent-text underline decoration-accent decoration-2 underline-offset-4 hover:text-text"
                   >
                     {t("backToNow")}
                   </Link>
                 ) : (
-                  <p className="text-sm leading-[1.8] text-text-soft">{copy.next}</p>
+                  <p className="path-next text-sm leading-[1.8] text-text-soft">{copy.next}</p>
                 )}
               </div>
 
               {node.children.length > 0 && (
-                <ol className="mt-2 flex flex-col gap-2">
+                <ol className="mt-6 flex flex-col gap-2">
                   {node.children.map((child) => {
                     const c = text.nodes[child.id];
                     return (
                       <li
                         key={child.id}
                         id={`path-${child.id}`}
+                        data-path-row
+                        data-sub
                         className={`ml-6 grid scroll-mt-4 items-center gap-2 rounded-2xl bg-surface-sub px-5 py-4 md:ml-10 md:px-6 xl:gap-6 ${gridOfChild(child)}`}
                       >
                         <YearLabel label={c.label} small />
                         <Photos node={child} />
                         <Doing node={child} />
-                        <p className="font-bold">
-                          {c.thought}
-                          {c.thoughtNote && <span className="mt-1 block text-[15px] font-normal">{c.thoughtNote}</span>}
+                        <p className="path-thought font-bold">
+                          <Sentences text={c.thought} />
+                          {c.thoughtNote && <span className="path-note mt-1 block text-[15px] font-normal">{c.thoughtNote}</span>}
                         </p>
-                        <p className="text-sm leading-[1.8] text-text-soft">{c.next}</p>
+                        <p className="path-next text-sm leading-[1.8] text-text-soft">{c.next}</p>
                       </li>
                     );
                   })}

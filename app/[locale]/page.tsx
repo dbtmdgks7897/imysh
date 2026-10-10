@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import NowSection from "@/components/home/NowSection";
 import PathTable from "@/components/home/PathTable";
+import HubThread from "@/components/home/HubThread";
 import { assertLocale } from "@/lib/locales";
 import { listProjectSlugPaths, loadProject } from "@/lib/content/projects";
 import { loadNow, loadNowText, loadPath, loadPathText } from "@/lib/content/profile";
@@ -25,7 +26,9 @@ export default async function LocalePage({ params }: { params: Promise<{ locale:
   const projectThumbnails = Object.fromEntries(projects.map((p) => [p.slugPath.join("/"), p.meta.thumbnail]));
 
   return (
-    <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8">
+    // isolate: the thread's svg sits behind the content (z-index -1) but above the page ground
+    <div className="relative isolate mx-auto w-full max-w-[1280px] px-4 md:px-8">
+      <HubThread />
       <NowSection locale={locale} now={loadNow()} text={loadNowText(locale)} />
       <PathTable locale={locale} path={loadPath()} text={loadPathText(locale)} projectTitles={projectTitles} projectThumbnails={projectThumbnails} />
     </div>

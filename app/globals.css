@@ -64,3 +64,119 @@
     }
   }
 }
+
+/* ---- Hub thread (components/home/HubThread.tsx, lib/hub/). Concept A2. ----
+   The svg sits behind the hub content; with no JS it stays empty and the hub is the static page. */
+.hub-thread {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  overflow: visible;
+  pointer-events: none;
+}
+.hub-thread path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.hub-thread .th {
+  stroke: var(--color-accent-text);
+  stroke-width: 2.4;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+.hub-thread .th-ahead {
+  stroke: var(--color-border);
+  stroke-width: 1.6;
+  stroke-dasharray: 1 7;
+}
+.hub-thread.static .th {
+  stroke-dashoffset: 0;
+}
+.hub-thread.static .th-ahead {
+  display: none;
+}
+.hub-thread .knot {
+  fill: var(--color-bg);
+  stroke: var(--color-accent-text);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.hub-thread .knot.on,
+.hub-thread.static .knot {
+  fill: var(--color-accent);
+}
+.hub-thread .knot.edge {
+  stroke-width: 1.6;
+}
+/* the sentence, split into characters by lib/hub/kinetic.ts */
+.kin-c {
+  display: inline-block;
+  will-change: transform;
+}
+.kin-w {
+  white-space: nowrap;
+}
+
+/* Row reveals: only while the thread runs (html.fx-thread is set by the script) and motion is allowed.
+   Opacity and transform only, so nothing moves the layout; a focused row is always fully shown. */
+@media (prefers-reduced-motion: no-preference) {
+  .hub-thread .knot {
+    transition: transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1), fill 0.3s;
+  }
+  .hub-thread .knot.on {
+    transform: scale(1.5);
+  }
+  .fx-thread [data-path-row] {
+    transition: background-color 0.6s, box-shadow 0.6s;
+  }
+  .fx-thread [data-path-row]:not(.lit) {
+    background-color: rgb(255 255 255 / 0.35);
+    box-shadow: none;
+  }
+  .fx-thread .path-year {
+    transform-origin: left bottom;
+    transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s, color 0.6s;
+  }
+  .fx-thread [data-path-row]:not(.lit) .path-year {
+    transform: scale(0.6);
+    opacity: 0.35;
+  }
+  .fx-thread [data-path-row].here:not([data-sub]) .path-year {
+    color: var(--color-accent-text);
+  }
+  .fx-thread :is(.path-doing, .path-ln, .path-note, .path-photos, .path-next) {
+    transition: opacity 0.7s ease var(--d, 0s), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s);
+  }
+  .fx-thread .path-doing {
+    --d: 0.05s;
+  }
+  .fx-thread .path-note {
+    --d: 0.6s;
+  }
+  .fx-thread .path-photos {
+    --d: 0.15s;
+  }
+  .fx-thread [data-path-row]:not(.lit) :is(.path-doing, .path-ln, .path-note) {
+    opacity: 0;
+  }
+  .fx-thread [data-path-row]:not(.lit) :is(.path-doing, .path-note) {
+    transform: translateY(14px);
+  }
+  .fx-thread [data-path-row]:not(.lit) .path-photos {
+    opacity: 0;
+    transform: translateY(40px) rotate(-4deg);
+  }
+  .fx-thread [data-path-row]:not(.leaving) .path-next {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  .fx-thread [data-path-row]:focus-within :is(.path-doing, .path-ln, .path-note, .path-photos, .path-next, .path-year) {
+    opacity: 1;
+    transform: none;
+    transition-duration: 0.1s;
+    transition-delay: 0s;
+  }
+}
