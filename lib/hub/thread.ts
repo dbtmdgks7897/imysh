@@ -72,9 +72,12 @@ export function startThread(o: ThreadOptions): () => void {
       const v = vline(A[0], A[1], B[1], sway);
       return hit(v) ? vline(A[0], A[1], B[1], 0) : v;
     }
-    for (const f of [1, 0.85, 0.7, 0.56, 0.44, 0.34, 0.26, 0.18]) {
+    // window lengths: fractions of the run first (gentlest), then short absolute ones for tight gaps
+    // (e.g. between a parent row and its first sub-row)
+    const lengths = [1, 0.85, 0.7, 0.56, 0.44, 0.34, 0.26, 0.18].map((f) => H * f).concat([72, 60, 50, 42, 36].filter((l) => l < H * 0.18));
+    for (const Lh of lengths) {
       for (const p of [0, 0.2, 0.4, 0.6, 0.8, 1]) {
-        const Lh = H * f, ys = A[1] + (H - Lh) * p, ye = ys + Lh;
+        const ys = A[1] + (H - Lh) * p, ye = ys + Lh;
         const pts = [
           ...(ys > A[1] + 0.5 ? vline(A[0], A[1], ys, 0) : []),
           ...bez([A[0], ys], [A[0], ys + Lh * 0.5], [B[0], ye - Lh * 0.5], [B[0], ye]),
