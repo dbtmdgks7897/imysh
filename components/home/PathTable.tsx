@@ -51,7 +51,8 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
     const photos = photosOf(node);
     if (photos.length === 0) return top && headerHasPhotos ? <div aria-hidden="true" className="hidden md:block" /> : null;
     return (
-      <div className={`grid gap-1.5 ${photos.length > 1 ? "grid-cols-3" : ""}`}>
+      // Several photos: side by side on phones, stacked in the 200px desktop column, in timeline order.
+      <div className={`grid gap-1.5 ${photos.length > 1 ? "grid-cols-2 md:grid-cols-1" : ""}`}>
         {photos.map(({ src, alt, own }) => (
           <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-placeholder">
             <ResponsiveImage

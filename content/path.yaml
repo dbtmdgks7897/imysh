@@ -12,10 +12,11 @@ nodes:
         projects: [everyai]
   - id: "2024"
     period: "2024.01–2024.12"
-    photos: [/images/life/factory.webp]          # the factory; the pub has no photo
+    photos: [/images/life/factory.webp, /images/life/clothing-shop.webp]   # timeline order; the pub has no photo
   - id: "2025"
     period: "2025.01–2026.05"
-    photos: [/images/life/workingholiday.webp]   # shows the owner's face: this row only, not the portrait
+    # oliveyoung, then the working holiday (shows the owner's face: this row only, not the portrait)
+    photos: [/images/life/oliveyoung.webp, /images/life/workingholiday.webp]
   - id: "2026-h1"
     period: "2026.03"           # vibe coding started in March 2026 (owner)
     children:

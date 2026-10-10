@@ -98,5 +98,15 @@
     "width": 760,
     "height": 950,
     "srcSet": "/images/life/portrait-640.webp 640w, /images/life/portrait.webp 760w"
+  },
+  "/images/life/oliveyoung.webp": {
+    "width": 1229,
+    "height": 922,
+    "srcSet": "/images/life/oliveyoung-640.webp 640w, /images/life/oliveyoung.webp 1229w"
+  },
+  "/images/life/clothing-shop.webp": {
+    "width": 1280,
+    "height": 960,
+    "srcSet": "/images/life/clothing-shop-640.webp 640w, /images/life/clothing-shop.webp 1280w"
   }
 }

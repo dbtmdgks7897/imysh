@@ -13,7 +13,11 @@ figures and the 2023-b path thumbnail, plus a pre-blurred Second Brain graph
 used as the hero and the 2026-d thumbnail. A third commit adds the owner's
 life photos: a factory photo in path row 2024, a working-holiday photo in
 row 2025 (the only place it is used), and the hub portrait, a mirror selfie
-cropped 4:5. The hub now has 9 images. Source
+cropped 4:5. The hub now has 9 images. A further local commit adds two
+more owner photos: the online clothing shop to row 2024 and Olive Young to
+row 2025. Each of those rows now shows two photos in timeline order,
+stacked in the desktop photo column and side by side on phones. The hub
+has 11 images. Source
 files and crops are recorded in `images-src/images.json`. `main` (imysh.pages.dev) still
 serves the March site; it gets merged after the owner's phone check.
 
@@ -134,7 +138,8 @@ Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
 - [x] ki-garu.com live links added to kigaru, 韓国式AI顔占い and AI自販機 (owner approved; all three URLs checked and return 200).
 - [x] everyai 3–4 static stills from the owner's Notion export, with no watermark, devtools or personal data [4, 8]. Second Brain graph (blurred, owner-supplied).
 - [x] Portrait and the 2024/2025 path photos. These are owner-supplied files already privacy-processed by the command post. The generated webp files carry no EXIF, XMP or IPTC data.
-- [ ] Optional: more path-row photos (pub, 2026 rows) if the owner has them.
+- [x] 2024 clothing-shop and 2025 Olive Young photos added; both rows show two photos in timeline order.
+- [ ] Optional: a pub photo or 2026-row photos if the owner has them.
 - [ ] README [20].
 
 ### Phase 4 — Pre-launch (done locally; phone check and merge remain)
@@ -398,6 +403,13 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **Added two more owner photos (local commit on `redesign`).**
+  - Row 2024: factory, then online clothing shop (the shop photo is cropped 4:3 around the stacks of stock; no people).
+  - Row 2025: Olive Young (mirror selfie, cropped 4:3 to head, phone and shoulders), then the working holiday.
+  - Layout: rows with several photos stack them in the 200px desktop column and put them side by side on phones. Column alignment is unchanged.
+  - Alt text in ko and ja names Olive Young only, because the copy already names it.
+  - The generated webp files carry no EXIF, XMP, IPTC or ICC data. Fonts were re-subset.
+  - Checks and Playwright pass.
 - 2026-10-10: **Added the owner's life photos (local commit).**
   - Placements:
     - path 2024: factory photo.
