@@ -40,38 +40,50 @@ lib/content/                         schema(zod) · projects · profile(now/path
 scripts/check-content.ts
 content/now.yaml + now.{ja,ko}.yaml       "いま" 구조 + 문장
 content/path.yaml + path.{ja,ko}.yaml     "ここまで" 구조 + 문장
-content/projects/<slug>/meta.yaml         구조 (period, stack, status, order, thumbnail, links)
+content/projects/<slug>/meta.yaml         구조 (period, stack, status, order, thumbnail, hero, sections, links)
 content/projects/<slug>/{ja,ko}.md        frontmatter(title, summary) + 본문
 messages/{ja,ko}.json                     UI 문자열
 public/_redirects                         / → /ja, /en* → /ja*
 ```
 
-## 디자인 시스템
+## 디자인 시스템 (C3 · やわらかい索引, spec §4)
 
-### 컨셉 컬러 3색
+### 색 — 역할 토큰만 (`app/globals.css` `@theme`)
 
-| 이름 | Hex | 용도 |
+| 토큰 | 값 | 용도 |
 |---|---|---|
-| Lavender Mist | `#c8bfc7` | 서브 배경, 카드 배경, 구분선 |
-| Sage Green | `#7a9b76` | 포인트 컬러, 링크, 뱃지, CTA |
-| Warm Taupe | `#8a7e72` | 보조 텍스트, 아이콘, 태그 |
-| Snow | `#faf9fa` | 메인 배경 |
-| Charcoal | `#2d2a28` | 메인 텍스트 (제목) |
+| `bg` | `#F7F4EF` | 페이지 바탕 |
+| `surface` | `#FFFFFF` | 행 카드, 프로젝트 카드 |
+| `surface-sub` | `#FBF8F4` | 하위 행, 칩, `<details>` |
+| `text` | `#2E2A27` | 본문·제목 |
+| `text-muted` | `#6A625B` | 캡션, 기간 (bg 대비 5.45) |
+| `text-soft` | `#4A433E` | "다음으로 간 이유" 줄 |
+| `border` | `#E3DDD3` | 헤어라인 |
+| `accent-text` | `#B44A30` | 링크, 강조 문구 (bg 대비 4.83) |
+| `accent` | `#E9B8A6` | 점, "지금" 행 테두리 — 글자색 금지 |
+| `accent-tint` | `#F6DDD2` | 강조 밑줄, 상태 pill 바탕 (위 글자는 `text`) |
+| `placeholder` | `#EFE7DE` | 이미지 로딩 바탕 |
 
-### 폰트
+색 이름 토큰(snow, sage 등)은 쓰지 않는다. `accent-text` 를 `accent-tint` 위의 작은 글자에 쓰지 않는다 (4.09).
 
-| 언어 | 폰트 |
-|---|---|
-| KO | Pretendard |
-| JA | Noto Sans JP |
-| 코드 | JetBrains Mono |
+### 폰트 — 전부 npm 에서 self-host
 
-### 레이아웃 원칙
+| 언어 | 폰트 | 패키지 |
+|---|---|---|
+| JA | Zen Maru Gothic 400/500/700 | `@fontsource/zen-maru-gothic` |
+| KO | Pretendard Variable | `pretendard` |
+| 코드 | JetBrains Mono | `@fontsource/jetbrains-mono` |
 
-- max-width 960px, mobile-first
-- 애니메이션 최소화 (페이지 전환 fade, 카드 호버 그림자만)
-- 여백 충분, 차분한 톤 유지
-- Sage Green은 포인트로만 (전체 면적 10% 이하)
+`next/font/google` 금지: Google 이 CJK 폰트를 `/l/font?kit=` URL 로 주면 빌드가 깨진다 (fe46a84).
+제목은 700, 900 금지. 한국어 `word-break: keep-all`, 일본어 `line-break: strict` (keep-all 금지).
+
+### 레이아웃·접근성
+
+- 허브 max-width 1280px, 상세 1200px, 본문 열 ≈ 40em
+- radius 14–20px (히어로 28px), 카드는 테두리 대신 부드러운 그림자, hover 는 그림자만
+- 이미지가 없으면 칸을 그리지 않는다 (회색 placeholder 금지)
+- 터치 타깃 ≥ 44px, `:focus-visible` 링은 `accent-text`, `prefers-reduced-motion` 존중
+- 상세 페이지 섹션: md 의 `##` 를 `meta.yaml` `sections` (why/what/tech/thought) 로 순서대로 매핑
 
 ## 코딩 컨벤션
 

@@ -2,45 +2,26 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Locale } from "@/lib/locales";
 import { projectHref, type Project } from "@/lib/content/projects";
-import TechTag from "@/components/ui/TechTag";
 import StatusBadge from "@/components/ui/StatusBadge";
 
-interface ProjectCardProps {
-  project: Project;
-  locale: Locale;
-}
-
-export default function ProjectCard({ project, locale }: ProjectCardProps) {
+export default function ProjectCard({ project, locale }: { project: Project; locale: Locale }) {
   const { title, summary, meta } = project;
   return (
     <Link
       href={projectHref(locale, project.slugPath)}
-      className="group block rounded-lg border border-lavender bg-snow overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5"
+      className="block overflow-hidden rounded-[20px] bg-surface shadow-card transition-shadow hover:shadow-card-hover"
     >
-      <div className="relative aspect-video bg-light-lavender overflow-hidden">
-        {meta.thumbnail ? (
-          <Image src={meta.thumbnail} alt={title} fill className="object-cover" />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-4xl font-bold text-lavender select-none" aria-label={title}>
-              {title.charAt(0).toUpperCase()}
-            </span>
-          </div>
-        )}
-      </div>
-      <div className="p-4 flex flex-col gap-3">
-        <div>
-          <h3 className="font-semibold text-charcoal">{title}</h3>
-          <p className="text-sm text-dark-gray mt-1">{summary}</p>
+      {meta.thumbnail && (
+        <div className="relative aspect-video bg-placeholder">
+          <Image src={meta.thumbnail} alt="" fill className="object-cover" sizes="(min-width: 768px) 30vw, 100vw" />
         </div>
-        <div className="flex flex-wrap gap-1">
-          {meta.stack.map((tech) => (
-            <TechTag key={tech} label={tech} />
-          ))}
-        </div>
-        <div className="flex items-center justify-between">
+      )}
+      <div className="flex flex-col gap-2 px-5 pt-4 pb-5">
+        <p className="text-lg font-bold">{title}</p>
+        <p className="text-sm leading-[1.8] text-text-soft">{summary}</p>
+        <div className="flex items-center justify-between gap-3">
           <StatusBadge status={meta.status} />
-          <span className="text-xs text-mid-gray">{meta.period}</span>
+          <span className="text-sm text-text-muted">{meta.period}</span>
         </div>
       </div>
     </Link>

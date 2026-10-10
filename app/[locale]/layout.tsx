@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
-// Noto Sans JP is self-hosted from npm instead of next/font/google: Google sometimes serves
-// CJK fonts as /l/font?kit=...&skey=... URLs, which next/font/google cannot resolve
-// (seen on GitHub Actions runners; build fails with "queries have exactly one entry").
-import "@fontsource/noto-sans-jp/400.css";
-import "@fontsource/noto-sans-jp/500.css";
-import "@fontsource/noto-sans-jp/700.css";
+// All fonts are self-hosted from npm. Never use next/font/google here: Google sometimes
+// serves CJK fonts as /l/font?kit=...&skey=... URLs that the build cannot resolve (fe46a84).
+import "@fontsource/zen-maru-gothic/400.css";
+import "@fontsource/zen-maru-gothic/500.css";
+import "@fontsource/zen-maru-gothic/700.css";
+import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+import "@fontsource/jetbrains-mono/400.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/layout/Navigation";
@@ -14,12 +14,6 @@ import { LOCALES, assertLocale, type Locale } from "@/lib/locales";
 import { assertContentValid } from "@/lib/content/validate";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "../globals.css";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--next-jetbrains-mono",
-  display: "swap",
-});
 
 export function generateStaticParams() {
   // Fails the static build on any content error (both locales, slugs, images, enums).
@@ -39,8 +33,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 const localeFontClass: Record<Locale, string> = {
-  ja: "font-noto-sans-jp",
-  ko: "font-pretendard",
+  ja: "font-ja",
+  ko: "font-ko",
 };
 
 export default async function LocaleLayout({
@@ -58,14 +52,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <head>
-        {/* Pretendard Variable — CDN (KO 폰트) */}
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css"
-        />
-      </head>
-      <body className={jetbrainsMono.variable}>
+      <body>
         <NextIntlClientProvider messages={messages}>
           <div className={`flex min-h-screen flex-col ${fontClass}`}>
             <Navigation locale={locale} />

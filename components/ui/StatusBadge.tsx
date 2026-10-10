@@ -1,28 +1,18 @@
 import { useTranslations } from "next-intl";
 import type { ProjectStatus } from "@/lib/content/schema";
 
-const STATUS_CLASS: Record<ProjectStatus, string> = {
-  deployed: "bg-sage text-white",
-  "in-progress": "border border-taupe text-taupe",
-  planned: "border border-mid-gray text-mid-gray",
+const KEY: Record<ProjectStatus, "deployed" | "inProgress" | "planned"> = {
+  deployed: "deployed",
+  "in-progress": "inProgress",
+  planned: "planned",
 };
 
-interface StatusBadgeProps {
-  status: ProjectStatus;
-}
-
-export default function StatusBadge({ status }: StatusBadgeProps) {
+// Text stays in the `text` color; the tint only marks the pill (4.5:1 holds).
+export default function StatusBadge({ status }: { status: ProjectStatus }) {
   const t = useTranslations("status");
-  const labelMap: Record<ProjectStatus, string> = {
-    deployed: t("deployed"),
-    "in-progress": t("inProgress"),
-    planned: t("planned"),
-  };
   return (
-    <span
-      className={`text-xs px-2 py-0.5 rounded font-medium ${STATUS_CLASS[status]}`}
-    >
-      {labelMap[status]}
+    <span className="inline-block rounded-full bg-accent-tint px-2.5 py-0.5 text-sm text-text">
+      {t(KEY[status])}
     </span>
   );
 }

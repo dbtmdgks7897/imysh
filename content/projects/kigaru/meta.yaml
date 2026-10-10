@@ -5,3 +5,5 @@ order: 1
 links:
   # Points at the GitHub profile root, not a repo — carried over verbatim; fix in Phase 3.
   github: "https://github.com/dbtmdgks7897"
+# HOW and 技術判断 both fold into the tech <details>.
+sections: [why, tech, what, tech, thought]

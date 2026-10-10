@@ -3,24 +3,19 @@ import type { Locale } from "@/lib/locales";
 import type { Project } from "@/lib/content/projects";
 import ProjectCard from "@/components/projects/ProjectCard";
 
-interface SubProjectListProps {
-  projects: Project[];
-  locale: Locale;
-}
-
-export default function SubProjectList({ projects, locale }: SubProjectListProps) {
-  const t = useTranslations("subProjectList");
+export default function SubProjectList({ projects, locale }: { projects: Project[]; locale: Locale }) {
+  const t = useTranslations("detail");
   if (projects.length === 0) return null;
   return (
-    <section className="mt-16">
-      <h2 className="text-xl font-bold text-charcoal pb-4 border-b border-lavender mb-8">
-        {t("heading")}
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="mt-8">
+      <h3 className="mb-4 text-lg font-bold">{t("children")}</h3>
+      <ul className="grid gap-4 sm:grid-cols-2">
         {projects.map((project) => (
-          <ProjectCard key={project.slugPath.join("/")} project={project} locale={locale} />
+          <li key={project.slugPath.join("/")}>
+            <ProjectCard project={project} locale={locale} />
+          </li>
         ))}
-      </div>
-    </section>
+      </ul>
+    </div>
   );
 }

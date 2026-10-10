@@ -1,30 +1,58 @@
 {
-  "hero": {
-    "tagline": "낭만, 가치"
+  "meta": {
+    "siteDescription": "누구나 자신이 정말 바라는 가치를 위해 살 수 있도록. 그걸 돕고 싶다."
   },
-  "home": {
-    "projectsHeading": "Projects"
+  "nav": {
+    "label": "메인",
+    "home": "처음으로",
+    "now": "01 지금",
+    "path": "02 여기까지",
+    "language": "언어"
   },
-  "projectHeader": {
-    "live": "라이브",
-    "github": "GitHub"
+  "now": {
+    "label": "01 — 지금",
+    "thinking": "생각하고 있는 것",
+    "others": "그 밖에",
+    "since": "{since}~",
+    "contact": "연락처",
+    "portraitAlt": "지금의 나"
   },
-  "projectNav": {
-    "allProjects": "← 모든 프로젝트",
-    "parentProject": "← 상위 프로젝트로"
+  "path": {
+    "label": "02 — 여기까지",
+    "colYear": "연도",
+    "colPhoto": "사진",
+    "colDoing": "하던 일",
+    "colThought": "그때의 생각",
+    "colNext": "다음으로 간 이유",
+    "backToNow": "→ 01 지금 으로",
+    "projectLink": "{title} →"
   },
-  "subProjectList": {
-    "heading": "하위 프로젝트"
+  "detail": {
+    "backToPath": "← 02 여기까지 · {label}",
+    "info": "프로젝트 정보",
+    "period": "기간",
+    "status": "상태",
+    "stack": "쓴 것",
+    "links": "링크",
+    "live": "사이트 보기",
+    "github": "GitHub",
+    "timeline": "이 무렵의 나",
+    "why": "왜 시작했나",
+    "what": "무엇을 만들었나",
+    "thought": "여기서 생각한 것",
+    "tech": "기술 이야기 더 보기",
+    "children": "이 안에 있는 것",
+    "backToRow": "← 02 여기까지 의 {label} 로 돌아가기",
+    "prevNext": "앞뒤 프로젝트",
+    "prev": "← 이전",
+    "next": "다음 →"
   },
   "status": {
-    "deployed": "배포 완료",
+    "deployed": "공개 중",
     "inProgress": "개발 중",
     "planned": "예정"
   },
   "footer": {
     "copyright": "© 2026 imysh"
-  },
-  "meta": {
-    "siteDescription": "누구나 자신이 정말 바라는 가치를 위해 살 수 있도록. 그걸 돕고 싶다."
   }
 }

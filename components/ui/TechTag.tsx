@@ -1,11 +1,3 @@
-interface TechTagProps {
-  label: string;
-}
-
-export default function TechTag({ label }: TechTagProps) {
-  return (
-    <span className="bg-light-lavender text-taupe font-mono text-xs px-2 py-0.5 rounded">
-      {label}
-    </span>
-  );
+export default function TechTag({ label }: { label: string }) {
+  return <span className="inline-block rounded-full bg-surface-sub px-2.5 py-0.5 text-sm text-text-soft">{label}</span>;
 }

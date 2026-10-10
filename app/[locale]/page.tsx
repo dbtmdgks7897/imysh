@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import HeroSection from "@/components/home/HeroSection";
-import ProjectsSection from "@/components/home/ProjectsSection";
+import NowSection from "@/components/home/NowSection";
+import PathTable from "@/components/home/PathTable";
 import { assertLocale } from "@/lib/locales";
-import { listTopLevelProjects } from "@/lib/content/projects";
+import { listProjectSlugPaths, loadProject } from "@/lib/content/projects";
+import { loadNow, loadNowText, loadPath, loadPathText } from "@/lib/content/profile";
 import { pageMetadata } from "@/lib/seo";
 import { SITE_NAME } from "@/lib/site";
 
@@ -18,11 +19,15 @@ export default async function LocalePage({ params }: { params: Promise<{ locale:
   const { locale: rawLocale } = await params;
   const locale = assertLocale(rawLocale);
   setRequestLocale(locale);
-  const projects = listTopLevelProjects(locale);
+
+  const projectTitles = Object.fromEntries(
+    listProjectSlugPaths().map((s) => [s.join("/"), loadProject(s, locale).title]),
+  );
+
   return (
-    <div className="mx-auto max-w-[960px] px-6">
-      <HeroSection />
-      <ProjectsSection locale={locale} projects={projects} />
+    <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8">
+      <NowSection locale={locale} now={loadNow()} text={loadNowText(locale)} />
+      <PathTable locale={locale} path={loadPath()} text={loadPathText(locale)} projectTitles={projectTitles} />
     </div>
   );
 }

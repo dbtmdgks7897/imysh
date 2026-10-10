@@ -17,12 +17,21 @@ export const slugPathSchema = z
   .string()
   .regex(/^[a-z0-9-]+(\/[a-z0-9-]+)*$/, 'project reference must look like "kigaru/kaouranai"');
 
+// Detail-page sections (spec §3, template B). `tech` is folded into <details>.
+export const SECTION_KEYS = ["why", "what", "tech", "thought"] as const;
+export const sectionKeySchema = z.enum(SECTION_KEYS);
+export type SectionKey = z.infer<typeof sectionKeySchema>;
+
 export const projectMetaSchema = z.strictObject({
   period: z.string().min(1),
   stack: z.array(z.string().min(1)),
   status: projectStatusSchema,
   order: z.number().int().optional(),
   thumbnail: imageRefSchema.optional(),
+  hero: imageRefSchema.optional(), // large image at the top of the detail page
+  // One entry per h2 in {ja,ko}.md, in order: maps the markdown onto the fixed sections
+  // without rewriting its words. Several h2s may share a key.
+  sections: z.array(sectionKeySchema).min(1),
   links: z
     .strictObject({
       github: z.url().optional(),

@@ -29,6 +29,8 @@ stack: ["Next.js", "FastAPI"]      # required
 status: in-progress                # required: deployed | in-progress | planned
 order: 3                           # optional, sorts siblings (lower first)
 thumbnail: /images/projects/<slug>/thumbnail.webp   # optional; local file must exist under public/
+hero: /images/projects/<slug>/hero.webp             # optional; large image at the top of the detail page
+sections: [why, what, tech, thought]               # required: one key per "## " in the md, in order
 links:                             # optional
   github: https://github.com/<user>/<repo>          # a repo, not the profile root
   live: https://example.pages.dev
@@ -44,21 +46,28 @@ links:                             # optional
    개발중/진행중/in-progress → `in-progress`; 기획중/예정/planned → `planned`.
    A `상위 프로젝트` row makes it a sub-project at `content/projects/<parent>/<slug>/`
    (the parent directory must already exist). Ask if the slug is unclear.
-2. **Body order.** Detail pages read: why I started → what I made → where it
+2. **Sections.** Detail pages have fixed sections: `why` (01 なぜ始めたか),
+   `what` (02 何をつくったか), `tech` (folded into "技術の話をもっと見る"),
+   `thought` (03 ここで考えたこと, ending with where it stopped or why it
+   continues). `meta.yaml` `sections` lists one key per `## ` heading in the md,
+   in order; ja.md and ko.md must have the same number of `## ` headings, and
+   nothing may come before the first one. Several headings may share a key
+   (their text is kept as sub-headings). Omit a section rather than inventing it.
+3. **Body order.** Detail pages read: why I started → what I made → where it
    stopped / why it continues. Keep the user's sections, in that order where
    they map; do not invent content. Keep tables, code blocks and lists — the site
    renders GFM. Images: commit them under `public/images/projects/<slug>/` and
    reference `/images/projects/<slug>/<file>`; do not add new remote image URLs.
-3. **Write `meta.yaml`** with the structural fields above.
-4. **Write `ko.md`** — the user's Korean, as given. Do not polish it.
-5. **Write `ja.md`** — translate title, summary and body into natural Japanese
+4. **Write `meta.yaml`** with the structural fields above.
+5. **Write `ko.md`** — the user's Korean, as given. Do not polish it.
+6. **Write `ja.md`** — translate title, summary and body into natural Japanese
    (です・ます調). Do not translate code, proper nouns or tech names. Tell the
    user the ja file is a **draft for their review**; translation is a human gate.
-6. **Link it from the path (ask first).** If the project belongs to a node in
+7. **Link it from the path (ask first).** If the project belongs to a node in
    `content/path.yaml`, offer to add `<slug>` (or `<parent>/<slug>`) to that
    node's `projects:` list. Validation fails if a path node references a slug
    that does not exist, so add the reference only after the files exist.
-7. **Verify** (all must pass):
+8. **Verify** (all must pass):
 
    ```bash
    npm run check:content

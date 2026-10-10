@@ -4,3 +4,4 @@ status: deployed
 order: 2
 # Remote until Phase 3 replaces R2 with committed images (spec §2.10).
 thumbnail: "https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/logo.jpg"
+sections: [why, what, tech, thought]

@@ -131,8 +131,10 @@ Role tokens replace palette-named tokens in `app/globals.css`:
 | `--color-accent-tint` | `#F6DDD2` | under-highlight of the accented phrase |
 | `--color-placeholder` | `#EFE7DE` | image placeholder ground |
 
-- Type: Zen Maru Gothic (400/500/700) via `next/font` for ja; Korean pairs
-  with Pretendard via `next/font` (no FOUT). Headings 700, never 900.
+- Type: Zen Maru Gothic (400/500/700) for ja; Korean pairs with Pretendard.
+  Both are self-hosted from npm (`@fontsource/zen-maru-gothic`, `pretendard`),
+  never `next/font/google`: Google can serve CJK fonts as `/l/font?kit=` URLs
+  that break the build (2026-10-10, `fe46a84`). Headings 700, never 900.
 - Korean: `word-break: keep-all; overflow-wrap: break-word`. Japanese:
   `line-break: strict`. Body column ≈ 40em.
 - Shape: radius 14–20px; cards use a soft shadow, not borders.

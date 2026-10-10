@@ -1,24 +1,65 @@
 @import "tailwindcss";
 
 @theme {
-  /* 컨셉 컬러 */
-  --color-snow: #faf9fa;
-  --color-lavender: #c8bfc7;
-  --color-light-lavender: #f0edf0;
-  --color-sage: #7a9b76;
-  --color-dark-sage: #5a7a56;
-  --color-taupe: #8a7e72;
-  --color-charcoal: #2d2a28;
-  --color-dark-gray: #4a4643;
-  --color-mid-gray: #9e9a96;
+  /* Role tokens (spec §4). Name by role, never by color, so a dark theme stays cheap. */
+  --color-bg: #f7f4ef;
+  --color-surface: #ffffff;
+  --color-surface-sub: #fbf8f4;
+  --color-text: #2e2a27;
+  --color-text-muted: #6a625b;
+  --color-text-soft: #4a433e;
+  --color-border: #e3ddd3;
+  --color-accent-text: #b44a30;
+  --color-accent: #e9b8a6; /* dots and outlines only, never text */
+  --color-accent-tint: #f6ddd2;
+  --color-placeholder: #efe7de;
 
-  /* 폰트 — next/font CSS 변수 참조 (--next-* 는 layout.tsx에서 주입) */
-  --font-pretendard: "Pretendard Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-noto-sans-jp: "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--next-jetbrains-mono), ui-monospace, "Courier New", monospace;
+  /* Self-hosted fonts (see app/[locale]/layout.tsx). Each stack falls back to the other
+     script's font so Hangul on ja pages and kana on ko pages still render well. */
+  --font-ja: "Zen Maru Gothic", "Pretendard Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-ko: "Pretendard Variable", "Zen Maru Gothic", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Courier New", monospace;
+
+  --shadow-card: 0 2px 14px rgb(90 70 50 / 0.07);
+  --shadow-card-hover: 0 6px 24px rgb(90 70 50 / 0.12);
 }
 
-body {
-  background-color: var(--color-snow);
-  color: var(--color-dark-gray);
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  /* Korean: never break inside a word. */
+  :lang(ko) {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  /* Japanese: strict kinsoku. No keep-all — Japanese has no spaces to break at. */
+  :lang(ja) {
+    line-break: strict;
+    overflow-wrap: break-word;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-text);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
 }

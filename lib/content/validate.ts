@@ -4,6 +4,7 @@ import { LOCALES } from "@/lib/locales";
 import { CONTENT_ROOT, PUBLIC_ROOT } from "./paths";
 import { ContentError } from "./read";
 import { listProjectSlugPaths, loadProjectMeta, loadProjectText } from "./projects";
+import { splitH2 } from "./sections";
 import { loadNow, loadNowText, loadPath, loadPathText } from "./profile";
 
 const ALLOWED_MD = new Set(LOCALES.map((l) => `${l}.md`));
@@ -53,12 +54,25 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
   // ---- projects ----
   for (const slugPath of slugPaths) {
     const slug = slugPath.join("/");
+    let sectionCount: number | null = null;
     attempt(errors, () => {
       const meta = loadProjectMeta(slugPath, root);
       checkImage(errors, meta.thumbnail, `projects/${slug}/meta.yaml thumbnail`, publicRoot);
+      checkImage(errors, meta.hero, `projects/${slug}/meta.yaml hero`, publicRoot);
+      sectionCount = meta.sections.length;
     });
     for (const locale of LOCALES) {
-      attempt(errors, () => void loadProjectText(slugPath, locale, root));
+      attempt(errors, () => {
+        const { body } = loadProjectText(slugPath, locale, root);
+        const { preamble, parts } = splitH2(body);
+        const where = `projects/${slug}/${locale}.md`;
+        if (preamble) errors.push(`${where}: text before the first "## " heading would not be shown`);
+        if (sectionCount !== null && parts.length !== sectionCount) {
+          errors.push(
+            `${where}: ${parts.length} "## " headings but meta.yaml sections lists ${sectionCount}`,
+          );
+        }
+      });
     }
     const dir = path.join(root, "projects", ...slugPath);
     for (const file of fs.readdirSync(dir)) {

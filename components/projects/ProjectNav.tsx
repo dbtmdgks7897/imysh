@@ -1,53 +1,33 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import type { Locale } from "@/lib/locales";
-import { projectHref } from "@/lib/content/projects";
 
 export interface NavLink {
   href: string;
   title: string;
 }
 
-interface ProjectNavProps {
-  slugPath: string[];
-  locale: Locale;
-  prev: NavLink | null;
-  next: NavLink | null;
-}
-
-export default function ProjectNav({ slugPath, locale, prev, next }: ProjectNavProps) {
-  const t = useTranslations("projectNav");
-
-  if (slugPath.length > 1) {
-    return (
-      <nav className="mt-16 pt-8 border-t border-lavender flex">
-        <Link
-          href={projectHref(locale, slugPath.slice(0, -1))}
-          className="text-sm text-taupe hover:text-sage transition-colors"
-        >
-          {t("parentProject")}
-        </Link>
-      </nav>
-    );
-  }
-
+export default function ProjectNav({ prev, next }: { prev: NavLink | null; next: NavLink | null }) {
+  const t = useTranslations("detail");
+  if (!prev && !next) return null;
+  const card = "flex min-h-11 flex-[1_1_220px] flex-col rounded-2xl bg-surface px-5 py-4 shadow-card transition-shadow hover:shadow-card-hover";
   return (
-    <nav className="mt-16 pt-8 border-t border-lavender flex items-center justify-between">
-      <Link href={`/${locale}/`} className="text-sm text-taupe hover:text-sage transition-colors">
-        {t("allProjects")}
-      </Link>
-      <div className="flex gap-6">
-        {prev && (
-          <Link href={prev.href} className="text-sm text-taupe hover:text-sage transition-colors">
-            ← {prev.title}
-          </Link>
-        )}
-        {next && (
-          <Link href={next.href} className="text-sm text-taupe hover:text-sage transition-colors">
-            {next.title} →
-          </Link>
-        )}
-      </div>
+    <nav aria-label={t("prevNext")} className="flex flex-wrap gap-4">
+      {prev ? (
+        <Link href={prev.href} rel="prev" className={card}>
+          <span className="text-sm text-text-muted">{t("prev")}</span>
+          <b>{prev.title}</b>
+        </Link>
+      ) : (
+        <span className="hidden flex-[1_1_220px] md:block" />
+      )}
+      {next ? (
+        <Link href={next.href} rel="next" className={`${card} text-right`}>
+          <span className="text-sm text-text-muted">{t("next")}</span>
+          <b>{next.title}</b>
+        </Link>
+      ) : (
+        <span className="hidden flex-[1_1_220px] md:block" />
+      )}
     </nav>
   );
 }

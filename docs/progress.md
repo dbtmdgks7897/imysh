@@ -14,37 +14,26 @@ is cheap). The page leads with "now" (いま), then the path that formed it
 - Visual direction: **C3 · やわらかい索引** (soft index — table-structured path,
   photos per row, rounded gothic, warm neutral ground, one terracotta accent).
   Artboard in https://claude.ai/artifact/Tr3MugFgFgucQyGEor13pb.
-- **Phase 1 (Foundation) is committed on `redesign` (`26f2a4c`, pushed) and the
-  Cloudflare preview works**: `/` 302 → `/ja`, `/en/projects/kigaru` 301 →
-  `/ja/projects/kigaru`, tables render, canonical/hreflang/OG present
-  (verified from the command post). Plan: [`docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`](superpowers/plans/2026-10-10-imysh-phase1-foundation.md).
-- **CI failed on that push, fixed locally in `fe46a84` (not pushed yet).** Root
-  cause: Google Fonts served the GitHub runner Noto Sans JP as
-  `/l/font?kit=…&skey=…&v=v57` URLs (local and Cloudflare get `/s/…`), and
-  `next/font/google` cannot resolve that form ("queries have exactly one
-  entry", 372 errors). Reproduced locally by mocking the `/l/` response via
-  `NEXT_FONT_GOOGLE_MOCKED_RESPONSES`; it fails on Next 16.1.6, 16.1.7,
-  16.2.12, 16.4.0, 16.5.0-canary.7 and with `--webpack`, so upgrading does not
-  help. Fix: Noto Sans JP now comes from `@fontsource/noto-sans-jp` (same
-  family and unicode-range slices, 400/500/700); the build no longer fetches
-  it. With the fix, the mocked `/l/` build passes, and so do the normal build
-  (Node 25 and Node 22), lint, typecheck and content check. Cost: 751 font files / 20 MB in `out/_next/static/media`
-  (browsers fetch only the slices they need).
-  Every plan verification passed locally: content check (positive and the
-  deliberately broken copies), lint, `typecheck` (`next typegen` + tsc), a clean
-  `npm ci` → build run, and the `out/` greps. The build now emits 9 pages
-  (`/ja`, `/ko`, 3 project slugs × 2, `/_not-found`); no `/` and no `/en`.
-  What changed: `ja` default + `ko`, `en` removed; `public/_redirects`
-  (`/` → `/ja` 302, `/en*` → `/ja*` 301); one zod-validated content model
-  (`content/projects/<slug>/meta.yaml` + `{ja,ko}.md`, `lib/content/`,
-  `npm run check:content`, also run at build time); placeholder
-  `content/now.*.yaml` / `content/path.*.yaml` (validated, not rendered);
-  remark + remark-gfm instead of next-mdx-remote (kigaru tables render);
-  per-page title / description / canonical / absolute hreflang / OG; GitHub
-  Actions CI (`.github/workflows/ci.yml`); the in-repo skill and `CLAUDE.md`
-  rewritten. Rendered className sets are identical to the live site apart
-  from the removed Inter font variable.
-- **Detail-page template B decided** (Phase 2 builds it): big hero image, left
+- **Phase 2 (Visual, C3) is implemented on `redesign`, uncommitted** (plan:
+  [`docs/superpowers/plans/2026-10-10-imysh-phase2-visual.md`](superpowers/plans/2026-10-10-imysh-phase2-visual.md);
+  base `b53d606`). Role tokens from spec §4 replace the palette tokens; Zen
+  Maru Gothic (ja), Pretendard (ko) and JetBrains Mono are self-hosted from
+  npm (no `next/font/google`, no jsdelivr, Noto Sans JP removed). The hub is
+  now "01 いま" + "02 ここまで" rendered from `content/now.*` / `content/path.*`
+  (the old Hero + Projects grid is gone). Detail pages use template B: hero
+  card with back links, info card (period, status, stack, links), mini
+  timeline of neighbouring path nodes, 01 なぜ始めたか / 02 何をつくったか /
+  tech in `<details>` / 03 ここで考えたこと (opens with the path node's
+  thought), back-to-row link, prev/next cards in path order. Markdown is
+  mapped into sections by a positional `sections:` list in `meta.yaml`; no
+  project words changed. Verified: lint, typecheck, check:content, build;
+  Playwright on a local static server, ja/ko × 1440/375 — no horizontal
+  overflow, no interactive target under 44px, focus ring in `accent-text`,
+  the self-hosted fonts load. Screenshots: `docs/screenshots/phase2/`.
+- Phase 1 (Foundation) is committed and pushed (`26f2a4c`, CI font fix
+  `fe46a84`, progress `b53d606`); CI is green and the preview at
+  <https://redesign.imysh.pages.dev> works.
+- **Detail-page template B** (built in Phase 2): big hero image, left
   info card (period, role, stack, mini timeline of neighbouring path nodes),
   right column 01 why / 02 what / 03 what I thought, tech details in
   `<details>`, prev/next at the bottom. Recorded in spec §3.
@@ -95,7 +84,7 @@ split: code by a subagent in this repo; copy, photos, everyai screenshots and
 publication-scope calls by the user. Numbers in brackets refer to the audit
 items below.
 
-### Phase 1 — Foundation (committed `26f2a4c`; CI fix `fe46a84` awaiting push)
+### Phase 1 — Foundation (done: `26f2a4c`, `fe46a84`, pushed, CI green)
 
 Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
 
@@ -116,27 +105,26 @@ Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
   checks (302/301, tables, canonical/hreflang/OG).
 - [x] Fix the CI build failure (Google `/l/font` URLs vs `next/font/google`):
   self-host Noto Sans JP via `@fontsource/noto-sans-jp` (`fe46a84`, local).
-- [ ] Push `fe46a84` and confirm CI is green (`gh run list --branch redesign`).
+- [x] Push `fe46a84` and confirm CI is green.
 - [ ] Check the Cloudflare Pages build Node version (Settings → Builds) against
   CI's Node 22.
 
-### Phase 2 — Visual (C3)
+### Phase 2 — Visual (C3) (implemented, uncommitted — awaiting review)
 
-- [ ] Role tokens from spec §4 replace palette tokens [5, 17].
-- [ ] "01 いま" section and "02 ここまで" path table with sub-rows.
-- [ ] Detail page template B (spec §3): hero image, left info card with mini
-  path timeline, right column 01 why / 02 what / 03 what I thought, tech
-  details in `<details>`, prev/next at the bottom.
-- [ ] Typography: Zen Maru Gothic (ja) and Pretendard (ko), **self-hosted**
-  (`@fontsource/zen-maru-gothic` or `next/font/local`), not `next/font/google`:
-  Google can serve CJK fonts as `/l/font?kit=` URLs that break the build (see
-  `fe46a84`). Spec §4 says "via `next/font`"; read it as self-hosted.
-  Same for JetBrains Mono if it ever fails the same way;
-  `word-break: keep-all` for Korean, `line-break: strict` for Japanese; body
-  column ≈40em [9, 15].
-- [ ] A11y floor: text ≥4.5:1, touch targets ≥44px on mobile, `focus-visible`
-  ring, `prefers-reduced-motion`, card hover shadow only [16, 19, 21].
-- [ ] ProjectNav arrow direction; remaining structural cleanups [14, 18].
+- [x] Role tokens from spec §4 replace palette tokens [5, 17].
+- [x] "01 いま" section and "02 ここまで" path table with sub-rows.
+- [x] Detail page template B with sections 01 なぜ始めたか / 02 何をつくったか /
+  03 ここで考えたこと, tech in `<details>`, back to the path row, prev/next.
+- [x] Typography: Zen Maru Gothic (ja) + Pretendard (ko), self-hosted; Korean
+  keep-all, Japanese strict; prose column ≈40em [9, 15].
+- [x] A11y floor: text ≥4.5:1, targets ≥44px, `focus-visible` ring,
+  reduced motion, hover shadow only [16, 19, 21]; ProjectNav replaced [14].
+- [ ] Review, commit and push from the command post; check the preview at
+  375px on a real phone (Phase 4 covers devices formally).
+- [ ] Hero images, path photos, portrait and card images are empty until
+  Phase 3 provides them (no placeholders are drawn).
+- [ ] "Role" row in the info card (artboard B) needs a `role` frontmatter key
+  with real copy — Phase 3.
 
 ### Phase 3 — Content
 
@@ -411,6 +399,7 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **Implemented Phase 2 (C3 visual) on `redesign`, uncommitted.** Role tokens, self-hosted Zen Maru Gothic / Pretendard / JetBrains Mono, hub rebuilt as 01 いま + 02 ここまで from the now/path content, detail pages in template B with md mapped into 01/02/tech/03 by a positional `sections:` list in meta.yaml (words unchanged), mini timeline, back-to-row and path-ordered prev/next. Lint, typecheck, content check and build pass; Playwright at ja/ko × 1440/375 found no overflow and no target under 44px. Screenshots in `docs/screenshots/phase2/`.
 - 2026-10-10: **Fixed the CI build failure on `redesign` (`fe46a84`, committed locally, not pushed).** CI run 38026469640 failed with 372 Turbopack errors because Google Fonts served the runner Noto Sans JP as `/l/font?kit=…&skey=…` URLs, which `next/font/google` cannot resolve. Reproduced locally with a mocked `/l/` response, which also fails on every newer Next (16.1.7 to 16.5 canary) and with `--webpack`. Fixed by loading Noto Sans JP from `@fontsource/noto-sans-jp` (same font, same slices), so the build no longer fetches it. Mocked `/l/` build, normal build (Node 25 and 22), lint, typecheck and content check all pass. Phase 2 note: self-host Zen Maru Gothic too.
 - 2026-10-10: **Implemented Phase 1 (Foundation) on local branch `redesign`, uncommitted and unpushed.** ja default + ko (en removed, `_redirects` for `/` and `/en*`), one zod-validated content model with `npm run check:content` and build-time validation, placeholder now/path content, remark + remark-gfm (kigaru tables now render), per-page canonical / absolute hreflang / OG metadata, GitHub Actions CI, rewritten skill and CLAUDE.md. All plan verifications passed locally; the md migration was proven verbatim (diff contains only removed structural frontmatter keys). One small change from the plan: `loadProjectText` was split out of `loadProject` so a missing meta.yaml no longer hides frontmatter errors (plan updated to match). Recorded detail template B in spec §3. Preview-URL checks wait for push approval.
 - 2026-10-10: **Wrote the Phase 1 (Foundation) implementation plan** for the approved redesign (purpose changed to a "who I am" site for people in Japan, maker identity, ja default + ko, en dropped, visual C3): `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`, 8 tasks with exact code, migration commands and output greps. Facts checked against the code and a scratch install, not the spec: no next-intl routing config exists (default locale is a fallback in `lib/i18n.ts` + the client redirect in `app/page.tsx`); CI typecheck needs `next typegen` first; spec path rows reference four slugs that do not exist yet; images are all remote R2; live `/en/*` URLs need 301s. The proposed zod schemas were parsed against the placeholder YAML, and the remark/hast renderer typing compiled under strict. Rewrote this file's status and replaced the old ordering in `## Next` with the spec's four phases, audit items renumbered 1–24 with phase tags (adds the touch-target item). No product code changed; branch `redesign` not created.

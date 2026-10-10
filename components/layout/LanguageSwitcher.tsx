@@ -1,39 +1,41 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { DEFAULT_LOCALE, LOCALES } from "@/lib/locales";
+import { DEFAULT_LOCALE, LOCALES, type Locale } from "@/lib/locales";
 
-const LABELS: Record<(typeof LOCALES)[number], string> = { ja: "JA", ko: "KO" };
+const LABELS: Record<Locale, string> = { ja: "JA", ko: "KO" };
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ label }: { label: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const currentLocale = pathname.split("/")[1] || DEFAULT_LOCALE;
 
-  function switchLocale(newLocale: string) {
+  function switchLocale(newLocale: Locale) {
     const segments = pathname.split("/");
     segments[1] = newLocale;
     router.push(segments.join("/"));
   }
 
   return (
-    <div className="flex items-center gap-1 text-sm font-mono">
-      {LOCALES.map((code, i) => (
-        <span key={code} className="flex items-center gap-1">
-          {i > 0 && <span className="text-mid-gray select-none">|</span>}
+    <div role="group" aria-label={label} className="flex items-center">
+      {LOCALES.map((code) => {
+        const active = code === currentLocale;
+        return (
           <button
+            key={code}
+            type="button"
             onClick={() => switchLocale(code)}
-            className={
-              code === currentLocale
-                ? "text-sage font-semibold"
-                : "text-taupe hover:text-charcoal transition-colors"
-            }
-            aria-pressed={code === currentLocale}
+            aria-pressed={active}
+            className={`flex min-h-11 min-w-11 items-center justify-center rounded-full px-2 transition-colors ${
+              active
+                ? "font-bold text-text underline decoration-accent decoration-2 underline-offset-4"
+                : "text-text-muted hover:text-accent-text"
+            }`}
           >
             {LABELS[code]}
           </button>
-        </span>
-      ))}
+        );
+      })}
     </div>
   );
 }
