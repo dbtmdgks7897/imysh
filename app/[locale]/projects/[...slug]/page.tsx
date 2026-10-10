@@ -1,22 +1,41 @@
-import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { LOCALES, assertLocale } from "@/lib/locales";
 import {
-  getAllProjectSlugs,
-  getProjectContent,
-  getSubProjects,
-} from "@/lib/markdown";
+  listChildProjects,
+  listProjectSlugPaths,
+  listTopLevelProjects,
+  loadProject,
+  projectHref,
+  type Project,
+} from "@/lib/content/projects";
 import ProjectHeader from "@/components/projects/ProjectHeader";
 import ProjectContent from "@/components/projects/ProjectContent";
 import SubProjectList from "@/components/projects/SubProjectList";
-import ProjectNav from "@/components/projects/ProjectNav";
+import ProjectNav, { type NavLink } from "@/components/projects/ProjectNav";
+import { pageMetadata } from "@/lib/seo";
+import { SITE_NAME } from "@/lib/site";
 
-const LOCALES = ["ko", "ja", "en"];
+export function generateStaticParams() {
+  const slugs = listProjectSlugPaths();
+  return LOCALES.flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
+}
 
-export async function generateStaticParams() {
-  const slugs = getAllProjectSlugs();
-  return LOCALES.flatMap((locale) =>
-    slugs.map((slug) => ({ locale, slug }))
-  );
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string[] }>;
+}): Promise<Metadata> {
+  const { locale: rawLocale, slug } = await params;
+  const locale = assertLocale(rawLocale);
+  const project = loadProject(slug, locale);
+  return pageMetadata({
+    locale,
+    subpath: `/projects/${slug.join("/")}`,
+    title: `${project.title} | ${SITE_NAME}`,
+    description: project.summary,
+    type: "article",
+  });
 }
 
 export default async function ProjectDetailPage({
@@ -24,34 +43,33 @@ export default async function ProjectDetailPage({
 }: {
   params: Promise<{ locale: string; slug: string[] }>;
 }) {
-  const { locale, slug } = await params;
+  const { locale: rawLocale, slug } = await params;
+  const locale = assertLocale(rawLocale);
   setRequestLocale(locale);
 
-  const content = await getProjectContent(slug, locale);
-  if (!content) notFound();
+  const project = loadProject(slug, locale);
+  const children = listChildProjects(slug, locale);
+  const parent = slug.length > 1 ? loadProject(slug.slice(0, -1), locale) : null;
 
-  const subProjects = await getSubProjects(slug, locale);
-
-  const parentTitle =
-    slug.length > 1
-      ? (await getProjectContent(slug.slice(0, -1), locale))?.frontmatter.title
-      : undefined;
+  // Prev/next only between top-level projects, in meta.yaml `order`.
+  const siblings = slug.length === 1 ? listTopLevelProjects(locale) : [];
+  const index = siblings.findIndex((p) => p.slugPath[0] === slug[0]);
+  const toLink = (p: Project | undefined): NavLink | null =>
+    p ? { href: projectHref(locale, p.slugPath), title: p.title } : null;
 
   return (
     <div className="mx-auto max-w-[960px] px-6 py-12">
-      <ProjectHeader
-        frontmatter={content.frontmatter}
+      <ProjectHeader project={project} locale={locale} parentTitle={parent?.title} />
+      <div className="mt-8">
+        <ProjectContent source={project.body} />
+      </div>
+      {children.length > 0 && <SubProjectList projects={children} locale={locale} />}
+      <ProjectNav
         slugPath={slug}
         locale={locale}
-        parentTitle={parentTitle}
+        prev={index > 0 ? toLink(siblings[index - 1]) : null}
+        next={index >= 0 ? toLink(siblings[index + 1]) : null}
       />
-      <div className="mt-8">
-        <ProjectContent source={content.source} />
-      </div>
-      {subProjects.length > 0 && (
-        <SubProjectList subProjects={subProjects} locale={locale} />
-      )}
-      <ProjectNav slugPath={slug} locale={locale} />
     </div>
   );
 }

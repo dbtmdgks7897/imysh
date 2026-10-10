@@ -1,11 +1,6 @@
 ---
 title: "kigaru"
 summary: "AIベースの運勢・観相サービスプラットフォーム"
-stack: ["Next.js", "FastAPI", "React", "Tailwind CSS", "Gemini Flash"]
-status: "in-progress"
-period: "2026.03~"
-githubUrl: "https://github.com/dbtmdgks7897"
-order: 1
 ---
 
 ## 背景 — WHY

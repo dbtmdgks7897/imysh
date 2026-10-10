@@ -1,10 +1,6 @@
 ---
 title: "관상이 어떠냐이"
 summary: "AI 관상 진단 서비스 — kigaru 플랫폼의 첫 번째 콘텐츠"
-stack: ["React", "Gemini Flash", "Tailwind CSS"]
-status: "in-progress"
-period: "2026.03~"
-order: 1
 ---
 
 ## 배경 — WHY

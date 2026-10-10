@@ -1,59 +1,53 @@
 import Link from "next/link";
 import { ExternalLink, Github } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { ProjectFrontmatter } from "@/lib/markdown";
+import type { Locale } from "@/lib/locales";
+import { projectHref, type Project } from "@/lib/content/projects";
 import TechTag from "@/components/ui/TechTag";
 import StatusBadge from "@/components/ui/StatusBadge";
 
 interface ProjectHeaderProps {
-  frontmatter: ProjectFrontmatter;
-  slugPath: string[];
-  locale: string;
+  project: Project;
+  locale: Locale;
   parentTitle?: string;
 }
 
-export default function ProjectHeader({
-  frontmatter,
-  slugPath,
-  locale,
-  parentTitle,
-}: ProjectHeaderProps) {
+export default function ProjectHeader({ project, locale, parentTitle }: ProjectHeaderProps) {
   const t = useTranslations("projectHeader");
-  const isSubProject = slugPath.length > 1;
+  const { slugPath, meta } = project;
   const parentSlug = slugPath.slice(0, -1);
+  const { live, github } = meta.links;
 
   return (
     <header className="pb-6 border-b border-lavender">
-      {isSubProject && (
+      {parentSlug.length > 0 && (
         <div className="mb-4">
           <Link
-            href={`/${locale}/projects/${parentSlug.join("/")}`}
+            href={projectHref(locale, parentSlug)}
             className="text-sm text-taupe hover:text-sage transition-colors flex items-center gap-1"
           >
             ← {parentTitle ?? parentSlug[parentSlug.length - 1]}
           </Link>
         </div>
       )}
-      <h1 className="text-3xl md:text-4xl font-bold text-charcoal">
-        {frontmatter.title}
-      </h1>
-      <p className="mt-2 text-lg text-taupe">{frontmatter.summary}</p>
+      <h1 className="text-3xl md:text-4xl font-bold text-charcoal">{project.title}</h1>
+      <p className="mt-2 text-lg text-taupe">{project.summary}</p>
       <div className="mt-4 space-y-2">
         <div className="flex flex-wrap items-center gap-3">
-          <StatusBadge status={frontmatter.status} />
-          <span className="text-sm text-mid-gray">{frontmatter.period}</span>
+          <StatusBadge status={meta.status} />
+          <span className="text-sm text-mid-gray">{meta.period}</span>
         </div>
         <div className="flex flex-wrap gap-1">
-          {frontmatter.stack.map((tech) => (
+          {meta.stack.map((tech) => (
             <TechTag key={tech} label={tech} />
           ))}
         </div>
       </div>
-      {(frontmatter.liveUrl || frontmatter.githubUrl) && (
+      {(live || github) && (
         <div className="mt-4 flex items-center gap-3">
-          {frontmatter.liveUrl && (
+          {live && (
             <a
-              href={frontmatter.liveUrl}
+              href={live}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm text-sage hover:text-dark-sage transition-colors"
@@ -62,9 +56,9 @@ export default function ProjectHeader({
               {t("live")}
             </a>
           )}
-          {frontmatter.githubUrl && (
+          {github && (
             <a
-              href={frontmatter.githubUrl}
+              href={github}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm text-taupe hover:text-charcoal transition-colors"

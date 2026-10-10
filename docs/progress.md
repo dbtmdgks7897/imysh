@@ -2,98 +2,178 @@
 
 ## Where things stand (2026-10-10)
 
-Portfolio website (personal branding + tech showcase), Next.js 16 App Router
-with Static Export, 3 locales (KO/JA/EN). **Live and serving today** at
-<https://imysh.pages.dev> via Cloudflare Pages (auto-deploy from
-`github.com/dbtmdgks7897/imysh`, branch `main`). Product code has not been
-touched since 2026-03-09; the deployment has stayed up by itself.
+**The site's purpose changed, and a redesign is approved.** imysh is no longer
+a recruiter portfolio. It is a site that says **what kind of person I am**, for
+people in **Japan** who meet me (e.g. the Japanese study group I lead). The
+identity is **a maker**, not a job title. Locales become **`ja` (default) +
+`ko`**; `en` is dropped (no current audience; next-intl stays, so re-adding it
+is cheap). The page leads with "now" (いま), then the path that formed it
+(ここまで), with projects as evidence.
 
-A full design + structure audit was run on 2026-10-10 (no product code
-changed). Verdict: **the foundation is worth building on** — it builds,
-type-checks and lints clean, the routing scales, and the 8px spacing rhythm
-and 960px container are applied consistently. But the live site is not in a
-state to put in front of a recruiter today, because of six specific defects
-listed under `## Next` → "Blocks reactivation". All six are localized fixes;
-only one (the two-source data model) is architectural.
+- Design spec (approved): [`docs/superpowers/specs/2026-10-10-imysh-redesign-design.md`](superpowers/specs/2026-10-10-imysh-redesign-design.md)
+- Visual direction: **C3 · やわらかい索引** (soft index — table-structured path,
+  photos per row, rounded gothic, warm neutral ground, one terracotta accent).
+  Artboard in https://claude.ai/artifact/Tr3MugFgFgucQyGEor13pb.
+- **Phase 1 (Foundation) is implemented on local branch `redesign`, uncommitted
+  and unpushed** (plan: [`docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`](superpowers/plans/2026-10-10-imysh-phase1-foundation.md)).
+  Every plan verification passed locally: content check (positive and the
+  deliberately broken copies), lint, `typecheck` (`next typegen` + tsc), a clean
+  `npm ci` → build run, and the `out/` greps. The build now emits 9 pages
+  (`/ja`, `/ko`, 3 project slugs × 2, `/_not-found`); no `/` and no `/en`.
+  What changed: `ja` default + `ko`, `en` removed; `public/_redirects`
+  (`/` → `/ja` 302, `/en*` → `/ja*` 301); one zod-validated content model
+  (`content/projects/<slug>/meta.yaml` + `{ja,ko}.md`, `lib/content/`,
+  `npm run check:content`, also run at build time); placeholder
+  `content/now.*.yaml` / `content/path.*.yaml` (validated, not rendered);
+  remark + remark-gfm instead of next-mdx-remote (kigaru tables render);
+  per-page title / description / canonical / absolute hreflang / OG; GitHub
+  Actions CI (`.github/workflows/ci.yml`); the in-repo skill and `CLAUDE.md`
+  rewritten. Rendered className sets are identical to the live site apart
+  from the removed Inter font variable.
+- **Detail-page template B decided** (Phase 2 builds it): big hero image, left
+  info card (period, role, stack, mini timeline of neighbouring path nodes),
+  right column 01 why / 02 what / 03 what I thought, tech details in
+  `<details>`, prev/next at the bottom. Recorded in spec §3.
 
-Verified on 2026-10-10:
+The live site is unchanged: <https://imysh.pages.dev>, auto-deployed from
+`github.com/dbtmdgks7897/imysh` `main`. Local `main` is 1 commit ahead of
+`origin/main` (the audit commit `52b8859`, unpushed). Push is not approved
+yet, so the Cloudflare preview checks (`_redirects` 302/301 behaviour, CI run)
+have not happened, and the Cloudflare Pages Node version is unchecked (CI pins 22).
 
-- `npm run build` succeeds (Next.js 16.1.6, Turbopack): 16 static pages —
-  `/`, `/_not-found`, `/{ko,ja,en}`, and 9 detail routes (3 slugs × 3 locales).
-- `npm run lint` (eslint) clean, no output.
-- `git status` clean, `main` in sync with `origin/main`, 13 commits total.
-- Live routes all return 200: `/`, `/ko`, `/ja`, `/en`,
-  `/ko/projects/kigaru`, `/ko/projects/kigaru/kaouranai`,
-  `/ko/projects/everyai`, `/ja/projects/everyai`, `/en/projects/kigaru`.
-- Live HTML contains `figcaption` markup and the R2 GIF URLs added in the
-  final commit `0f6226a`, so the deploy is current with the last commit.
+Verified against the code while planning (these correct the spec; full list
+in the plan's "Where the spec disagrees with the code"):
 
-All six planned milestones (M0–M5) in `prompt_plan.md` were completed. The
-site is functionally finished for MVP scope; what is thin is **content**.
+- There is no next-intl routing config or middleware. "Default locale" is only
+  the `?? "ko"` fallback in `lib/i18n.ts` and the client redirect in
+  `app/page.tsx`; the locale list is hard-coded in four files.
+- `tsc -p tsconfig.json --noEmit` needs `next typegen` first on a fresh CI
+  checkout (tsconfig includes `.next/types`).
+- The spec's path rows reference slugs that do not exist yet
+  (my-asset-manager, kigaru/jihanki, imysh, second-brain), so Phase 1
+  placeholders link only everyai and kigaru/kaouranai.
+- All images are still remote R2 URLs; "every referenced image exists" can only
+  be enforced for local `/images/...` paths until Phase 3.
+- `/en/*` URLs are live; the plan adds 301s to `/ja/*` in `public/_redirects`.
+- The Noto Sans JP `subsets: ["latin"]` diagnosis is unverified (`subsets`
+  controls preloading); moot once Phase 2 switches ja to Zen Maru Gothic.
 
-### Content state
+### Content state (text unchanged; en files deleted, structure moved to meta.yaml)
 
 | Project | Content | Notes |
 |---|---|---|
-| `kigaru` (order 1) | 48-line ko.md + ja/en | Thin: no screenshots, no `liveUrl`, `githubUrl` points at the GitHub profile root, not a repo. Status `in-progress`. No thumbnail → initial-letter fallback card. |
-| `kigaru/kaouranai` (sub) | 24-line ko.md + ja/en | Thinnest page. No images, no links. |
-| `everyai` (order 2) | 94-line ko.md + ja/en | The one complete case study: background / results / technical decisions / retrospective, 12 R2-hosted GIF screenshots, thumbnail from R2. Status `deployed`. |
+| `kigaru` (order 1) | 48-line ko.md + ja.md | Thin. No screenshots, no live URL, `links.github` is the profile root. Tables now render (on `redesign`). |
+| `kigaru/kaouranai` (sub) | 24-line ko.md + ja.md | Thinnest page. No images, no links. |
+| `everyai` (order 2) | 94-line ko.md + ja.md | The one complete case study; 12 watermarked R2 GIFs (3.1 MB). |
 
-`spec.md` planned "3 projects (kigaru platform + 2 existing)". Only one of
-the two existing projects (everyai) was migrated. The two placeholder
-entries added in M5 were deleted in `2311d4b`, so the hub currently shows
-two cards.
+### Known gaps (unchanged)
 
-### Known gaps / rough edges
-
-- `public/images/projects/` holds only `.gitkeep`. Every image on the site
-  is an external Cloudflare R2 URL
-  (`pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev`). If that bucket goes away
-  the everyai page loses all its screenshots.
-- No `liveUrl` on any project, so the "라이브" button in `ProjectHeader`
-  never renders.
-- No tests of any kind (no test runner, no CI config in the repo).
-- `spec.md` §8 items 5–8 still open: dark mode, OG images, image
-  optimization under Static Export.
-- Root `/` redirect is client-side JS only (`app/page.tsx`); crawlers
-  landing on `/` see an empty page.
-- No `README.md` (removed in M0).
-- No environment variables are used anywhere — no `process.env` reference in
-  the codebase, no `.env*` file. Nothing to provision to run it.
+- Every image is an external Cloudflare R2 URL; `public/images/projects/` holds
+  only `.gitkeep`. The spec decides to commit images to the repo (Phase 3).
+- No test runner (explicitly not planned, spec §2.11). CI exists on `redesign`
+  but has never run (not pushed).
+- No `README.md`. No environment variables anywhere.
 
 ## Next
 
-### Blocks reactivation — fix before showing the site to anyone
+Four phases (spec §7). Work happens on branch `redesign`; Cloudflare Pages
+preview URLs are used for review; `main` is merged once, after Phase 3. Owner
+split: code by a subagent in this repo; copy, photos, everyai screenshots and
+publication-scope calls by the user. Numbers in brackets refer to the audit
+items below.
 
-1. **Hub cards render Korean on `/ja` and `/en`.** `lib/projects.ts:19-37`
+### Phase 1 — Foundation (implemented locally on `redesign`, uncommitted)
+
+Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
+
+- [x] Create branch `redesign` from local `main`.
+- [x] Drop `en`, make `ja` the default, `public/_redirects` for `/` → `/ja`
+  (302) and `/en*` → `/ja*` (301) [2].
+- [x] One validated content model: `content/projects/<slug>/meta.yaml` +
+  `{ja,ko}.md`, zod schemas, `npm run check:content`, validation at build
+  time; delete `PROJECTS` and `lib/markdown.ts` [1, 10, 11, 12, 18 partly].
+- [x] Placeholder `content/now.*.yaml` / `content/path.*.yaml` (C3 draft
+  Japanese copy; Korean marked as draft), validated but not rendered.
+- [x] remark + remark-gfm instead of next-mdx-remote [7].
+- [x] `generateMetadata`: title, description, canonical, absolute hreflang, OG [3].
+- [x] GitHub Actions CI: lint, typecheck, content check, build [12].
+- [x] Rewrite `.claude/skills/portfolio-page-generator/SKILL.md` and
+  `CLAUDE.md` for the new model [13].
+- [ ] Review the uncommitted changes and commit on `redesign` (command post).
+- [ ] Push `redesign` (needs approval), then on the Cloudflare preview: `/`
+  returns 302 → `/ja`, `/en/projects/kigaru` returns 301 → `/ja/projects/kigaru`,
+  kigaru tables render; CI run is green (`gh run list --branch redesign`).
+- [ ] Check the Cloudflare Pages build Node version (Settings → Builds) against
+  CI's Node 22.
+
+### Phase 2 — Visual (C3)
+
+- [ ] Role tokens from spec §4 replace palette tokens [5, 17].
+- [ ] "01 いま" section and "02 ここまで" path table with sub-rows.
+- [ ] Detail page template B (spec §3): hero image, left info card with mini
+  path timeline, right column 01 why / 02 what / 03 what I thought, tech
+  details in `<details>`, prev/next at the bottom.
+- [ ] Typography: Zen Maru Gothic (ja) and Pretendard (ko) via `next/font`;
+  `word-break: keep-all` for Korean, `line-break: strict` for Japanese; body
+  column ≈40em [9, 15].
+- [ ] A11y floor: text ≥4.5:1, touch targets ≥44px on mobile, `focus-visible`
+  ring, `prefers-reduced-motion`, card hover shadow only [16, 19, 21].
+- [ ] ProjectNav arrow direction; remaining structural cleanups [14, 18].
+
+### Phase 3 — Content
+
+- [ ] Korean drafts from the vault → user review → Japanese translation → user review.
+- [ ] New pages: my-asset-manager, kigaru/jihanki, second-brain, imysh [22].
+- [ ] Rewrite everyai with 3–4 static screenshots replacing the GIFs [4, 8];
+  fill kigaru and kaouranai [6, 23].
+- [ ] Commit images under `public/images/`, `npm run images` (sharp, two webp
+  widths), `width`/`height` + `loading="lazy"` [24].
+- [ ] README [20].
+- [ ] Open items (spec §8): jihanki slug, which photos exist, public scope
+  (study venue/city, employer names, talking-bar wording), the two inferred
+  hand-off lines, My Asset Manager facts marked 추정.
+
+### Phase 4 — Pre-launch
+
+- [ ] Real phone, OG previews, Lighthouse; then merge `redesign` into `main`.
+
+### Audit items (reference, 2026-10-10)
+
+The audit findings that the phases above resolve, renumbered 1–24 in one
+sequence. The phase each one belongs to is in brackets.
+
+
+#### Blocks reactivation — fix before showing the site to anyone
+
+1. [Phase 1] **Hub cards render Korean on `/ja` and `/en`.** `lib/projects.ts:19-37`
    stores `title`/`summary` as single Korean strings, and
    `components/home/ProjectsSection.tsx:17` feeds them to every locale.
    Verified live: `/en` shows English badges and headings next to Korean card
    summaries. Fix by deriving cards from the per-locale frontmatter
    (`getAllProjectSlugs` + `getProjectContent` already exist) instead of the
    hand-maintained array.
-2. **`/` emits a document with no `<html>`, no `<title>` and no content.**
+2. [Phase 1] **`/` emits a document with no `<html>`, no `<title>` and no content.**
    `app/layout.tsx:6` returns `children` bare, so the client-only redirect in
    `app/page.tsx` has no shell. `out/index.html` is 5.5 KB of script tags.
    Crawlers and link previews of the canonical URL see nothing. Fix with a
    real rendered page at `/` or a Cloudflare Pages `_redirects` entry.
-3. **Every page is titled `imysh`; no OG, Twitter or canonical tags.**
+3. [Phase 1] **Every page is titled `imysh`; no OG, Twitter or canonical tags.**
    `app/[locale]/layout.tsx:34-42` sets one static title and no
    `metadataBase`, and the detail route defines no `generateMetadata`.
    Verified: `out/ko/projects/everyai.html` → `<title>imysh</title>`. The
    emitted `hreflang` hrefs are relative (`/ko/`), which is invalid.
-4. **The everyai page ships 3.1 MB of GIFs.** 12 R2 images, 140-361 KB each,
+4. [Phase 3] **The everyai page ships 3.1 MB of GIFs.** 12 R2 images, 140-361 KB each,
    with no `loading="lazy"`, no width/height and no `Cache-Control` on the
    bucket (ETag only). `components/projects/ProjectContent.tsx:52-66`.
-5. **Two color tokens fail WCAG AA badly where they carry meaning.** Measured:
+5. [Phase 2] **Two color tokens fail WCAG AA badly where they carry meaning.** Measured:
    `sage #7a9b76` on `snow` = 2.95:1 (used for the "Live" link and the active
    locale) and `mid-gray #9e9a96` on `snow` = 2.66:1 (card period, figcaption).
    `dark-sage #5a7a56` measures 4.59:1 — use it for sage-colored *text* and
    keep sage for fills and borders.
-6. **Two of the three project pages are near-empty** (kigaru 48 lines,
+6. [Phase 3] **Two of the three project pages are near-empty** (kigaru 48 lines,
    kaouranai 24 lines, no images, no `liveUrl`). Carried over from the
    2026-10-10 repo scan.
-7. **The kigaru detail page prints raw markdown table syntax.** Confirmed on
+7. [Phase 1] **The kigaru detail page prints raw markdown table syntax.** Confirmed on
    the live site under "결과물 — WHAT": `| 기능 | 설명 |` and the separator row
    render as text. Cause confirmed in code: `ProjectContent.tsx:1,89` uses
    `MDXRemote` from `next-mdx-remote/rsc` with **no remark plugins and no
@@ -101,81 +181,87 @@ two cards.
    GFM tables. It is the first card on the hub, so this reads as a bug, not as
    unfinished content. Fix by passing `remarkGfm` through `mdxOptions`, or by
    dropping MDX for plain remark (content uses no MDX features).
-8. **Every everyai GIF carries a screen-recorder watermark, and two show the
+8. [Phase 3] **Every everyai GIF carries a screen-recorder watermark, and two show the
    devtools panel.** "Bandisoft.com" is burned into the top-left of all 12,
    and the login / social-login clips include an open Chrome devtools pane.
    They are 1920px recordings scaled down, so at phone width (327x184) the
    text inside them is unreadable. This is the one finished case study, shown
    to recruiters — it undercuts the work it is meant to show. Not visible from
    the code; found by looking at the rendered page.
-9. **Korean breaks mid-word.** Observed on the hub cards and in detail body
+9. [Phase 2] **Korean breaks mid-word.** Observed on the hub cards and in detail body
    text at both 1440 and 375 ("있/는", "플랫/폼", "로/그인"), worst at phone
    width. Cause confirmed: no `word-break`, `break-keep`, `word-wrap` or
    `overflow-wrap` anywhere in `app/` or `components/`. Korean needs
    `word-break: keep-all` (plus `overflow-wrap: break-word` for long tokens);
    the default breaks CJK at any character.
 
-### Worth doing while reopening
+#### Worth doing while reopening
 
-7. **Collapse the two-source data model.** `lib/projects.ts` PROJECTS and
+10. [Phase 1] **Collapse the two-source data model.** `lib/projects.ts` PROJECTS and
    `content/projects/<slug>/<locale>.md` frontmatter duplicate all nine
    fields, and they have already drifted: PROJECTS `title: "EveryAI"` vs
    frontmatter `"EveryAI - AI 작품·서비스 거래 플랫폼"`. Nothing validates that
    the two agree. This also fixes item 1 for free.
-8. **Validate frontmatter instead of asserting it.** `lib/markdown.ts:36,41`
+11. [Phase 1] **Validate frontmatter instead of asserting it.** `lib/markdown.ts:36,41`
    do `data as ProjectFrontmatter` on gray-matter's `any`, and
    `components/projects/SubProjectList.tsx:26` casts `status as ProjectStatus`.
    A typo in `status:` ships a badge with an undefined class. `strict` is on
    but buys nothing here.
-9. **Add build-time invariants plus CI** (there are no tests at all): every
+12. [Phase 1] **Add build-time invariants plus CI** (there are no tests at all): every
    PROJECTS slug has content in 3 locales, every frontmatter parses, no
    missing locale file. `getProjectContent` currently falls back to `ko.md`
    silently, so a missing `en.md` renders Korean inside `<html lang="en">`.
-10. **Fix the `portfolio-page-generator` skill.** Its verification step,
+13. [Phase 1] **Fix the `portfolio-page-generator` skill.** Its verification step,
     `npx tsc --noEmit lib/projects.ts`, ignores tsconfig and reports four
     spurious `TS2503` errors on a healthy repo (the correct
     `npx tsc --noEmit -p tsconfig.json` exits 0). Its placeholder-ordering
     rule refers to entries deleted in `2311d4b`. And it still writes
     Korean-only card data into PROJECTS, i.e. it reproduces item 1.
-11. **`ProjectNav` overflows at phone width.** `ProjectNav.tsx:34-58` puts
+14. [Phase 2] **`ProjectNav` overflows at phone width** — corrected by the visual audit: it does not overflow at 375px; the real issue is item 21 (and the arrow direction). `ProjectNav.tsx:34-58` puts
     three links in a `flex` row with no `flex-wrap`.
-12. **Prose lines are ~114 characters.** The detail container is 960px with
+15. [Phase 2] **Prose lines are ~114 characters.** The detail container is 960px with
     `px-6` (≈912px of text) and `ProjectContent`'s `<article>` sets no
     max-width. Target ~65ch for the body column.
-13. **No focus-visible styles anywhere** (nor `prefers-reduced-motion`, nor a
+16. [Phase 2] **No focus-visible styles anywhere** (nor `prefers-reduced-motion`, nor a
     skip link) — grep finds zero occurrences across `app/` and `components/`.
-14. **Move to role-based color tokens.** `app/globals.css:4-20` names tokens
+17. [Phase 2] **Move to role-based color tokens.** `app/globals.css:4-20` names tokens
     after colors (`snow`, `charcoal`), so dark mode would make `bg-snow` mean
     a dark color. See the dark-mode note below.
-15. Smaller structural cleanups: `order` is dead on the hub (only
+18. [Phase 1–2] Smaller structural cleanups: `order` is dead on the hub (only
     `lib/markdown.ts:87` reads it, hub uses array order); the locale list is
     duplicated in five places; `max-w-[960px] px-6` in four; `SOCIAL_LINKS` in
     both `Footer.tsx:4` and `HeroSection.tsx:7`; two different h2 sizes for the
     same level (`ProjectsSection` 24/30px vs `SubProjectList` 20px);
     `liveUrl` is never set anywhere, so `ProjectHeader.tsx:54-64` is dead.
-16. Accessibility details: MDX `alt` is duplicated into `<figcaption>` so
+19. [Phase 2] Accessibility details: MDX `alt` is duplicated into `<figcaption>` so
     screen readers announce it twice; the card thumbnail's `alt` repeats the
     adjacent `<h3>`; the initials-fallback card puts `aria-label` on a plain
     `<span>` (a no-op) at 1.54:1 contrast.
-17. Write a `README.md` — for a portfolio repo, the repo is part of the
+20. [Phase 3] Write a `README.md` — for a portfolio repo, the repo is part of the
     portfolio.
+21. [Phase 2] **Touch targets are 16-20px.** Found by the visual audit at
+    375px: the KO/JA/EN switcher is 16-19x20px, social icons 20x20 (18x18 in
+    the footer), prev/next links 20px tall — under the 24px minimum (WCAG 2.2
+    AA) and far under the 44px target the spec sets for mobile.
 
-### Content work (unchanged from the repo scan)
+#### Content work (unchanged from the repo scan)
 
-18. **Migrate the remaining past project(s)** — `spec.md` assumed three
+22. [Phase 3] **Migrate the remaining past project(s)** — `spec.md` assumed three
    projects; everyai is the only migrated one. Use the in-repo skill
    `.claude/skills/portfolio-page-generator/SKILL.md` (paste a
    `portfolio-*.md`, it writes ko/ja/en + inserts into `PROJECTS` + verifies
    the build).
-19. **Fill in kigaru and kaouranai** — screenshots, a real `liveUrl`
+23. [Phase 3] **Fill in kigaru and kaouranai** — screenshots, a real `liveUrl`
     (`kigaru.pages.dev` per spec), and a repo-level `githubUrl`. These two
     pages are the weakest thing a visitor currently sees.
-20. **Decide the image hosting story** — either commit thumbnails/screenshots
+24. [Phase 3] **Decide the image hosting story** — decided: images are committed to the repo (spec §2.10). The options were: either commit thumbnails/screenshots
     under `public/images/projects/` or accept the R2 bucket as a dependency
     and write it down.
 
-### Cosmetic or later
+#### Cosmetic or later
 
+- Decided by the spec: the page-transition fade is dropped, not deferred;
+  dark mode, CMS and vault sync are not planned (spec §2.11).
 - The spec's page-transition fade was never implemented (no keyframes, no
   animate utilities anywhere). No scroll animation, which is per spec.
 - `getSubProjects` only scans one level down, so a depth-3 project would
@@ -307,6 +393,8 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **Implemented Phase 1 (Foundation) on local branch `redesign`, uncommitted and unpushed.** ja default + ko (en removed, `_redirects` for `/` and `/en*`), one zod-validated content model with `npm run check:content` and build-time validation, placeholder now/path content, remark + remark-gfm (kigaru tables now render), per-page canonical / absolute hreflang / OG metadata, GitHub Actions CI, rewritten skill and CLAUDE.md. All plan verifications passed locally; the md migration was proven verbatim (diff contains only removed structural frontmatter keys). One small change from the plan: `loadProjectText` was split out of `loadProject` so a missing meta.yaml no longer hides frontmatter errors (plan updated to match). Recorded detail template B in spec §3. Preview-URL checks wait for push approval.
+- 2026-10-10: **Wrote the Phase 1 (Foundation) implementation plan** for the approved redesign (purpose changed to a "who I am" site for people in Japan, maker identity, ja default + ko, en dropped, visual C3): `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`, 8 tasks with exact code, migration commands and output greps. Facts checked against the code and a scratch install, not the spec: no next-intl routing config exists (default locale is a fallback in `lib/i18n.ts` + the client redirect in `app/page.tsx`); CI typecheck needs `next typegen` first; spec path rows reference four slugs that do not exist yet; images are all remote R2; live `/en/*` URLs need 301s. The proposed zod schemas were parsed against the placeholder YAML, and the remark/hast renderer typing compiled under strict. Rewrote this file's status and replaced the old ordering in `## Next` with the spec's four phases, audit items renumbered 1–24 with phase tags (adds the touch-target item). No product code changed; branch `redesign` not created.
 - 2026-10-10: **Design and structure audit, code pass plus a human looking at the rendered site; verdict is that the foundation holds and reopening is finish work, not a rebuild.** Nine blocking items, of which the pixels found three the code could not see: the kigaru detail page printing raw markdown table syntax (cause: `MDXRemote` with no `remark-gfm`), a screen-recorder watermark burned into all 12 everyai GIFs with devtools visible in two, and Korean breaking mid-word (cause: no `word-break: keep-all` anywhere). The pixels also corrected three code-side calls — `ProjectNav` does not overflow at 375px (the real problem is 16-20px hit targets), the initials fallback reads as intentional, and page spacing is not uniform (a 160px band pushes the cards below the fold). Contrast matched to the decimal across both passes: 6 of 11 token pairs fail. The decisive question — whether the low-contrast palette reads as calm or as unfinished — came back "calm", so the design decisions stand and what reads unfinished is bugs. Also recorded: the first screen states no role at all while the flagship project is a Java/Spring back end whose stack is missing from the top tags.
 
 - 2026-10-10: Design + structure audit ahead of a possible reactivation.

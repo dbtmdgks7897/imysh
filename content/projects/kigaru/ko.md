@@ -1,11 +1,6 @@
 ---
 title: "kigaru"
 summary: "AI 기반 운세·관상 서비스 플랫폼"
-stack: ["Next.js", "FastAPI", "React", "Tailwind CSS", "Gemini Flash"]
-status: "in-progress"
-period: "2026.03~"
-githubUrl: "https://github.com/dbtmdgks7897"
-order: 1
 ---
 
 ## 배경 — WHY

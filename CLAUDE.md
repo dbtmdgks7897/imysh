@@ -2,10 +2,11 @@
 
 ## 프로젝트 개요
 
-개인 브랜딩 + 기술 쇼케이스용 포트폴리오 웹사이트.
-프로젝트가 메인 콘텐츠이며, 3개 국어(KO/JA/EN)를 지원한다.
+"나는 어떤 사람인가"를 보여주는 사이트. 일본에서 만나는 사람들이 대상이고,
+정체성은 직무가 아니라 "만드는 사람". 기본 언어 ja, 두 번째 ko (en 없음).
 
-- 목적: 채용 담당자, 기술 커뮤니티, 잠재 협업자 대상
+- 설계: `docs/superpowers/specs/2026-10-10-imysh-redesign-design.md`
+- 진행 상황: `docs/progress.md`
 - 배포: Cloudflare Pages (imysh.pages.dev)
 - 콘텐츠: 순수 정적 사이트, 빌드 타임에 모든 콘텐츠 생성
 
@@ -13,45 +14,36 @@
 
 - **Framework**: Next.js (App Router, Static Export), TypeScript (strict)
 - **Styling**: Tailwind CSS v4
-- **i18n**: next-intl
-- **Markdown**: next-mdx-remote
+- **i18n**: next-intl (ja 기본, ko) — 로케일 목록은 `lib/locales.ts` 한 곳
+- **Markdown**: unified + remark-parse + remark-gfm + remark-rehype → React (`components/projects/ProjectContent.tsx`)
+- **콘텐츠 검증**: zod (`lib/content/`), `npm run check:content`
 - **배포**: Cloudflare Pages
 
 ## 빌드 & 테스트
 
 ```bash
-npm run dev      # 개발 서버 (localhost)
-npm run build    # Static Export → out/ 디렉토리
-npm run lint     # ESLint
+npm run dev            # 개발 서버 — / 는 404, /ja 로 열 것 (/ 리다이렉트는 public/_redirects, Cloudflare 전용)
+npm run build          # Static Export → out/ (콘텐츠 검증 포함)
+npm run lint           # ESLint
+npm run typecheck      # next typegen && tsc -p tsconfig.json --noEmit
+npm run check:content  # content/ 전체 검증 (두 로케일, slug·이미지 참조, enum)
 ```
 
 ## 디렉토리 구조
 
 ```
-app/
-├── [locale]/
-│   ├── layout.tsx              # 공통 레이아웃 (Nav + Footer)
-│   ├── page.tsx                # 루트 허브 페이지
-│   └── projects/
-│       └── [...slug]/
-│           └── page.tsx        # 프로젝트 상세 (동적 라우트)
-├── layout.tsx                  # Root layout (폰트 로딩)
-└── page.tsx                    # / → /[locale]/ 리다이렉트
-
-components/
-├── layout/                     # Navigation, Footer, LanguageSwitcher
-├── home/                       # HeroSection, ProjectsSection
-├── projects/                   # ProjectCard, ProjectHeader, ProjectContent, ...
-└── ui/                         # TechTag, StatusBadge, ...
-
-lib/
-├── i18n.ts                     # next-intl 설정
-├── projects.ts                 # 프로젝트 메타데이터 로딩 유틸
-└── markdown.ts                 # 마크다운 파싱/렌더링 유틸
-
-content/projects/               # 마크다운 콘텐츠 (locale별)
-messages/                       # i18n 메시지 (ko.json, ja.json, en.json)
-public/images/projects/         # 프로젝트 썸네일, 스크린샷
+app/[locale]/layout.tsx              html shell, fonts, base metadata, 빌드 시 콘텐츠 검증
+app/[locale]/page.tsx                허브
+app/[locale]/projects/[...slug]/     프로젝트 상세 (계층 slug)
+lib/locales.ts  lib/site.ts  lib/seo.ts  lib/i18n.ts
+lib/content/                         schema(zod) · projects · profile(now/path) · validate
+scripts/check-content.ts
+content/now.yaml + now.{ja,ko}.yaml       "いま" 구조 + 문장
+content/path.yaml + path.{ja,ko}.yaml     "ここまで" 구조 + 문장
+content/projects/<slug>/meta.yaml         구조 (period, stack, status, order, thumbnail, links)
+content/projects/<slug>/{ja,ko}.md        frontmatter(title, summary) + 본문
+messages/{ja,ko}.json                     UI 문자열
+public/_redirects                         / → /ja, /en* → /ja*
 ```
 
 ## 디자인 시스템
@@ -72,7 +64,6 @@ public/images/projects/         # 프로젝트 썸네일, 스크린샷
 |---|---|
 | KO | Pretendard |
 | JA | Noto Sans JP |
-| EN | Inter |
 | 코드 | JetBrains Mono |
 
 ### 레이아웃 원칙
@@ -91,28 +82,25 @@ public/images/projects/         # 프로젝트 썸네일, 스크린샷
 
 ## 콘텐츠 추가 방법
 
-1. `content/projects/[slug]/[locale].md` 파일 생성
-2. frontmatter에 메타데이터 작성 (`spec.md` 6.1 참조)
-3. 하위 프로젝트: `content/projects/[parent]/[child]/[locale].md`
+스킬 `.claude/skills/portfolio-page-generator/SKILL.md` 를 쓴다. 원칙: 구조는 한 곳
+(`*.yaml`), 문장은 로케일별. 한 로케일이라도 빠지면 빌드가 실패한다 (다른 로케일로
+대체하지 않음).
 
 ## 라우팅 구조
 
 ```
-/[locale]/                          # 루트 허브
-/[locale]/projects/kigaru           # kigaru 상세
-/[locale]/projects/kigaru/kaouranai # kigaru 하위 프로젝트
+/ja, /ko                                 허브
+/{ja,ko}/projects/kigaru                 상세
+/{ja,ko}/projects/kigaru/kaouranai       하위 프로젝트
 ```
 
-루트 `/` → 브라우저 언어 감지 → `/ko/` | `/ja/` | `/en/` 리다이렉트
+`/` 는 Cloudflare Pages `_redirects` 로 `/ja` (302). 옛 `/en/*` 는 `/ja/*` (301).
 
-## 구현 마일스톤
+## 구현 단계 (2026-10 리디자인)
 
-- **M0**: 프로젝트 세팅 (create-next-app, 디렉토리 구조)
-- **M1**: 디자인 시스템 + 레이아웃 쉘 (Nav, Footer, 테마)
-- **M2**: 루트 허브 페이지 (Hero, ProjectCards)
-- **M3**: 프로젝트 상세 페이지 (마크다운, 동적 라우트, 계층)
-- **M4**: 다국어 i18n (3개 국어 전환)
-- **M5**: 콘텐츠 투입 + Cloudflare Pages 배포
+1. Foundation — 데이터 모델·검증, remark, 로케일, 리다이렉트, 메타데이터, CI
+2. Visual — C3 토큰, いま 섹션, 경로 표, 타이포, 접근성
+3. Content — 볼트 → 한국어 초안 → 일본어 번역, 신규 페이지, 사진
+4. Pre-launch — 실기기, OG 미리보기, Lighthouse, main 머지
 
-자세한 태스크: `prompt_plan.md` 참조
-기능 명세: `spec.md` 참조
+`spec.md` / `prompt_plan.md` 는 2026-03 최초 구축 기록 (역사 문서).

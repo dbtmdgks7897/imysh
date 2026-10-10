@@ -1,10 +1,6 @@
 ---
 title: "EveryAI - AI作品・サービス取引プラットフォーム"
 summary: "生成AIで制作された作品やサービスを取引できるプラットフォーム。6週間の実務プロジェクト。"
-stack: ["Java 17", "Spring Boot 3.1", "JPA", "Spring Security", "Next.js", "JWT", "BootPay"]
-status: "deployed"
-period: "2023.10 – 2023.12"
-order: 2
 ---
 
 ## 1. 背景 — WHY

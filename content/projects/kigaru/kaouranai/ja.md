@@ -1,10 +1,6 @@
 ---
 title: "観相はどうですか"
 summary: "AI観相診断サービス — kigaruプラットフォームの最初のコンテンツ"
-stack: ["React", "Gemini Flash", "Tailwind CSS"]
-status: "in-progress"
-period: "2026.03~"
-order: 1
 ---
 
 ## 背景 — WHY

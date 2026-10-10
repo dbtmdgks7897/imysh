@@ -1,0 +1,51 @@
+# DRAFT (Phase 1 placeholder) — copy taken from the C3 artboard; final copy in Phase 3.
+# Two "next" lines are inferences, not vault quotes (spec §8): 2023 and 2025.
+heading: "いまの考えは、どこから来たのか。"
+nodes:
+  "2023":
+    label: "2023"
+    doing: "everyai — バックエンドのインターン"
+    thought: "「AIがあれば、何でもできるようになる」"
+    next: "何でもできるなら、何をしたいのか。それを探しに外へ出た。"
+  "2024":
+    label: "2024"
+    doing: "パブ・工場・ネットショップ"
+    thought: "「面白そうだから」"
+    thoughtNote: "仕事の中身より、どんな気持ちで働くかが大事。"
+    next: "ほとんどの作業はAIが代われる。でも、人と向き合う仕事がしたい。"
+  "2025":
+    label: "2025"
+    doing: "コスメ販売・日本でワーキングホリデー"
+    thought: "楽しさから、一歩深く。"
+    thoughtNote: "人の役に立つことがしたい。"
+    next: "役に立つものを、自分の手でつくってみたくなった。"
+  "2026-h1":
+    label: "2026 前半"
+    doing: "バイブコーディング"
+    thought: "つくりながら、考えが変わっていった。"
+    next: "みんなの価値の前に、自分の価値が分からなかった。だから、コードより人に会うことを選んだ。"
+  "2026-a":
+    label: "2026-a"
+    doing: "kaouranai"
+    thought: "はじめての一作。完成して「これ、なぜ作ったんだろう」。"
+    next: "次は、実際に使われるものを。"
+  "2026-b":
+    label: "2026-b"
+    doing: "プログラミング自販機"
+    thought: "使われるものを目指したが、肝心の流れがうまく回らなかった。"
+    next: "せめて、ここまでやったことを残そう。"
+  "2026-c":
+    label: "2026-c"
+    doing: "imysh"
+    thought: "やってきたことを整理する場所。"
+    next: "みんなの価値をどう見つける？ 自分のさえ分からないのに。→ 人に会いに行った。"
+  "2026-d":
+    label: "2026-d"
+    doing: "Second Brain"
+    thought: "まず自分から。自分の価値を見つけるために。"
+    next: "いまも続いている。"
+  "2026-h2":
+    label: "2026 後半"
+    doing: "トーキングバー・工事現場"
+    thought: "慣れたら、人に本心を伝えられない人になるかもしれない。"
+    thoughtNote: "だから早めに、方向を変えた。"

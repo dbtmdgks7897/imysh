@@ -1,0 +1,51 @@
+# DRAFT — direct Korean rendering of path.ja.yaml (Phase 1 placeholder).
+# Not reviewed by the author; Phase 3 replaces it with Korean written from the vault.
+heading: "지금의 생각은, 어디서 왔는가."
+nodes:
+  "2023":
+    label: "2023"
+    doing: "everyai — 백엔드 인턴"
+    thought: "“AI가 있으면 뭐든 할 수 있게 된다”"
+    next: "뭐든 할 수 있다면, 무엇을 하고 싶은가. 그걸 찾으러 밖으로 나갔다."
+  "2024":
+    label: "2024"
+    doing: "펍·공장·온라인 쇼핑몰"
+    thought: "“재밌어 보여서”"
+    thoughtNote: "일의 내용보다, 어떤 마음으로 일하느냐가 중요하다."
+    next: "대부분의 작업은 AI가 대신할 수 있다. 그래도 사람과 마주하는 일을 하고 싶다."
+  "2025":
+    label: "2025"
+    doing: "화장품 판매·일본 워킹홀리데이"
+    thought: "즐거움에서, 한 걸음 더 깊이."
+    thoughtNote: "사람에게 도움이 되는 일을 하고 싶다."
+    next: "도움이 되는 것을, 내 손으로 직접 만들어 보고 싶어졌다."
+  "2026-h1":
+    label: "2026 전반"
+    doing: "바이브 코딩"
+    thought: "만들면서, 생각이 바뀌어 갔다."
+    next: "모두의 가치 이전에, 내 가치를 몰랐다. 그래서 코드보다 사람을 만나는 쪽을 택했다."
+  "2026-a":
+    label: "2026-a"
+    doing: "kaouranai"
+    thought: "첫 작품. 완성하고 나서 ‘이거, 왜 만들었지’."
+    next: "다음엔 실제로 쓰이는 것을."
+  "2026-b":
+    label: "2026-b"
+    doing: "프로그래밍 자판기"
+    thought: "쓰이는 것을 목표로 했지만, 정작 핵심 흐름이 잘 돌아가지 않았다."
+    next: "적어도, 여기까지 한 것을 남기자."
+  "2026-c":
+    label: "2026-c"
+    doing: "imysh"
+    thought: "해 온 것을 정리하는 곳."
+    next: "모두의 가치를 어떻게 찾지? 내 것조차 모르는데. → 사람을 만나러 갔다."
+  "2026-d":
+    label: "2026-d"
+    doing: "Second Brain"
+    thought: "먼저 나부터. 내 가치를 찾기 위해."
+    next: "지금도 계속되고 있다."
+  "2026-h2":
+    label: "2026 후반"
+    doing: "토킹바·공사 현장"
+    thought: "익숙해지면, 사람에게 본심을 전하지 못하는 사람이 될지도 모른다."
+    thoughtNote: "그래서 일찍, 방향을 바꿨다."

@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [main, redesign]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      # typecheck runs `next typegen` first so .next/types exists on a fresh checkout
+      - run: npm run typecheck
+      - run: npm run check:content
+      - run: npm run build

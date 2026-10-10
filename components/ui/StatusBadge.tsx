@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { ProjectStatus } from "@/lib/projects";
+import type { ProjectStatus } from "@/lib/content/schema";
 
 const STATUS_CLASS: Record<ProjectStatus, string> = {
   deployed: "bg-sage text-white",

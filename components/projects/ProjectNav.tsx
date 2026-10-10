@@ -1,22 +1,28 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { PROJECTS } from "@/lib/projects";
+import type { Locale } from "@/lib/locales";
+import { projectHref } from "@/lib/content/projects";
+
+export interface NavLink {
+  href: string;
+  title: string;
+}
 
 interface ProjectNavProps {
   slugPath: string[];
-  locale: string;
+  locale: Locale;
+  prev: NavLink | null;
+  next: NavLink | null;
 }
 
-export default function ProjectNav({ slugPath, locale }: ProjectNavProps) {
+export default function ProjectNav({ slugPath, locale, prev, next }: ProjectNavProps) {
   const t = useTranslations("projectNav");
-  const isSubProject = slugPath.length > 1;
 
-  if (isSubProject) {
-    const parentSlug = slugPath.slice(0, -1).join("/");
+  if (slugPath.length > 1) {
     return (
       <nav className="mt-16 pt-8 border-t border-lavender flex">
         <Link
-          href={`/${locale}/projects/${parentSlug}`}
+          href={projectHref(locale, slugPath.slice(0, -1))}
           className="text-sm text-taupe hover:text-sage transition-colors"
         >
           {t("parentProject")}
@@ -25,33 +31,19 @@ export default function ProjectNav({ slugPath, locale }: ProjectNavProps) {
     );
   }
 
-  const currentIndex = PROJECTS.findIndex((p) => p.slug === slugPath[0]);
-  const prev = currentIndex > 0 ? PROJECTS[currentIndex - 1] : null;
-  const next =
-    currentIndex < PROJECTS.length - 1 ? PROJECTS[currentIndex + 1] : null;
-
   return (
     <nav className="mt-16 pt-8 border-t border-lavender flex items-center justify-between">
-      <Link
-        href={`/${locale}/`}
-        className="text-sm text-taupe hover:text-sage transition-colors"
-      >
+      <Link href={`/${locale}/`} className="text-sm text-taupe hover:text-sage transition-colors">
         {t("allProjects")}
       </Link>
       <div className="flex gap-6">
         {prev && (
-          <Link
-            href={`/${locale}/projects/${prev.slug}`}
-            className="text-sm text-taupe hover:text-sage transition-colors"
-          >
+          <Link href={prev.href} className="text-sm text-taupe hover:text-sage transition-colors">
             ← {prev.title}
           </Link>
         )}
         {next && (
-          <Link
-            href={`/${locale}/projects/${next.slug}`}
-            className="text-sm text-taupe hover:text-sage transition-colors"
-          >
+          <Link href={next.href} className="text-sm text-taupe hover:text-sage transition-colors">
             {next.title} →
           </Link>
         )}

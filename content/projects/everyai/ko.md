@@ -1,10 +1,6 @@
 ---
 title: "EveryAI - AI 작품·서비스 거래 플랫폼"
 summary: "생성 AI로 만든 작품과 서비스를 거래할 수 있는 플랫폼. 6주 실무 프로젝트."
-stack: ["Java 17", "Spring Boot 3.1", "JPA", "Spring Security", "Next.js", "JWT", "BootPay"]
-status: "deployed"
-period: "2023.10 – 2023.12"
-order: 2
 ---
 
 ## 1. 배경 — WHY

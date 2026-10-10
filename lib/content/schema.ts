@@ -1,0 +1,108 @@
+import { z } from "zod";
+
+// Closed enum: a typo in meta.yaml fails the build instead of shipping an unstyled badge.
+export const PROJECT_STATUSES = ["deployed", "in-progress", "planned"] as const;
+export const projectStatusSchema = z.enum(PROJECT_STATUSES);
+export type ProjectStatus = z.infer<typeof projectStatusSchema>;
+
+// Local images live under public/images/; remote https URLs are tolerated until Phase 3 removes R2.
+export const imageRefSchema = z
+  .string()
+  .refine((s) => s.startsWith("/images/") || s.startsWith("https://"), {
+    message: 'image must start with "/images/" or "https://"',
+  });
+
+export const idSchema = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "id must be kebab-case");
+export const slugPathSchema = z
+  .string()
+  .regex(/^[a-z0-9-]+(\/[a-z0-9-]+)*$/, 'project reference must look like "kigaru/kaouranai"');
+
+export const projectMetaSchema = z.strictObject({
+  period: z.string().min(1),
+  stack: z.array(z.string().min(1)),
+  status: projectStatusSchema,
+  order: z.number().int().optional(),
+  thumbnail: imageRefSchema.optional(),
+  links: z
+    .strictObject({
+      github: z.url().optional(),
+      live: z.url().optional(),
+    })
+    .default({}),
+});
+export type ProjectMeta = z.infer<typeof projectMetaSchema>;
+
+// Per-locale frontmatter carries sentences only; everything structural is in meta.yaml.
+export const projectFrontmatterSchema = z.strictObject({
+  title: z.string().min(1),
+  summary: z.string().min(1),
+});
+
+// ---- now (spec §3.1, §5) ----
+
+export const nowSchema = z.strictObject({
+  asOf: z.string().min(1),
+  portrait: imageRefSchema.nullable(),
+  cards: z.array(
+    z.strictObject({
+      id: idSchema,
+      image: imageRefSchema.nullable(),
+      project: slugPathSchema.nullable(), // internal project page, if any
+      href: z.url().nullable(), // external link, if any
+    }),
+  ),
+  oneLiners: z.array(z.strictObject({ id: idSchema, since: z.string().min(1) })),
+});
+export type Now = z.infer<typeof nowSchema>;
+
+export const nowTextSchema = z.strictObject({
+  statement: z.strictObject({
+    before: z.string().min(1),
+    accent: z.string().min(1), // the one accented phrase
+    after: z.string().min(1),
+  }),
+  thinking: z.array(z.string().min(1)).min(1).max(2),
+  cards: z.record(
+    z.string(),
+    z.strictObject({ label: z.string().min(1), title: z.string().min(1), text: z.string().min(1) }),
+  ),
+  oneLiners: z.record(z.string(), z.string().min(1)),
+});
+export type NowText = z.infer<typeof nowTextSchema>;
+
+// ---- path (spec §3.2, §5) ----
+
+const pathChildSchema = z.strictObject({
+  id: idSchema,
+  photos: z.array(imageRefSchema).default([]),
+  projects: z.array(slugPathSchema).default([]),
+});
+export type PathChild = z.infer<typeof pathChildSchema>;
+
+const pathNodeSchema = z.strictObject({
+  id: idSchema,
+  period: z.string().min(1),
+  current: z.boolean().default(false), // the row that links back to "now"
+  photos: z.array(imageRefSchema).default([]),
+  projects: z.array(slugPathSchema).default([]),
+  children: z.array(pathChildSchema).default([]),
+});
+export type PathNode = z.infer<typeof pathNodeSchema>;
+
+export const pathSchema = z.strictObject({ nodes: z.array(pathNodeSchema).min(1) });
+export type PathData = z.infer<typeof pathSchema>;
+
+export const pathTextSchema = z.strictObject({
+  heading: z.string().min(1),
+  nodes: z.record(
+    z.string(),
+    z.strictObject({
+      label: z.string().min(1), // year cell, e.g. "2026 前半"
+      doing: z.string().min(1),
+      thought: z.string().min(1),
+      thoughtNote: z.string().min(1).optional(),
+      next: z.string().min(1).optional(), // "why I moved on"; required except on the current node
+    }),
+  ),
+});
+export type PathText = z.infer<typeof pathTextSchema>;

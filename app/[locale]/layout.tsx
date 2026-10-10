@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Sans_JP, JetBrains_Mono } from "next/font/google";
+import { Noto_Sans_JP, JetBrains_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
+import { LOCALES, assertLocale, type Locale } from "@/lib/locales";
+import { assertContentValid } from "@/lib/content/validate";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "../globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--next-inter",
-  display: "swap",
-});
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
@@ -25,26 +22,26 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const LOCALES = ["ko", "ja", "en"] as const;
-
 export function generateStaticParams() {
+  // Fails the static build on any content error (both locales, slugs, images, enums).
+  assertContentValid();
   return LOCALES.map((locale) => ({ locale }));
 }
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  const locale = assertLocale(rawLocale);
+  const t = await getTranslations({ locale, namespace: "meta" });
   return {
-    title: "imysh",
-    description: "Personal portfolio — Projects, craft, and values.",
-    alternates: {
-      languages: Object.fromEntries(LOCALES.map((l) => [l, `/${l}/`])),
-    },
+    metadataBase: new URL(SITE_URL),
+    title: SITE_NAME,
+    description: t("siteDescription"),
   };
 }
 
-const localeFontClass: Record<string, string> = {
-  ko: "font-pretendard",
+const localeFontClass: Record<Locale, string> = {
   ja: "font-noto-sans-jp",
-  en: "font-inter",
+  ko: "font-pretendard",
 };
 
 export default async function LocaleLayout({
@@ -54,10 +51,11 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = assertLocale(rawLocale);
   setRequestLocale(locale);
   const messages = await getMessages();
-  const fontClass = localeFontClass[locale] ?? "font-inter";
+  const fontClass = localeFontClass[locale];
 
   return (
     <html lang={locale}>
@@ -68,9 +66,7 @@ export default async function LocaleLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css"
         />
       </head>
-      <body
-        className={`${inter.variable} ${notoSansJP.variable} ${jetbrainsMono.variable}`}
-      >
+      <body className={`${notoSansJP.variable} ${jetbrainsMono.variable}`}>
         <NextIntlClientProvider messages={messages}>
           <div className={`flex min-h-screen flex-col ${fontClass}`}>
             <Navigation locale={locale} />

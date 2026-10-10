@@ -1,0 +1,20 @@
+# DRAFT — direct Korean rendering of now.ja.yaml (Phase 1 placeholder).
+# Not reviewed by the author; Phase 3 replaces it with Korean written from the vault.
+statement:
+  before: "누구나 자신이 정말 바라는 가치를 위해"
+  accent: "살 수 있도록."
+  after: "그걸 돕고 싶다."
+thinking:
+  - "그러기 위해 먼저, 내가 무엇을 소중히 여기는지 확인하고 있는 중이다. 답은 코드보다 사람과의 대화 속에 있다고 생각한다."
+cards:
+  second-brain:
+    label: "PROJECT"
+    title: "Second Brain"
+    text: "내 생각과 선택을 기록해서, 소중히 여기는 가치를 찾기 위한 장치."
+  youtube:
+    label: "YOUTUBE"
+    title: "面白そうだから"   # channel name, kept in Japanese
+    text: "'재밌어 보여서' 골라 온 일들과, 거기서 생각한 것. EP01 준비 중."
+oneLiners:
+  study-group: "일본어 스터디 리더"
+  construction: "공사 현장에서 일하고 있다"

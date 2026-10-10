@@ -1,0 +1,5 @@
+# Root has no page; send visitors to the default locale.
+/        /ja           302
+# en was removed on 2026-10-10; keep old links working.
+/en      /ja           301
+/en/*    /ja/:splat    301

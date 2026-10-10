@@ -1,12 +1,14 @@
 import { useTranslations } from "next-intl";
-import { PROJECTS } from "@/lib/projects";
+import type { Locale } from "@/lib/locales";
+import type { Project } from "@/lib/content/projects";
 import ProjectCard from "@/components/projects/ProjectCard";
 
 interface ProjectsSectionProps {
-  locale: string;
+  locale: Locale;
+  projects: Project[];
 }
 
-export default function ProjectsSection({ locale }: ProjectsSectionProps) {
+export default function ProjectsSection({ locale, projects }: ProjectsSectionProps) {
   const t = useTranslations("home");
   return (
     <section className="py-16">
@@ -14,8 +16,8 @@ export default function ProjectsSection({ locale }: ProjectsSectionProps) {
         {t("projectsHeading")}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {PROJECTS.map((project) => (
-          <ProjectCard key={project.slug} project={project} locale={locale} />
+        {projects.map((project) => (
+          <ProjectCard key={project.slugPath.join("/")} project={project} locale={locale} />
         ))}
       </div>
     </section>
