@@ -22,6 +22,7 @@ export default function ResponsiveImage({ src, alt, sizes, className, priority }
       height={info?.height}
       alt={alt}
       loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : undefined}
       decoding="async"
       className={className}
     />

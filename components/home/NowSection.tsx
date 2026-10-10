@@ -35,7 +35,7 @@ export default function NowSection({ locale, now, text }: NowSectionProps) {
         </h1>
         {now.portrait && (
           <div data-avoid className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-placeholder">
-            <ResponsiveImage src={now.portrait} alt={t("portraitAlt")} priority className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 35vw, 100vw" />
+            <ResponsiveImage src={now.portrait} alt={t("portraitAlt")} priority className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 35vw, 360px" />
           </div>
         )}
       </div>
