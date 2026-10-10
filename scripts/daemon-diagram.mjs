@@ -2,20 +2,13 @@
 // Draws the daemon page's three-layer diagram (C3 tokens) in ja and ko and writes it to
 // images-src/projects/daemon/layers-{ja,ko}.svg with every label converted to outlines, so
 // `npm run images` (sharp/librsvg) renders it without the site fonts installed.
-// Fonts: fonts-src/ZenMaruGothic-*.ttf (ja; `npm run fonts` downloads them) and Pretendard OTF (ko).
+// Fonts and outlining: scripts/diagram-text.mjs.
 import fs from "node:fs";
 import path from "node:path";
-import { createRequire } from "node:module";
+import { C, fontsFor, textPath } from "./diagram-text.mjs";
 
-const require = createRequire(import.meta.url);
-const hb = await require("harfbuzzjs");
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, "images-src", "projects", "daemon");
-
-const FONTS = {
-  ja: { regular: "fonts-src/ZenMaruGothic-Regular.ttf", bold: "fonts-src/ZenMaruGothic-Bold.ttf" },
-  ko: { regular: "node_modules/pretendard/dist/public/static/Pretendard-Regular.otf", bold: "node_modules/pretendard/dist/public/static/Pretendard-Bold.otf" },
-};
 
 const TEXT = {
   ja: {
@@ -34,37 +27,9 @@ const TEXT = {
   },
 };
 
-const C = { bg: "#F7F4EF", surface: "#FFFFFF", sub: "#FBF8F4", text: "#2E2A27", muted: "#6A625B", soft: "#4A433E", border: "#E3DDD3", accentText: "#B44A30", accent: "#E9B8A6", tint: "#F6DDD2" };
-
-function loadFont(file) {
-  const blob = hb.createBlob(fs.readFileSync(path.join(ROOT, file)));
-  const face = hb.createFace(blob, 0);
-  return { font: hb.createFont(face), upem: face.upem };
-}
-
-// One line of text as outlined glyphs. anchor: "start" | "end". Returns an SVG <path>.
-function textPath(f, str, x, y, size, fill, anchor = "start") {
-  const buf = hb.createBuffer();
-  buf.addText(str);
-  buf.guessSegmentProperties();
-  hb.shape(f.font, buf);
-  const glyphs = buf.json();
-  buf.destroy();
-  const k = size / f.upem;
-  const width = glyphs.reduce((w, g) => w + g.ax, 0) * k;
-  let pen = anchor === "end" ? x - width : x;
-  const parts = [];
-  for (const g of glyphs) {
-    const d = f.font.glyphToPath(g.g);
-    if (d) parts.push(`<path transform="translate(${(pen + g.dx * k).toFixed(2)} ${(y - g.dy * k).toFixed(2)}) scale(${k.toFixed(5)} ${(-k).toFixed(5)})" d="${d}"/>`);
-    pen += g.ax * k;
-  }
-  return `<g fill="${fill}">${parts.join("")}</g>`;
-}
-
 fs.mkdirSync(OUT, { recursive: true });
 for (const [lang, t] of Object.entries(TEXT)) {
-  const R = loadFont(FONTS[lang].regular), B = loadFont(FONTS[lang].bold);
+  const { regular: R, bold: B } = fontsFor(lang);
   const band = (y, x, w, h, fill, stroke, [name, note], strong) => `
   <rect x="${x}" y="${y + 6}" width="${w}" height="${h}" rx="22" fill="#5A4632" opacity=".06"/>
   <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="22" fill="${fill}" stroke="${stroke}" stroke-width="${strong ? 2 : 1.5}"/>
