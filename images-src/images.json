@@ -1,5 +1,5 @@
 {
-  "_comment": "Source images → public/images/<key>.webp (max 1280px wide) + <key>-640.webp. Run `npm run images` after editing. crop = [top, height] in source pixels, full width.",
+  "_comment": "Source images → public/images/<key>.webp (max 1280px wide) + <key>-640.webp. Run `npm run images` after editing. crop = [top, height], cropX = [left, width] in source pixels (full extent when omitted).",
   "projects/my-asset-manager/portfolio-detail": {
     "src": "projects/my-asset-manager/portfolio-detail.webp"
   },
@@ -76,5 +76,24 @@
   },
   "projects/second-brain/graph": {
     "src": "projects/second-brain/graph.webp"
+  },
+  "_life_sources": "Owner photos, privacy-processed by the command post (bystanders cropped, brand labels blurred, metadata stripped). workingholiday shows the owner's face: path row 2025 only, never the hub portrait.",
+  "life/factory": {
+    "src": "life/factory.webp"
+  },
+  "life/workingholiday": {
+    "src": "life/workingholiday.webp"
+  },
+  "_portrait_source": "portrait.webp: owner's mirror selfie (metadata stripped by the command post). Cropped 4:5 on head and upper body; the store's left poster is outside the crop.",
+  "life/portrait": {
+    "src": "life/portrait.webp",
+    "crop": [
+      470,
+      950
+    ],
+    "cropX": [
+      330,
+      760
+    ]
   }
 }

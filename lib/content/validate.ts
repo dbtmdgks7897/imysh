@@ -163,6 +163,12 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
         checkNoDraftMarkers(errors, `path.${locale}.yaml`, JSON.stringify(text));
         checkGlyphs(errors, `path.${locale}.yaml`, JSON.stringify(text));
         compareIds(errors, `path.${locale}.yaml nodes`, ids, Object.keys(text.nodes));
+        for (const n of all) {
+          const alts = text.nodes[n.id]?.photoAlts ?? [];
+          if (n.photos.length !== alts.length) {
+            errors.push(`path.${locale}.yaml "${n.id}": ${n.photos.length} photos but ${alts.length} photoAlts`);
+          }
+        }
         // "next" is required on top-level rows (the hand-off between periods); sub-rows may omit it.
         for (const id of data.nodes.map((n) => n.id)) {
           const t = text.nodes[id];

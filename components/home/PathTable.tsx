@@ -31,25 +31,35 @@ function YearLabel({ label, small }: { label: string; small?: boolean }) {
 
 export default function PathTable({ locale, path, text, projectTitles, projectThumbnails }: PathTableProps) {
   const t = useTranslations("path");
-  // A row's images: its own photos, else the thumbnails of the projects it links to.
-  // Rows with neither get no image cell at all (never a placeholder box).
-  const photosOf = (node: PathNode | PathChild): string[] =>
+  // A row's images: its own photos (with alt text from path.<locale>.yaml), else the thumbnails
+  // of the projects it links to (decorative: the project link sits next to it).
+  const photosOf = (node: PathNode | PathChild): { src: string; alt: string; own: boolean }[] =>
     node.photos.length > 0
-      ? node.photos
-      : node.projects.map((slug) => projectThumbnails[slug]).filter((src): src is string => Boolean(src));
-  const gridOf = (node: PathNode | PathChild) => (photosOf(node).length > 0 ? GRID_PHOTO : GRID_PLAIN);
-  // The header follows the top-level rows; sub-rows are indented and need not line up with it.
-  const grid = path.nodes.some((n) => photosOf(n).length > 0) ? GRID_PHOTO : GRID_PLAIN;
-  const headerHasPhotos = grid === GRID_PHOTO;
+      ? node.photos.map((src, i) => ({ src, alt: text.nodes[node.id]?.photoAlts?.[i] ?? "", own: true }))
+      : node.projects
+          .map((slug) => projectThumbnails[slug])
+          .filter((src): src is string => Boolean(src))
+          .map((src) => ({ src, alt: "", own: false }));
+  // Top-level rows share one grid so their columns line up with the header; a top row without
+  // an image keeps an empty (never grey) cell on desktop. Sub-rows are indented and pick their own.
+  const topGrid = path.nodes.some((n) => photosOf(n).length > 0) ? GRID_PHOTO : GRID_PLAIN;
+  const grid = topGrid;
+  const headerHasPhotos = topGrid === GRID_PHOTO;
+  const gridOfChild = (node: PathChild) => (photosOf(node).length > 0 ? GRID_PHOTO : GRID_PLAIN);
 
-  function Photos({ node }: { node: PathNode | PathChild }) {
+  function Photos({ node, top }: { node: PathNode | PathChild; top?: boolean }) {
     const photos = photosOf(node);
-    if (photos.length === 0) return null;
+    if (photos.length === 0) return top && headerHasPhotos ? <div aria-hidden="true" className="hidden md:block" /> : null;
     return (
       <div className={`grid gap-1.5 ${photos.length > 1 ? "grid-cols-3" : ""}`}>
-        {photos.map((src) => (
+        {photos.map(({ src, alt, own }) => (
           <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-placeholder">
-            <ResponsiveImage src={src} alt="" className="absolute inset-0 h-full w-full object-cover object-top" sizes="200px" />
+            <ResponsiveImage
+              src={src}
+              alt={alt}
+              className={`absolute inset-0 h-full w-full object-cover ${own ? "object-center" : "object-top"}`}
+              sizes="200px"
+            />
           </div>
         ))}
       </div>
@@ -96,12 +106,12 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
             <li key={node.id}>
               <div
                 id={`path-${node.id}`}
-                className={`grid scroll-mt-4 items-start gap-3 rounded-[20px] bg-surface p-5 md:gap-6 md:p-6 ${gridOf(node)} ${
+                className={`grid scroll-mt-4 items-start gap-3 rounded-[20px] bg-surface p-5 md:gap-6 md:p-6 ${topGrid} ${
                   node.current ? "ring-2 ring-accent" : ""
                 }`}
               >
                 <YearLabel label={copy.label} />
-                <Photos node={node} />
+                <Photos node={node} top />
                 <Doing node={node} />
                 <p className="text-xl leading-normal font-bold md:text-[22px]">
                   {copy.thought}
@@ -127,7 +137,7 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
                       <li
                         key={child.id}
                         id={`path-${child.id}`}
-                        className={`ml-6 grid scroll-mt-4 items-center gap-2 rounded-2xl bg-surface-sub px-5 py-4 md:ml-10 md:gap-6 md:px-6 ${gridOf(child)}`}
+                        className={`ml-6 grid scroll-mt-4 items-center gap-2 rounded-2xl bg-surface-sub px-5 py-4 md:ml-10 md:gap-6 md:px-6 ${gridOfChild(child)}`}
                       >
                         <YearLabel label={c.label} small />
                         <Photos node={child} />

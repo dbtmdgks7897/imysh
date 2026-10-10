@@ -1,7 +1,7 @@
 # Structure of the "02 ここまで" path (spec §3.2). One line, oldest first; the last node is "now".
 # Periods follow the owner's timeline note (SecondBrain 03-Resources/내 이력 연표). Ids are quoted
 # so YAML keeps them as strings. Sentences live in path.{ja,ko}.yaml.
-# Photos: owner-supplied life photos per row are still pending.
+# Photos: owner-supplied, privacy-processed. Rows without one show no image.
 nodes:
   - id: "2023"
     period: "2023.07–2023.12"
@@ -12,8 +12,10 @@ nodes:
         projects: [everyai]
   - id: "2024"
     period: "2024.01–2024.12"
+    photos: [/images/life/factory.webp]          # the factory; the pub has no photo
   - id: "2025"
     period: "2025.01–2026.05"
+    photos: [/images/life/workingholiday.webp]   # shows the owner's face: this row only, not the portrait
   - id: "2026-h1"
     period: "2026.03"           # vibe coding started in March 2026 (owner)
     children:

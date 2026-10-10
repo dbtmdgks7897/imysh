@@ -111,6 +111,7 @@ export const pathTextSchema = z.strictObject({
       doing: z.string().min(1),
       thought: z.string().min(1),
       thoughtNote: z.string().min(1).optional(),
+      photoAlts: z.array(z.string().min(1)).optional(), // one per path.yaml photo, same order
       next: z.string().min(1).optional(), // "why I moved on"; required except on the current node
     }),
   ),

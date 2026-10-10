@@ -1,6 +1,6 @@
 # Structure of the "01 いま" section (spec §3.1). Sentences live in now.{ja,ko}.yaml.
 asOf: "2026.10"
-portrait: null              # owner photo, Phase 3 (pending)
+portrait: /images/life/portrait.webp   # owner's mirror selfie, cropped 4:5 (alt text in messages now.portraitAlt)
 cards:
   - id: second-brain
     image: null             # Second Brain screen — owner to capture (personal data must be hidden)

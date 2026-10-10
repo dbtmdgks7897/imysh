@@ -25,7 +25,7 @@ export default function NowSection({ locale, now, text }: NowSectionProps) {
       <div className={now.portrait ? "grid items-end gap-10 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]" : ""}>
         <h1
           id="now-heading"
-          className="text-[clamp(30px,5.6vw,76px)] leading-[1.3] font-bold tracking-[0.01em]"
+          className="text-[clamp(30px,5vw,68px)] leading-[1.3] font-bold tracking-[0.01em]"
         >
           {statement.before}
           <span className="bg-[linear-gradient(transparent_62%,var(--color-accent-tint)_62%)] text-accent-text">
@@ -35,7 +35,7 @@ export default function NowSection({ locale, now, text }: NowSectionProps) {
         </h1>
         {now.portrait && (
           <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-placeholder">
-            <ResponsiveImage src={now.portrait} alt={t("portraitAlt")} className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 35vw, 100vw" />
+            <ResponsiveImage src={now.portrait} alt={t("portraitAlt")} priority className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 35vw, 100vw" />
           </div>
         )}
       </div>

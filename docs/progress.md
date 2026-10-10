@@ -10,7 +10,10 @@ on top (not pushed) points the kigaru repository links at the public
 snapshot <https://github.com/dbtmdgks7897/kigaru-matsuri>, and a second one adds
 the owner's images: four clean everyai stills, used as the hero, the 02
 figures and the 2023-b path thumbnail, plus a pre-blurred Second Brain graph
-used as the hero and the 2026-d thumbnail. The hub now has 6 images. Source
+used as the hero and the 2026-d thumbnail. A third commit adds the owner's
+life photos: a factory photo in path row 2024, a working-holiday photo in
+row 2025 (the only place it is used), and the hub portrait, a mirror selfie
+cropped 4:5. The hub now has 9 images. Source
 files and crops are recorded in `images-src/images.json`. `main` (imysh.pages.dev) still
 serves the March site; it gets merged after the owner's phone check.
 
@@ -130,7 +133,8 @@ Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
 - [ ] **Owner:** review the Japanese, using `docs/phase3-translation-notes.md`.
 - [x] ki-garu.com live links added to kigaru, 韓国式AI顔占い and AI自販機 (owner approved; all three URLs checked and return 200).
 - [x] everyai 3–4 static stills from the owner's Notion export, with no watermark, devtools or personal data [4, 8]. Second Brain graph (blurred, owner-supplied).
-- [ ] **Owner:** portrait and path-row life photos.
+- [x] Portrait and the 2024/2025 path photos. These are owner-supplied files already privacy-processed by the command post. The generated webp files carry no EXIF, XMP or IPTC data.
+- [ ] Optional: more path-row photos (pub, 2026 rows) if the owner has them.
 - [ ] README [20].
 
 ### Phase 4 — Pre-launch (done locally; phone check and merge remain)
@@ -394,6 +398,19 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **Added the owner's life photos (local commit).**
+  - Placements:
+    - path 2024: factory photo.
+    - path 2025: working-holiday photo. It shows the owner's face, so it is used only there.
+    - hub portrait: mirror selfie, cropped 4:5 at x330 y470 760×950. The store's left poster falls outside the crop.
+  - Alt texts in ko and ja name no place or brand: `photoAlts` in path text, `now.portraitAlt` in messages.
+  - Code changes:
+    - Top-level path rows share one grid. Rows without an image keep an empty, non-grey cell so columns stay aligned.
+    - `images.mjs` gained `cropX` and fails if any metadata survives.
+    - The portrait loads eagerly.
+    - The hub sentence max size is now 68px, so 「です。」 does not end up alone on a line.
+  - Fonts were re-subset.
+  - Results: CLS 0.0007–0.0059; no overflow at ja/ko × 1440/375. All checks and Playwright pass.
 - 2026-10-10: **Added the owner's images (local commit).**
   - everyai: 4 stills cropped from the owner's Notion export.
     - main page: `로그인(JWT).gif` frame 94
