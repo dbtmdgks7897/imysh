@@ -14,7 +14,7 @@
   font-weight: 400;
   font-display: swap;
   src: url("./fonts/zen-maru-gothic-400-command-post.woff2") format("woff2");
-  unicode-range: U+305E,U+3085,U+516D,U+56FA,U+5D29,U+61B6,U+6271,U+66F4,U+6B04,U+6CC1,U+79FB,U+7D99,U+8108,U+8ABF,U+8B70,U+95A2,U+98DF;
+  unicode-range: U+305E,U+3085,U+516D,U+56FA,U+5D29,U+6271,U+66F4,U+6B04,U+6CC1,U+79FB,U+7D99,U+8108,U+8ABF,U+8B70,U+95A2,U+98DF;
 }
 @font-face {
   font-family: "Zen Maru Gothic";
@@ -38,7 +38,7 @@
   font-weight: 400;
   font-display: swap;
   src: url("./fonts/zen-maru-gothic-400-imysh.woff2") format("woff2");
-  unicode-range: U+4ECB,U+6240,U+6B20,U+7248,U+7AE0,U+7D04,U+7D39;
+  unicode-range: U+4ECB,U+6B20,U+7248,U+7AE0,U+7D04,U+7D39;
 }
 @font-face {
   font-family: "Zen Maru Gothic";
@@ -70,7 +70,7 @@
   font-weight: 400;
   font-display: swap;
   src: url("./fonts/zen-maru-gothic-400-my-asset-manager.woff2") format("woff2");
-  unicode-range: U+505C,U+5217,U+533A,U+5358,U+56F3,U+5C65,U+60F3,U+628A,U+6295,U+63B2,U+63CF,U+63E1,U+6697,U+682A,U+6B74,U+7A3F,U+7C21,U+7DD2,U+7DF4,U+7FD2,U+8AC7,U+8CA8,U+8CC7;
+  unicode-range: U+505C,U+5217,U+533A,U+5358,U+56F3,U+5C65,U+60F3,U+628A,U+6295,U+63B2,U+63CF,U+63E1,U+6697,U+682A,U+7A3F,U+7C21,U+7DD2,U+7DF4,U+7FD2,U+8AC7,U+8CA8,U+8CC7;
 }
 @font-face {
   font-family: "Zen Maru Gothic";
@@ -78,7 +78,7 @@
   font-weight: 400;
   font-display: swap;
   src: url("./fonts/zen-maru-gothic-400-second-brain.woff2") format("woff2");
-  unicode-range: U+30B1,U+5BDF,U+5DEE,U+5EF6,U+611B,U+672A;
+  unicode-range: U+30B1,U+30CE,U+5BDF,U+5DEE,U+5EF6,U+611B,U+672A;
 }
 @font-face {
   font-family: "Zen Maru Gothic";
@@ -101,7 +101,7 @@
   font-weight: 700;
   font-display: swap;
   src: url("./fonts/zen-maru-gothic-700-command-post.woff2") format("woff2");
-  unicode-range: U+305E,U+3085,U+516D,U+56FA,U+5D29,U+61B6,U+6271,U+66F4,U+6B04,U+6CC1,U+79FB,U+7D99,U+8108,U+8ABF,U+8B70,U+95A2,U+98DF;
+  unicode-range: U+305E,U+3085,U+516D,U+56FA,U+5D29,U+6271,U+66F4,U+6B04,U+6CC1,U+79FB,U+7D99,U+8108,U+8ABF,U+8B70,U+95A2,U+98DF;
 }
 @font-face {
   font-family: "Zen Maru Gothic";
@@ -125,7 +125,7 @@
   font-weight: 700;
   font-display: swap;
   src: url("./fonts/zen-maru-gothic-700-imysh.woff2") format("woff2");
-  unicode-range: U+4ECB,U+6240,U+6B20,U+7248,U+7AE0,U+7D04,U+7D39;
+  unicode-range: U+4ECB,U+6B20,U+7248,U+7AE0,U+7D04,U+7D39;
 }
 @font-face {
   font-family: "Zen Maru Gothic";
@@ -157,7 +157,7 @@
   font-weight: 700;
   font-display: swap;
   src: url("./fonts/zen-maru-gothic-700-my-asset-manager.woff2") format("woff2");
-  unicode-range: U+505C,U+5217,U+533A,U+5358,U+56F3,U+5C65,U+60F3,U+628A,U+6295,U+63B2,U+63CF,U+63E1,U+6697,U+682A,U+6B74,U+7A3F,U+7C21,U+7DD2,U+7DF4,U+7FD2,U+8AC7,U+8CA8,U+8CC7;
+  unicode-range: U+505C,U+5217,U+533A,U+5358,U+56F3,U+5C65,U+60F3,U+628A,U+6295,U+63B2,U+63CF,U+63E1,U+6697,U+682A,U+7A3F,U+7C21,U+7DD2,U+7DF4,U+7FD2,U+8AC7,U+8CA8,U+8CC7;
 }
 @font-face {
   font-family: "Zen Maru Gothic";
@@ -165,7 +165,7 @@
   font-weight: 700;
   font-display: swap;
   src: url("./fonts/zen-maru-gothic-700-second-brain.woff2") format("woff2");
-  unicode-range: U+30B1,U+5BDF,U+5DEE,U+5EF6,U+611B,U+672A;
+  unicode-range: U+30B1,U+30CE,U+5BDF,U+5DEE,U+5EF6,U+611B,U+672A;
 }
 @font-face {
   font-family: "Zen Maru Gothic";

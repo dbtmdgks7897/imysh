@@ -20,7 +20,9 @@ const TEXT = {
     steps: ["計画だけ", "変更（コミットなし）", "ローカルコミット"],
     out: ["外に出ることは", "司令塔からだけ", "push・デプロイ・公開"],
     smoke: ["スモークテストで", "はじめて完了"],
-    rec: ["記録は", "承認のあとで"],
+    sb: ["Second Brain", "長期の記憶"],
+    reads: "読む",
+    writes: "承認したものだけ書く",
   },
   ko: {
     me: ["나", "정하고, 승인한다"],
@@ -31,7 +33,9 @@ const TEXT = {
     steps: ["계획만", "변경 (커밋 없이)", "로컬 커밋"],
     out: ["밖으로 나가는 일은", "지휘본부에서만", "push · 배포 · 공개"],
     smoke: ["스모크 테스트까지", "해야 끝"],
-    rec: ["기록은", "승인한 뒤에"],
+    sb: ["Second Brain", "장기 기억"],
+    reads: "읽는다",
+    writes: "승인한 것만 쓴다",
   },
 };
 const card = (x, y, w, h, fill, stroke, sw = 1.5, rx = 18) => `
@@ -91,10 +95,19 @@ for (const [lang, t] of Object.entries(TEXT)) {
   parts.push(card(878, 358, 292, 96, C.surface, C.border));
   parts.push(textPath(B, t.smoke[0], 1024, 398, 19, C.text, "middle"));
   parts.push(textPath(R, t.smoke[1], 1024, 428, 17, C.soft, "middle"));
-  parts.push(`<path d="M 822 276 C 852 300, 852 560, 872 594" stroke="${C.muted}" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>`);
-  parts.push(card(878, 548, 292, 92, C.sub, C.border));
-  parts.push(textPath(B, t.rec[0], 1024, 586, 19, C.text, "middle"));
-  parts.push(textPath(R, t.rec[1], 1024, 616, 17, C.soft, "middle"));
+  // long-term memory: Second Brain. Solid = the command post reads it; dotted = writes back only what I approved.
+  parts.push(`<path d="M 878 574 C 838 560, 838 304, 826 286" stroke="${C.muted}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`);
+  parts.push(`<path d="M 832 294 L 825 285 L 836 287" stroke="${C.muted}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`);
+  parts.push(`<path d="M 824 262 C 866 290, 866 590, 874 612" stroke="${C.accentText}" stroke-width="1.8" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>`);
+  parts.push(`<path d="M 866 606 L 875 613 L 875 602" stroke="${C.accentText}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`);
+  // legend for the two lines, above the box
+  parts.push(`<path d="M 888 492 L 918 492" stroke="${C.muted}" stroke-width="1.8" stroke-linecap="round"/>`);
+  parts.push(textPath(R, t.reads, 928, 498, 16, C.soft));
+  parts.push(`<path d="M 888 522 L 918 522" stroke="${C.accentText}" stroke-width="1.8" stroke-dasharray="2 6" stroke-linecap="round"/>`);
+  parts.push(textPath(R, t.writes, 928, 528, 16, C.soft));
+  parts.push(card(878, 548, 292, 92, C.surface, C.accent, 1.8));
+  parts.push(textPath(B, t.sb[0], 1024, 586, 21, C.text, "middle"));
+  parts.push(textPath(R, t.sb[1], 1024, 616, 17, C.soft, "middle"));
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 690" width="1200" height="690">
   <rect width="1200" height="690" fill="${C.bg}"/>${parts.join("")}
 </svg>
