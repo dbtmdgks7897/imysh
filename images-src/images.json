@@ -109,5 +109,11 @@
       1250,
       1782
     ]
+  },
+  "projects/daemon/layers-ja": {
+    "src": "projects/daemon/layers-ja.svg"
+  },
+  "projects/daemon/layers-ko": {
+    "src": "projects/daemon/layers-ko.svg"
   }
 }

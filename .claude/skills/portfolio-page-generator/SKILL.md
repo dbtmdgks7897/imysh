@@ -30,6 +30,7 @@ status: in-progress                # required: deployed | in-progress | finished
 order: 3                           # optional, sorts siblings (lower first)
 thumbnail: /images/projects/<slug>/thumbnail.webp   # optional; local file must exist under public/
 hero: /images/projects/<slug>/hero.webp             # optional; large image at the top of the detail page
+# heroFit: contain                 # optional; for diagrams (default crops like a photo)
 # thumbnail/hero may also be per-locale, every locale required: { ja: /images/....webp, ko: /images/....webp }
 sections: [why, what, tech, thought]               # required: one key per "## " in the md, in order
 links:                             # optional

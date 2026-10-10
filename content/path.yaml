@@ -31,3 +31,8 @@ nodes:
   - id: "2026-h2"
     period: "2026.05–"
     current: true
+    children:
+      - id: "2026-e"            # 2026.09 — Second Brain restarted → the daemon (paused 10-02)
+        projects: [daemon]
+      - id: "2026-f"            # 2026.09– — the ~/dev command post; row only, no page
+

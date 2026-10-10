@@ -49,6 +49,8 @@ export const projectMetaSchema = z.strictObject({
   order: z.number().int().optional(),
   thumbnail: localizedImageSchema.optional(),
   hero: localizedImageSchema.optional(), // large image at the top of the detail page
+  // "contain" for diagrams whose edges carry text; photos and screenshots keep the default crop.
+  heroFit: z.enum(["cover", "contain"]).optional(),
   // One entry per h2 in {ja,ko}.md, in order: maps the markdown onto the fixed sections
   // without rewriting its words. Several h2s may share a key.
   sections: z.array(sectionKeySchema).min(1),

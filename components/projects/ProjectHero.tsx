@@ -8,7 +8,8 @@ export interface BackLink {
 }
 
 export default function ProjectHero({ project, backLinks }: { project: Project; backLinks: BackLink[] }) {
-  const { hero } = project.meta;
+  const { hero, heroFit } = project.meta;
+  const contain = heroFit === "contain";
   return (
     <div className="flex flex-wrap overflow-hidden rounded-[28px] bg-surface">
       <div className="flex min-w-0 flex-[1_1_360px] flex-col justify-center px-6 py-8 md:px-10 md:py-12">
@@ -27,8 +28,14 @@ export default function ProjectHero({ project, backLinks }: { project: Project; 
         <p className="mt-3 max-w-[40em] text-lg leading-[1.8] text-text-soft">{project.summary}</p>
       </div>
       {hero && (
-        <div className="relative min-h-[240px] flex-[1.4_1_480px] bg-placeholder md:min-h-[360px]">
-          <ResponsiveImage src={hero} alt={project.heroAlt ?? ""} priority className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 60vw, 100vw" />
+        <div className={`relative min-h-[240px] flex-[1.4_1_480px] md:min-h-[360px] ${contain ? "bg-bg" : "bg-placeholder"}`}>
+          <ResponsiveImage
+            src={hero}
+            alt={project.heroAlt ?? ""}
+            priority
+            className={`absolute inset-0 h-full w-full ${contain ? "object-contain p-4" : "object-cover object-top"}`}
+            sizes="(min-width: 768px) 60vw, 100vw"
+          />
         </div>
       )}
     </div>

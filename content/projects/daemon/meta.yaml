@@ -1,0 +1,11 @@
+# The daemon: Second Brain's assistant as its own being (2026-09), built on OpenClaw, paused 2026-10-02.
+# Sources: SecondBrain vault 01-Projects/secondbrain (index decisions 09-26 … 10-02). Drafts: docs/phase5-drafts-{ko,ja}.md
+period: "2026.09 – 2026.10"
+stack: ["OpenClaw", "Claude", "Telegram Bot API"]
+status: paused
+order: 6
+# A diagram, not a photo: labels are in the page's language.
+hero: { ja: /images/projects/daemon/layers-ja.webp, ko: /images/projects/daemon/layers-ko.webp }
+thumbnail: { ja: /images/projects/daemon/layers-ja.webp, ko: /images/projects/daemon/layers-ko.webp }
+heroFit: contain   # keep the whole diagram visible
+sections: [why, what, tech, thought]

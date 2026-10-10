@@ -154,7 +154,10 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
                         <YearLabel label={c.label} small />
                         <Photos node={child} />
                         <Doing node={child} />
-                        <p className="font-bold">{c.thought}</p>
+                        <p className="font-bold">
+                          {c.thought}
+                          {c.thoughtNote && <span className="mt-1 block text-[15px] font-normal">{c.thoughtNote}</span>}
+                        </p>
                         <p className="text-sm leading-[1.8] text-text-soft">{c.next}</p>
                       </li>
                     );
