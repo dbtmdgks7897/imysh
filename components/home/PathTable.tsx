@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { Locale } from "@/lib/locales";
@@ -42,7 +42,7 @@ export default function PathTable({ locale, path, text, projectTitles }: PathTab
       <div className={`grid gap-1.5 ${node.photos.length > 1 ? "grid-cols-3" : ""}`}>
         {node.photos.map((src) => (
           <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-placeholder">
-            <Image src={src} alt="" fill className="object-cover" sizes="200px" />
+            <ResponsiveImage src={src} alt="" className="absolute inset-0 h-full w-full object-cover object-top" sizes="200px" />
           </div>
         ))}
       </div>

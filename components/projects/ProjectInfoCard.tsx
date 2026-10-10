@@ -12,6 +12,12 @@ export default function ProjectInfoCard({ project }: { project: Project }) {
       <dl className="grid grid-cols-[72px_minmax(0,1fr)] items-center gap-x-3 gap-y-2.5">
         <dt className="text-text-muted">{t("period")}</dt>
         <dd>{period}</dd>
+        {project.role && (
+          <>
+            <dt className="text-text-muted">{t("role")}</dt>
+            <dd>{project.role}</dd>
+          </>
+        )}
         <dt className="text-text-muted">{t("status")}</dt>
         <dd>
           <StatusBadge status={status} />

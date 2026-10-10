@@ -1,0 +1,10 @@
+# The AI vending machine. Live path is ki-garu.com/code (repo name kigaru-code); site slug decided: jihanki.
+period: "2026.03 – 2026.04"
+stack: ["Next.js", "FastAPI", "Gemini", "Cloudflare KV"]
+status: deployed
+links:
+  live: "https://ki-garu.com/code/"
+order: 2
+hero: /images/projects/kigaru/code-top.webp
+thumbnail: /images/projects/kigaru/code-top.webp
+sections: [why, what, tech, thought]

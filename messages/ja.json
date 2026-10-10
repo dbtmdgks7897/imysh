@@ -1,6 +1,6 @@
 {
   "meta": {
-    "siteDescription": "誰もが、自分が本当に望む価値のために生きられるように。それを手伝いたい。"
+    "siteDescription": "誰もが、自分が本当に望む価値のために生きられるように。それを手伝いたいです。"
   },
   "nav": {
     "label": "メイン",
@@ -31,6 +31,7 @@
     "backToPath": "← 02 ここまで · {label}",
     "info": "プロジェクト情報",
     "period": "期間",
+    "role": "立場",
     "status": "状態",
     "stack": "つかったもの",
     "links": "リンク",
@@ -50,6 +51,8 @@
   "status": {
     "deployed": "公開中",
     "inProgress": "開発中",
+    "finished": "完了",
+    "closed": "サービス終了",
     "planned": "予定"
   },
   "footer": {

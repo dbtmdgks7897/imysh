@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { Locale } from "@/lib/locales";
@@ -35,7 +35,7 @@ export default function NowSection({ locale, now, text }: NowSectionProps) {
         </h1>
         {now.portrait && (
           <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-placeholder">
-            <Image src={now.portrait} alt={t("portraitAlt")} fill className="object-cover" sizes="(min-width: 768px) 35vw, 100vw" />
+            <ResponsiveImage src={now.portrait} alt={t("portraitAlt")} className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 35vw, 100vw" />
           </div>
         )}
       </div>
@@ -57,7 +57,7 @@ export default function NowSection({ locale, now, text }: NowSectionProps) {
             <>
               {card.image && (
                 <div className="relative aspect-video bg-placeholder">
-                  <Image src={card.image} alt="" fill className="object-cover" sizes="(min-width: 768px) 25vw, 100vw" />
+                  <ResponsiveImage src={card.image} alt="" className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 25vw, 100vw" />
                 </div>
               )}
               <div className="px-5 pt-4 pb-5">

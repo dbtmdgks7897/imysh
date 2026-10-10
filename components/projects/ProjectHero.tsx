@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import Link from "next/link";
 import type { Project } from "@/lib/content/projects";
 
@@ -28,7 +28,7 @@ export default function ProjectHero({ project, backLinks }: { project: Project; 
       </div>
       {hero && (
         <div className="relative min-h-[240px] flex-[1.4_1_480px] bg-placeholder md:min-h-[360px]">
-          <Image src={hero} alt="" fill priority className="object-cover" sizes="(min-width: 768px) 60vw, 100vw" />
+          <ResponsiveImage src={hero} alt="" priority className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 60vw, 100vw" />
         </div>
       )}
     </div>

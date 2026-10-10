@@ -1,9 +1,12 @@
-period: "2026.03~"
+period: "2026.03 – 2026.04"
 stack: ["Next.js", "FastAPI", "React", "Tailwind CSS", "Gemini Flash"]
-status: in-progress
+# deployed: the service still runs (development stopped 2026-04). Live link approved by the owner 2026-10-10.
+status: deployed
 order: 1
-links:
-  # Points at the GitHub profile root, not a repo — carried over verbatim; fix in Phase 3.
-  github: "https://github.com/dbtmdgks7897"
+hero: /images/projects/kigaru/landing.webp
 # HOW and 技術判断 both fold into the tech <details>.
-sections: [why, tech, what, tech, thought]
+sections: [why, what, tech, tech, thought]
+links:
+  # Points at the GitHub profile root, not a repo — whether the repo is public is an open owner question.
+  github: "https://github.com/dbtmdgks7897"
+  live: "https://ki-garu.com/"

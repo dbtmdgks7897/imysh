@@ -1,0 +1,15 @@
+{
+  "_comment": "Source images → public/images/<key>.webp (max 1280px wide) + <key>-640.webp. Run `npm run images` after editing. crop = [top, height] in source pixels, full width.",
+  "projects/my-asset-manager/portfolio-detail": { "src": "projects/my-asset-manager/portfolio-detail.webp" },
+  "projects/my-asset-manager/analyze": { "src": "projects/my-asset-manager/analyze.webp" },
+  "projects/my-asset-manager/bitcoin-detail": { "src": "projects/my-asset-manager/bitcoin-detail.webp" },
+  "projects/my-asset-manager/board-detail": { "src": "projects/my-asset-manager/board-detail.webp" },
+  "projects/my-asset-manager/mockup": { "src": "projects/my-asset-manager/mockup.png" },
+  "projects/my-asset-manager/db-v3": { "src": "projects/my-asset-manager/db-v3.png" },
+  "projects/kigaru/landing": { "src": "projects/kigaru/landing.webp", "crop": [0, 2000] },
+  "projects/kigaru/kaouranai-top": { "src": "projects/kigaru/kaouranai-top.webp", "crop": [0, 1800] },
+  "projects/kigaru/code-top": { "src": "projects/kigaru/code-top.webp", "crop": [0, 1400] },
+  "projects/kigaru/code-memory-game": { "src": "projects/kigaru/code-memory-game.webp", "crop": [0, 950] },
+  "projects/kigaru/code-janken": { "src": "projects/kigaru/code-janken.webp", "crop": [0, 870] },
+  "projects/imysh/hub-ja": { "src": "projects/imysh/hub-ja.png", "crop": [0, 900] }
+}

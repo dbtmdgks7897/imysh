@@ -5,6 +5,7 @@ import { CONTENT_ROOT, PUBLIC_ROOT } from "./paths";
 import { ContentError } from "./read";
 import { listProjectSlugPaths, loadProjectMeta, loadProjectText } from "./projects";
 import { splitH2 } from "./sections";
+import { isKnownImage } from "./images";
 import { loadNow, loadNowText, loadPath, loadPathText } from "./profile";
 
 const ALLOWED_MD = new Set(LOCALES.map((l) => `${l}.md`));
@@ -18,10 +19,19 @@ function attempt(errors: string[], fn: () => void) {
 }
 
 function checkImage(errors: string[], ref: string | null | undefined, where: string, publicRoot: string) {
-  if (!ref || !ref.startsWith("/")) return; // remote URLs are not checked (see plan note 3)
+  if (!ref) return;
   if (!fs.existsSync(path.join(publicRoot, ref))) {
     errors.push(`${where}: image not found in public/: ${ref}`);
+  } else if (!isKnownImage(ref)) {
+    errors.push(`${where}: ${ref} is not in lib/content/image-manifest.json (run npm run images)`);
   }
+}
+
+const MD_IMAGE = /!\[[^\]]*\]\(([^)\s]+)[^)]*\)/g;
+
+// Draft markers like 【본인 확인: …】 must never reach the site.
+function checkNoDraftMarkers(errors: string[], where: string, text: string) {
+  if (text.includes("【")) errors.push(`${where}: contains a draft marker "【"`);
 }
 
 // Every structural id needs text in this locale file, and the file may not carry unknown ids.
@@ -63,9 +73,15 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
     });
     for (const locale of LOCALES) {
       attempt(errors, () => {
-        const { body } = loadProjectText(slugPath, locale, root);
+        const { title, summary, role, body } = loadProjectText(slugPath, locale, root);
         const { preamble, parts } = splitH2(body);
         const where = `projects/${slug}/${locale}.md`;
+        checkNoDraftMarkers(errors, where, [title, summary, role ?? "", body].join("\n"));
+        for (const match of body.matchAll(MD_IMAGE)) {
+          const src = match[1];
+          if (!src.startsWith("/images/")) errors.push(`${where}: image must be a local /images/ path: ${src}`);
+          else checkImage(errors, src, `${where} image`, publicRoot);
+        }
         if (preamble) errors.push(`${where}: text before the first "## " heading would not be shown`);
         if (sectionCount !== null && parts.length !== sectionCount) {
           errors.push(
@@ -95,6 +111,7 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
     for (const locale of LOCALES) {
       attempt(errors, () => {
         const text = loadNowText(locale, root);
+        checkNoDraftMarkers(errors, `now.${locale}.yaml`, JSON.stringify(text));
         compareIds(errors, `now.${locale}.yaml cards`, cardIds, Object.keys(text.cards));
         compareIds(errors, `now.${locale}.yaml oneLiners`, lineIds, Object.keys(text.oneLiners));
       });
@@ -121,8 +138,10 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
     for (const locale of LOCALES) {
       attempt(errors, () => {
         const text = loadPathText(locale, root);
+        checkNoDraftMarkers(errors, `path.${locale}.yaml`, JSON.stringify(text));
         compareIds(errors, `path.${locale}.yaml nodes`, ids, Object.keys(text.nodes));
-        for (const id of ids) {
+        // "next" is required on top-level rows (the hand-off between periods); sub-rows may omit it.
+        for (const id of data.nodes.map((n) => n.id)) {
           const t = text.nodes[id];
           if (t && id !== currentId && !t.next) {
             errors.push(`path.${locale}.yaml "${id}": "next" (why I moved on) is required`);

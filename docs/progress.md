@@ -14,22 +14,38 @@ is cheap). The page leads with "now" (いま), then the path that formed it
 - Visual direction: **C3 · やわらかい索引** (soft index — table-structured path,
   photos per row, rounded gothic, warm neutral ground, one terracotta accent).
   Artboard in https://claude.ai/artifact/Tr3MugFgFgucQyGEor13pb.
-- **Phase 2 (Visual, C3) is implemented on `redesign`, uncommitted** (plan:
-  [`docs/superpowers/plans/2026-10-10-imysh-phase2-visual.md`](superpowers/plans/2026-10-10-imysh-phase2-visual.md);
-  base `b53d606`). Role tokens from spec §4 replace the palette tokens; Zen
-  Maru Gothic (ja), Pretendard (ko) and JetBrains Mono are self-hosted from
-  npm (no `next/font/google`, no jsdelivr, Noto Sans JP removed). The hub is
-  now "01 いま" + "02 ここまで" rendered from `content/now.*` / `content/path.*`
-  (the old Hero + Projects grid is gone). Detail pages use template B: hero
-  card with back links, info card (period, status, stack, links), mini
-  timeline of neighbouring path nodes, 01 なぜ始めたか / 02 何をつくったか /
-  tech in `<details>` / 03 ここで考えたこと (opens with the path node's
-  thought), back-to-row link, prev/next cards in path order. Markdown is
-  mapped into sections by a positional `sections:` list in `meta.yaml`; no
-  project words changed. Verified: lint, typecheck, check:content, build;
-  Playwright on a local static server, ja/ko × 1440/375 — no horizontal
-  overflow, no interactive target under 44px, focus ring in `accent-text`,
-  the self-hosted fonts load. Screenshots: `docs/screenshots/phase2/`.
+- **Phase 3 (Content) is applied on `redesign`, uncommitted.** The owner
+  reviewed `docs/phase3-drafts-ko.md`. Every public-scope recommendation
+  was accepted except #13 (kigaru: "shown only to a few close friends"). The
+  central sentence is the softened 「…살아갈 수 있도록 / 生きられるように」, and the
+  slug is `jihanki`. Korean and Japanese copy are now in `content/` for now,
+  the path (2023 split into My Asset Manager → everyai) and seven project
+  pages. New pages: my-asset-manager, kigaru/jihanki, second-brain, imysh.
+  Translation choices are in `docs/phase3-translation-notes.md`. The owner
+  answered the 9 open questions, and all of them are applied in ko and ja:
+  the professor's special lecture → the recommended internship; vibe coding
+  from March 2026; why kigaru and imysh stopped ("to learn through real
+  conversations"); EP01 still 準備中; everyai shown as サービス終了 / 서비스 종료;
+  kaouranai shown as 韓国式AI顔占い. The 6 small confirmations are applied
+  too:
+  - My Asset Manager shows as `closed`; it was deployed at the end of the
+    project and is down now.
+  - The vending-machine motive is in the owner's words.
+  - Second Brain lists its stack as technology names only, and says it is
+    used daily.
+  - The whole ja site is unified on です・ます.
+  The ki-garu.com live links are in (owner approved). The only open link
+  decision is the kigaru repo, whose link still points at the GitHub profile. check:content rejects any 【 marker.
+- Images: `npm run images` (sharp) turns `images-src/` into two webp widths
+  under `public/images/` plus `lib/content/image-manifest.json`. Markup sets
+  width, height, srcset and lazy loading. The everyai GIFs are dropped
+  (everyai is text-only), and R2 is gone from the codebase: images must be
+  local `/images/….webp`. Added `finished` (完了/완료) and `closed`
+  (サービス終了/서비스 종료) statuses and an optional `role` frontmatter (立場/역할). Verified: lint, typecheck,
+  check:content, build, and Playwright at ja/ko × 1440/375 on 10 pages, with
+  no overflow, no target under 44px and no 【 in `out/`. Screenshots are in
+  `docs/screenshots/phase3/` (6.3 MB; decide whether to commit them).
+- Phase 2 (Visual, C3) is committed (`dfac518`), pushed, and CI is green.
 - Phase 1 (Foundation) is committed and pushed (`26f2a4c`, CI font fix
   `fe46a84`, progress `b53d606`); CI is green and the preview at
   <https://redesign.imysh.pages.dev> works.
@@ -109,7 +125,7 @@ Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
 - [ ] Check the Cloudflare Pages build Node version (Settings → Builds) against
   CI's Node 22.
 
-### Phase 2 — Visual (C3) (implemented, uncommitted — awaiting review)
+### Phase 2 — Visual (C3) (done: `dfac518`, pushed, CI green)
 
 - [x] Role tokens from spec §4 replace palette tokens [5, 17].
 - [x] "01 いま" section and "02 ここまで" path table with sub-rows.
@@ -119,25 +135,28 @@ Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
   keep-all, Japanese strict; prose column ≈40em [9, 15].
 - [x] A11y floor: text ≥4.5:1, targets ≥44px, `focus-visible` ring,
   reduced motion, hover shadow only [16, 19, 21]; ProjectNav replaced [14].
-- [ ] Review, commit and push from the command post; check the preview at
-  375px on a real phone (Phase 4 covers devices formally).
+- [x] Review, commit and push from the command post.
 - [ ] Hero images, path photos, portrait and card images are empty until
   Phase 3 provides them (no placeholders are drawn).
 - [ ] "Role" row in the info card (artboard B) needs a `role` frontmatter key
   with real copy — Phase 3.
 
-### Phase 3 — Content
+### Phase 3 — Content (applied, uncommitted; only the kigaru repo link open)
 
-- [ ] Korean drafts from the vault → user review → Japanese translation → user review.
-- [ ] New pages: my-asset-manager, kigaru/jihanki, second-brain, imysh [22].
-- [ ] Rewrite everyai with 3–4 static screenshots replacing the GIFs [4, 8];
-  fill kigaru and kaouranai [6, 23].
-- [ ] Commit images under `public/images/`, `npm run images` (sharp, two webp
-  widths), `width`/`height` + `loading="lazy"` [24].
+- [x] Korean drafts → owner review (`docs/phase3-drafts-ko.md`).
+- [x] Apply the Korean to `content/`; 2023 split; four new projects [22, 23].
+- [x] Japanese translation (`docs/phase3-translation-notes.md` for review).
+- [x] `npm run images`; MAM and kigaru screenshots and vault mockup/DB
+  diagram; R2 removed [24].
+- [x] Owner answered the 9 open questions; applied in ko and ja.
+- [x] Owner's 6 small confirmations applied; ja unified on です・ます.
+- [ ] **Owner:** kigaru repo public or not, which decides whether its GitHub link (now the profile root) stays.
+- [ ] Second Brain 02 says capture is "from the phone via Telegram". The bot README says the bot has been dormant since 2026-10-02 and capture moved to the Claude app. Owner to confirm or correct this line.
+- [ ] **Owner:** review the Japanese, using `docs/phase3-translation-notes.md`.
+- [x] ki-garu.com live links added to kigaru, 韓国式AI顔占い and AI自販機 (owner approved; all three URLs checked and return 200).
+- [ ] **Owner:** portrait, path-row life photos, Second Brain screens;
+  everyai 3–4 static screenshots (the app must be re-run) [4, 8].
 - [ ] README [20].
-- [ ] Open items (spec §8): jihanki slug, which photos exist, public scope
-  (study venue/city, employer names, talking-bar wording), the two inferred
-  hand-off lines, My Asset Manager facts marked 추정.
 
 ### Phase 4 — Pre-launch
 
@@ -399,6 +418,11 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: Added ki-garu.com live links to kigaru (`/`), 韓国式AI顔占い (`/kaouranai/`) and AI自販機 (`/code/`); each URL returned 200. Removed the TODO.
+- 2026-10-10: **Applied the owner's 6 small Phase 3 confirmations and unified the Japanese on です・ます (uncommitted).** My Asset Manager is now `closed` (deployed, now down). Added the jihanki motive in the owner's words. Second Brain gets a tech-names-only stack and "used daily". Flagged that its Telegram-capture line may be stale, because the bot README says capture moved to the Claude app. Checks pass and Playwright is clean on 20 shots.
+- 2026-10-10: **Applied the owner's answers to the 9 Phase 3 questions in ko and ja.** Added a `closed` status for everyai, renamed kaouranai to 韓国式AI顔占い, and filled the path hand-offs for 2023-a and 2026-c. Checks pass, Playwright is clean on 20 shots, and `out/` has no 【 and no old kaouranai name.
+- 2026-10-10: **Applied the owner-reviewed Phase 3 copy and translated it to Japanese (uncommitted).** now, path (2023 split into My Asset Manager → everyai) and seven project pages in ko and ja, including four new ones. 9 owner questions remain; the sentences they cover are omitted, and check:content blocks 【 markers. Added the `npm run images` sharp pipeline with a manifest, so markup gets width/height/srcset. Dropped the everyai GIFs and removed R2. Added the `finished` status and an optional `role` frontmatter. Lint, typecheck, check:content and build pass; Playwright ja/ko × 1440/375 on 10 pages is clean.
+- 2026-10-10: **Phase 3 started: wrote Korean drafts of all site copy for owner review** (`docs/phase3-drafts-ko.md`). It covers now, the path (2023 now split into My Asset Manager → everyai, periods from the timeline note) and seven project pages in the 01/02/03 shape, using the owner's own vault wording. Two path lines that were inferences earlier now have sources (EP01). 17 public-scope items are listed with recommendations, gaps are marked 【본인 확인】, and the doc includes an image inventory. The vault and other repos were only read; no content files changed and nothing was translated.
 - 2026-10-10: **Implemented Phase 2 (C3 visual) on `redesign`, uncommitted.** Role tokens, self-hosted Zen Maru Gothic / Pretendard / JetBrains Mono, hub rebuilt as 01 いま + 02 ここまで from the now/path content, detail pages in template B with md mapped into 01/02/tech/03 by a positional `sections:` list in meta.yaml (words unchanged), mini timeline, back-to-row and path-ordered prev/next. Lint, typecheck, content check and build pass; Playwright at ja/ko × 1440/375 found no overflow and no target under 44px. Screenshots in `docs/screenshots/phase2/`.
 - 2026-10-10: **Fixed the CI build failure on `redesign` (`fe46a84`, committed locally, not pushed).** CI run 38026469640 failed with 372 Turbopack errors because Google Fonts served the runner Noto Sans JP as `/l/font?kit=…&skey=…` URLs, which `next/font/google` cannot resolve. Reproduced locally with a mocked `/l/` response, which also fails on every newer Next (16.1.7 to 16.5 canary) and with `--webpack`. Fixed by loading Noto Sans JP from `@fontsource/noto-sans-jp` (same font, same slices), so the build no longer fetches it. Mocked `/l/` build, normal build (Node 25 and 22), lint, typecheck and content check all pass. Phase 2 note: self-host Zen Maru Gothic too.
 - 2026-10-10: **Implemented Phase 1 (Foundation) on local branch `redesign`, uncommitted and unpushed.** ja default + ko (en removed, `_redirects` for `/` and `/en*`), one zod-validated content model with `npm run check:content` and build-time validation, placeholder now/path content, remark + remark-gfm (kigaru tables now render), per-page canonical / absolute hreflang / OG metadata, GitHub Actions CI, rewritten skill and CLAUDE.md. All plan verifications passed locally; the md migration was proven verbatim (diff contains only removed structural frontmatter keys). One small change from the plan: `loadProjectText` was split out of `loadProject` so a missing meta.yaml no longer hides frontmatter errors (plan updated to match). Recorded detail template B in spec §3. Preview-URL checks wait for push approval.

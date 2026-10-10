@@ -5,6 +5,7 @@ import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import { toJsxRuntime, type Components } from "hast-util-to-jsx-runtime";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 
 // Plain markdown + GFM (tables, strikethrough, autolinks). No MDX: `{` in content is just text.
 // Raw HTML in markdown is dropped by remark-rehype's default; content does not use any.
@@ -42,10 +43,14 @@ const components: Components = {
   ),
   td: (props: JSX.IntrinsicElements["td"]) => <td className="border-b border-border px-4 py-2 text-text-soft" {...props} />,
   img: (props: JSX.IntrinsicElements["img"]) => (
-    // The alt text is the caption; hide the duplicate from screen readers via an empty alt.
+    // The alt text is shown as the caption; the image itself gets an empty alt so it is not read twice.
     <span className="my-6 block">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="mx-auto block max-w-full rounded-[14px] shadow-card" loading="lazy" {...props} alt="" />
+      <ResponsiveImage
+        src={typeof props.src === "string" ? props.src : ""}
+        alt=""
+        sizes="(min-width: 1024px) 720px, 100vw"
+        className="mx-auto block h-auto max-w-full rounded-[14px] shadow-card"
+      />
       {props.alt && <span className="mt-2 block text-center text-sm text-text-muted">{props.alt}</span>}
     </span>
   ),

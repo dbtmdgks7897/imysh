@@ -1,19 +1,20 @@
-# DRAFT (Phase 1 placeholder) — copy taken from the C3 artboard; final copy in Phase 3.
+# Japanese translation of now.ko.yaml (2026-10-10), unified to です・ます (owner decision). Choices: docs/phase3-translation-notes.md
 statement:
   before: "誰もが、自分が本当に望む価値のために"
   accent: "生きられるように。"
-  after: "それを手伝いたい。"
+  after: "それを手伝いたいです。"
 thinking:
-  - "そのためにまず、自分が何を大切にしているのかを確かめているところです。答えはコードより、人との会話の中にあると思っています。"
+  - "手伝う方法は、見せることだと思っています。自分の価値を追いかけて楽しく生きている姿を見て、誰かが一度でも「自分は何がしたいんだろう」と自分に問いかけるきっかけになれたら、うれしいです。"
+  - "自分が見つけた答えは「楽しく」です。"
 cards:
   second-brain:
     label: "PROJECT"
     title: "Second Brain"
-    text: "自分の考えと選択を記録して、大切にしている価値を見つけるための仕組み。"
+    text: "ありのままの自分で生きるためにつくっている相棒です。同じ価値観を持ちながら、自分の弱いところは違う気質で補ってくれます。"
   youtube:
     label: "YOUTUBE"
     title: "面白そうだから"
-    text: "「面白そう」で選んできた仕事と、そこで考えたこと。EP01 準備中。"
+    text: "「面白そうだから」で選んできたことが積み重なって、本当にやりたいことをして生きられる扉の前まで来ました。日本語でつくっています。EP01 準備中。"
 oneLiners:
   study-group: "日本語スタディのリーダー"
   construction: "工事現場で働いています"

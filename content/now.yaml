@@ -1,16 +1,15 @@
 # Structure of the "01 いま" section (spec §3.1). Sentences live in now.{ja,ko}.yaml.
-# PLACEHOLDER (Phase 1): images and links are filled in Phase 3.
 asOf: "2026.10"
-portrait: null              # e.g. /images/now/portrait.jpg
+portrait: null              # owner photo, Phase 3 (pending)
 cards:
   - id: second-brain
-    image: null
-    project: null           # set to "second-brain" once content/projects/second-brain exists (Phase 3)
+    image: null             # Second Brain screen — owner to capture (personal data must be hidden)
+    project: second-brain
     href: null
   - id: youtube
     image: null
     project: null
-    href: null              # channel URL once EP01 is public
+    href: null              # channel URL — open owner question (EP01 uploaded?)
 oneLiners:
   - id: study-group
     since: "2026.07"

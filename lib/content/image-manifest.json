@@ -1,0 +1,62 @@
+{
+  "/images/projects/my-asset-manager/portfolio-detail.webp": {
+    "width": 1280,
+    "height": 1058,
+    "srcSet": "/images/projects/my-asset-manager/portfolio-detail-640.webp 640w, /images/projects/my-asset-manager/portfolio-detail.webp 1280w"
+  },
+  "/images/projects/my-asset-manager/analyze.webp": {
+    "width": 1280,
+    "height": 800,
+    "srcSet": "/images/projects/my-asset-manager/analyze-640.webp 640w, /images/projects/my-asset-manager/analyze.webp 1280w"
+  },
+  "/images/projects/my-asset-manager/bitcoin-detail.webp": {
+    "width": 1280,
+    "height": 800,
+    "srcSet": "/images/projects/my-asset-manager/bitcoin-detail-640.webp 640w, /images/projects/my-asset-manager/bitcoin-detail.webp 1280w"
+  },
+  "/images/projects/my-asset-manager/board-detail.webp": {
+    "width": 1280,
+    "height": 921,
+    "srcSet": "/images/projects/my-asset-manager/board-detail-640.webp 640w, /images/projects/my-asset-manager/board-detail.webp 1280w"
+  },
+  "/images/projects/my-asset-manager/mockup.webp": {
+    "width": 1280,
+    "height": 671,
+    "srcSet": "/images/projects/my-asset-manager/mockup-640.webp 640w, /images/projects/my-asset-manager/mockup.webp 1280w"
+  },
+  "/images/projects/my-asset-manager/db-v3.webp": {
+    "width": 1280,
+    "height": 1181,
+    "srcSet": "/images/projects/my-asset-manager/db-v3-640.webp 640w, /images/projects/my-asset-manager/db-v3.webp 1280w"
+  },
+  "/images/projects/kigaru/landing.webp": {
+    "width": 1170,
+    "height": 2000,
+    "srcSet": "/images/projects/kigaru/landing-640.webp 640w, /images/projects/kigaru/landing.webp 1170w"
+  },
+  "/images/projects/kigaru/kaouranai-top.webp": {
+    "width": 1170,
+    "height": 1800,
+    "srcSet": "/images/projects/kigaru/kaouranai-top-640.webp 640w, /images/projects/kigaru/kaouranai-top.webp 1170w"
+  },
+  "/images/projects/kigaru/code-top.webp": {
+    "width": 1170,
+    "height": 1400,
+    "srcSet": "/images/projects/kigaru/code-top-640.webp 640w, /images/projects/kigaru/code-top.webp 1170w"
+  },
+  "/images/projects/kigaru/code-memory-game.webp": {
+    "width": 1170,
+    "height": 950,
+    "srcSet": "/images/projects/kigaru/code-memory-game-640.webp 640w, /images/projects/kigaru/code-memory-game.webp 1170w"
+  },
+  "/images/projects/kigaru/code-janken.webp": {
+    "width": 1170,
+    "height": 870,
+    "srcSet": "/images/projects/kigaru/code-janken-640.webp 640w, /images/projects/kigaru/code-janken.webp 1170w"
+  },
+  "/images/projects/imysh/hub-ja.webp": {
+    "width": 1280,
+    "height": 800,
+    "srcSet": "/images/projects/imysh/hub-ja-640.webp 640w, /images/projects/imysh/hub-ja.webp 1280w"
+  }
+}

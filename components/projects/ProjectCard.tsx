@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import type { Locale } from "@/lib/locales";
 import { projectHref, type Project } from "@/lib/content/projects";
 import StatusBadge from "@/components/ui/StatusBadge";
@@ -13,7 +13,7 @@ export default function ProjectCard({ project, locale }: { project: Project; loc
     >
       {meta.thumbnail && (
         <div className="relative aspect-video bg-placeholder">
-          <Image src={meta.thumbnail} alt="" fill className="object-cover" sizes="(min-width: 768px) 30vw, 100vw" />
+          <ResponsiveImage src={meta.thumbnail} alt="" className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 30vw, 100vw" />
         </div>
       )}
       <div className="flex flex-col gap-2 px-5 pt-4 pb-5">

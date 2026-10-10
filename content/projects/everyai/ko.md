@@ -1,6 +1,7 @@
 ---
 title: "EveryAI - AI 작품·서비스 거래 플랫폼"
 summary: "생성 AI로 만든 작품과 서비스를 거래할 수 있는 플랫폼. 6주 실무 프로젝트."
+role: "백엔드 인턴 — 백엔드 전체 담당"
 ---
 
 ## 1. 배경 — WHY
@@ -8,9 +9,13 @@ summary: "생성 AI로 만든 작품과 서비스를 거래할 수 있는 플랫
 AI 기술로 만든 다양한 작품과 서비스를 거래할 수 있는 플랫폼을 구축하는 실무 프로젝트.
 소비자는 합리적인 가격에 AI 서비스를 이용하고, 제작자는 새로운 수익 채널을 확보하는 것이 목표였다.
 
+대학 교수님이 추천해 주신 인턴이었다. 그 전에 같은 교수님의 특강에서 My Asset Manager를 만들었다.
+
 ## 2. 결과물 — WHAT
 
 백엔드 전체를 담당했다. 인증, 서비스 CRUD, 실시간 메시징, 결제, 관리자 기능까지 구현.
+
+지금은 서비스가 종료되어 볼 수 없다.
 
 ### 인증 시스템
 
@@ -21,27 +26,13 @@ AI 기술로 만든 다양한 작품과 서비스를 거래할 수 있는 플랫
 - accessToken 1일 / refreshToken 7일, 만료 시 자동 재발급 플로우
 - 카카오 등 소셜 로그인 — 기존 회원 여부에 따라 가입/로그인 분기
 
-![회원가입](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/signup.gif)
-
-![JWT 로그인](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/login-jwt.gif)
-
-![소셜 로그인](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/social-login-signup.gif)
-
 ### 서비스·프로젝트 관리
 
 AI 서비스/프로젝트의 등록·수정·삭제 CRUD. 이미지 업로드 포함.
 
-![서비스 등록](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/service-register.gif)
-
-![서비스 수정](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/service-edit.gif)
-
 ### 결제 (BootPay)
 
 부트페이 연동으로 안전 결제 구현. 메시지 방 내에서 결제 요청 → 결제 처리 → 성공 메시지 전송까지의 전체 플로우.
-
-![부트페이 결제](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/bootpay-1.gif)
-
-![결제 완료 처리](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/bootpay-2.gif)
 
 ### 실시간 메시징
 
@@ -51,19 +42,9 @@ AI 서비스/프로젝트의 등록·수정·삭제 CRUD. 이미지 업로드 �
 - 방 진입 시 상대 메시지 자동 읽음 처리
 - 메시지 신고 기능
 
-![메시지 방 생성](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/message-room-create.gif)
-
-![일반 메시지 전송](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/text-message.gif)
-
-![안전 결제 요청 메시지](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/safe-payment-send.gif)
-
 ### 관리자 기능
 
 유저 관리(제한/해제), 서비스 승인/반려, 전문가 등급 관리, 광고 배너 관리.
-
-![유저 제한](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/user-restrict.gif)
-
-![서비스 승인](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/service-approve.gif)
 
 ## 3. 기술 판단
 
@@ -88,3 +69,5 @@ Spring Security의 필터 체인에 커스텀 JwtFilter를 추가하여 모든 �
 - 기본 CRUD 외에 보안, Git 협업, S3, 부트페이, FCM 같은 실무 기술을 프로젝트에 통합하면서 이론적 배경도 깊게 공부할 수 있었다.
 - 인원이 많다고 생산성이 올라가지 않는다는 걸 체감. 각자의 생산성을 최대화할 방법을 모색하고 적용하는 게 중요했다.
 - 추가 구현했지만 넣지 못한 기능: FCM 푸시 알림
+
+성과가 바로 안 보이는 게 불안해서 인턴을 그만뒀다. 돌아보면 성급했다.

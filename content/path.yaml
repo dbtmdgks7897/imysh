@@ -1,25 +1,30 @@
 # Structure of the "02 ここまで" path (spec §3.2). One line, oldest first; the last node is "now".
-# Sentences live in path.{ja,ko}.yaml. Ids are quoted so YAML keeps them as strings.
-# PLACEHOLDER (Phase 1): photos and most project links are filled in Phase 3.
+# Periods follow the owner's timeline note (SecondBrain 03-Resources/내 이력 연표). Ids are quoted
+# so YAML keeps them as strings. Sentences live in path.{ja,ko}.yaml.
+# Photos: owner-supplied life photos per row are still pending.
 nodes:
   - id: "2023"
     period: "2023.07–2023.12"
-    projects: [everyai]       # add my-asset-manager when its page exists (Phase 3)
+    children:
+      - id: "2023-a"            # 2023.07–08
+        projects: [my-asset-manager]
+      - id: "2023-b"            # 2023.08–12
+        projects: [everyai]
   - id: "2024"
     period: "2024.01–2024.12"
   - id: "2025"
     period: "2025.01–2026.05"
   - id: "2026-h1"
-    period: "2026"            # spec gives only "2026 H1"; exact months open (Phase 3)
+    period: "2026.03"           # vibe coding started in March 2026 (owner)
     children:
       - id: "2026-a"
         projects: [kigaru/kaouranai]
       - id: "2026-b"
-        projects: []          # kigaru/jihanki (slug open, spec §8)
+        projects: [kigaru/jihanki]
       - id: "2026-c"
-        projects: []          # imysh
+        projects: [imysh]
       - id: "2026-d"
-        projects: []          # second-brain
+        projects: [second-brain]
   - id: "2026-h2"
     period: "2026.05–"
     current: true

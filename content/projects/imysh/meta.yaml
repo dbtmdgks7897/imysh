@@ -1,0 +1,6 @@
+period: "2026.03 –"          # first version in March, rebuilt in October
+stack: ["Next.js", "TypeScript", "Tailwind CSS", "Cloudflare Pages"]
+status: deployed
+order: 4
+hero: /images/projects/imysh/hub-ja.webp
+sections: [why, what, tech, thought]

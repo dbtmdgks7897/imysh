@@ -1,9 +1,11 @@
 import { useTranslations } from "next-intl";
 import type { ProjectStatus } from "@/lib/content/schema";
 
-const KEY: Record<ProjectStatus, "deployed" | "inProgress" | "planned"> = {
+const KEY: Record<ProjectStatus, "deployed" | "inProgress" | "finished" | "closed" | "planned"> = {
   deployed: "deployed",
   "in-progress": "inProgress",
+  finished: "finished",
+  closed: "closed",
   planned: "planned",
 };
 

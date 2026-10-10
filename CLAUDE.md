@@ -26,7 +26,8 @@ npm run dev            # 개발 서버 — / 는 404, /ja 로 열 것 (/ 리다�
 npm run build          # Static Export → out/ (콘텐츠 검증 포함)
 npm run lint           # ESLint
 npm run typecheck      # next typegen && tsc -p tsconfig.json --noEmit
-npm run check:content  # content/ 전체 검증 (두 로케일, slug·이미지 참조, enum)
+npm run check:content  # content/ 전체 검증 (두 로케일, slug·이미지 참조, enum, 【 금지)
+npm run images         # images-src/ → public/images/ (webp 640 + 1280) + lib/content/image-manifest.json
 ```
 
 ## 디렉토리 구조
@@ -41,7 +42,8 @@ scripts/check-content.ts
 content/now.yaml + now.{ja,ko}.yaml       "いま" 구조 + 문장
 content/path.yaml + path.{ja,ko}.yaml     "ここまで" 구조 + 문장
 content/projects/<slug>/meta.yaml         구조 (period, stack, status, order, thumbnail, hero, sections, links)
-content/projects/<slug>/{ja,ko}.md        frontmatter(title, summary) + 본문
+content/projects/<slug>/{ja,ko}.md        frontmatter(title, summary, role?) + 본문
+images-src/images.json                    이미지 원본 목록 (crop 포함) — 결과물은 public/images/ 에 커밋
 messages/{ja,ko}.json                     UI 문자열
 public/_redirects                         / → /ja, /en* → /ja*
 ```
@@ -89,7 +91,7 @@ public/_redirects                         / → /ja, /en* → /ja*
 
 - 컴포넌트: 함수형, `export default`
 - **하드코딩 텍스트 금지** — 반드시 `useTranslations()` 사용
-- 이미지: `public/images/projects/` 하위에 배치
+- 이미지: 원본은 `images-src/`, `npm run images` 로 생성한 `/images/....webp` 만 참조 (외부 호스트 금지, R2 제거됨)
 - 경로 alias: `@/` → 루트
 
 ## 콘텐츠 추가 방법

@@ -31,6 +31,7 @@
     "backToPath": "← 02 여기까지 · {label}",
     "info": "프로젝트 정보",
     "period": "기간",
+    "role": "역할",
     "status": "상태",
     "stack": "쓴 것",
     "links": "링크",
@@ -50,6 +51,8 @@
   "status": {
     "deployed": "공개 중",
     "inProgress": "개발 중",
+    "finished": "완료",
+    "closed": "서비스 종료",
     "planned": "예정"
   },
   "footer": {

@@ -1,6 +1,7 @@
 ---
 title: "EveryAI - AI作品・サービス取引プラットフォーム"
 summary: "生成AIで制作された作品やサービスを取引できるプラットフォーム。6週間の実務プロジェクト。"
+role: "バックエンドのインターン — バックエンド全体を担当"
 ---
 
 ## 1. 背景 — WHY
@@ -8,9 +9,13 @@ summary: "生成AIで制作された作品やサービスを取引できるプ�
 AI技術で制作されたさまざまな作品やサービスを取引できるプラットフォームを構築する実務プロジェクト。
 消費者は手頃な価格でAIサービスを利用でき、制作者は新たな収益チャネルを確保することが目標でした。
 
+大学の教授に勧めていただいたインターンでした。その前に、同じ教授の特別講義でMy Asset Managerをつくっています。
+
 ## 2. 成果物 — WHAT
 
 バックエンド全体を担当しました。認証、サービスCRUD、リアルタイムメッセージング、決済、管理者機能まで実装しました。
+
+いまはサービスが終了していて、見ることはできません。
 
 ### 認証システム
 
@@ -21,27 +26,13 @@ AI技術で制作されたさまざまな作品やサービスを取引できる
 - accessToken 1日 / refreshToken 7日、期限切れ時の自動再ログインフロー
 - カカオなどのソーシャルログイン — 既存会員かどうかで登録/ログインを分岐
 
-![会員登録](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/signup.gif)
-
-![JWTログイン](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/login-jwt.gif)
-
-![ソーシャルログイン](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/social-login-signup.gif)
-
 ### サービス・プロジェクト管理
 
 AIサービス/プロジェクトの登録・修正・削除CRUD。画像アップロード対応。
 
-![サービス登録](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/service-register.gif)
-
-![サービス修正](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/service-edit.gif)
-
 ### 決済（BootPay）
 
 BootPay連携で安全決済を実装。メッセージルーム内で決済リクエスト → 決済処理 → 成功メッセージ送信までの全フロー。
-
-![BootPay決済](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/bootpay-1.gif)
-
-![決済完了処理](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/bootpay-2.gif)
 
 ### リアルタイムメッセージング
 
@@ -51,19 +42,9 @@ BootPay連携で安全決済を実装。メッセージルーム内で決済リ�
 - ルーム入室時に相手のメッセージを自動既読処理
 - メッセージ通報機能
 
-![メッセージルーム作成](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/message-room-create.gif)
-
-![通常メッセージ送信](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/text-message.gif)
-
-![安全決済リクエストメッセージ](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/safe-payment-send.gif)
-
 ### 管理者機能
 
 ユーザー管理（制限/解除）、サービス承認/否認、専門家グレード管理、広告バナー管理。
-
-![ユーザー制限](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/user-restrict.gif)
-
-![サービス承認](https://pub-72d7e584b9db493583cc4b36f541a9f8.r2.dev/everyai/service-approve.gif)
 
 ## 3. 技術判断
 
@@ -88,3 +69,5 @@ Spring SecurityのフィルターチェーンにカスタムJwtFilterを追加�
 - 基本的なCRUDだけでなく、セキュリティ、Gitを使った協業、S3、BootPay、FCMといった実務技術をプロジェクトに組み込む過程で、理論的な背景も深く学ぶことができました。
 - 人数が多いからといって生産性が上がるわけではないと実感しました。各自の生産性を最大化する方法を模索し、実践することが重要でした。
 - 追加実装したものの本番には組み込めなかった機能: FCMプッシュ通知
+
+成果がすぐに見えないのが不安で、インターンを辞めました。振り返ると、焦りすぎていました。

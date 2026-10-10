@@ -1,20 +1,20 @@
-# DRAFT — direct Korean rendering of now.ja.yaml (Phase 1 placeholder).
-# Not reviewed by the author; Phase 3 replaces it with Korean written from the vault.
+# Owner-reviewed Korean (2026-10-10, docs/phase3-drafts-ko.md).
 statement:
-  before: "누구나 자신이 정말 바라는 가치를 위해"
-  accent: "살 수 있도록."
-  after: "그걸 돕고 싶다."
+  before: "누구나 스스로 진정으로 원하는 가치를 위해 "
+  accent: "살아갈 수 있도록."
+  after: " 그걸 돕고 싶다."
 thinking:
-  - "그러기 위해 먼저, 내가 무엇을 소중히 여기는지 확인하고 있는 중이다. 답은 코드보다 사람과의 대화 속에 있다고 생각한다."
+  - "돕는 방법은 보여 주는 것이라고 생각한다. 내가 내 가치를 쫓으며 즐겁게 사는 모습을 보고, 누군가 한 번이라도 더 ‘나는 뭘 하고 싶은 거지’ 하고 스스로 물어보게 되면 좋겠다."
+  - "내가 찾은 답은 ‘즐겁게’다."
 cards:
   second-brain:
     label: "PROJECT"
     title: "Second Brain"
-    text: "내 생각과 선택을 기록해서, 소중히 여기는 가치를 찾기 위한 장치."
+    text: "있는 그대로의 나로 살기 위해 만드는 조수. 나와 같은 가치를 갖고, 내가 약한 곳은 다른 기질로 채워 준다."
   youtube:
     label: "YOUTUBE"
     title: "面白そうだから"   # channel name, kept in Japanese
-    text: "'재밌어 보여서' 골라 온 일들과, 거기서 생각한 것. EP01 준비 중."
+    text: "‘재밌어 보여서’ 골라 온 선택들이 쌓여서, 정말 하고 싶은 걸 하며 살 수 있는 문 앞까지 왔다. 일본어로 만든다. EP01 준비 중."
 oneLiners:
   study-group: "일본어 스터디 리더"
-  construction: "공사 현장에서 일하고 있다"
+  construction: "공사현장에서 일하고 있다"

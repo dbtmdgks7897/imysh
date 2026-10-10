@@ -26,7 +26,7 @@ headers and prev/next links are all derived from these files.
 ```yaml
 period: "2026.03~"                 # required, free text
 stack: ["Next.js", "FastAPI"]      # required
-status: in-progress                # required: deployed | in-progress | planned
+status: in-progress                # required: deployed | in-progress | finished | planned
 order: 3                           # optional, sorts siblings (lower first)
 thumbnail: /images/projects/<slug>/thumbnail.webp   # optional; local file must exist under public/
 hero: /images/projects/<slug>/hero.webp             # optional; large image at the top of the detail page
@@ -36,7 +36,9 @@ links:                             # optional
   live: https://example.pages.dev
 ```
 
-`ko.md` / `ja.md` frontmatter may contain **only** `title` and `summary`.
+`ko.md` / `ja.md` frontmatter may contain **only** `title`, `summary` and an optional `role` (立場, only when a source states it).
+
+Images: put the original in `images-src/`, add it to `images-src/images.json`, run `npm run images`, and reference the generated `/images/....webp` path (meta.yaml and markdown alike). Remote image URLs are rejected. Never write draft markers like 【…】 into content — check:content fails on them.
 
 ## Steps
 

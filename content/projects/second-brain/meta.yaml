@@ -1,0 +1,6 @@
+period: "2026.03 –"          # designed in March, restarted in September
+# Technology names only (owner OK, 2026-10-10). No hosts, endpoints or paths.
+stack: ["Obsidian", "obsidian-git", "Dataview", "Python", "Telegram Bot API", "Claude", "Claude Code", "MCP", "Whisper", "Google Calendar API", "launchd", "Fly.io"]
+status: in-progress
+order: 5
+sections: [why, what, tech, thought]
