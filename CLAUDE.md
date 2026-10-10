@@ -79,8 +79,10 @@ public/_redirects                         / → /ja, /en* → /ja*
 | KO (한글·라틴) | Pretendard 400/700 | `node_modules/pretendard` OTF |
 | 코드 | 시스템 monospace | — |
 
-`npm run fonts` 가 사이트에 쓰인 글자만 남겨 `app/fonts/*.woff2` 와 `lib/content/font-charset.json` 을 만든다
-(페이지당 폰트 2–4개). 새 글자가 들어가면 check:content 가 실패하니 `npm run fonts` 후 커밋.
+`npm run fonts` 가 사이트에 쓰인 글자만 남겨 `app/fonts/*.woff2`, `app/fonts.css`(생성물, 손으로 고치지 않음),
+`lib/content/font-charset.json` 을 만든다. Zen Maru Gothic 은 굵기마다 페이지 기준으로 나눈다:
+hub(허브 글자) · 프로젝트별(그 페이지만 쓰는 글자) · shared(나머지). unicode-range 로 필요한 파일만 받는다
+(허브는 2개, 상세 페이지는 3–6개). 새 글자가 들어가면 check:content 가 실패하니 `npm run fonts` 후 커밋.
 `next/font/google` 금지 (fe46a84). OG 카드(`npm run og`)는 satori용으로 `@fontsource/zen-maru-gothic` woff 슬라이스를 쓴다.
 제목은 700, 900 금지. 한국어 `word-break: keep-all`, 일본어 `line-break: strict` (keep-all 금지).
 
