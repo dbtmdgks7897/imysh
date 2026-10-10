@@ -10,6 +10,7 @@ interface PathTableProps {
   path: PathData;
   text: PathText;
   projectTitles: Record<string, string>;
+  projectThumbnails: Record<string, string | undefined>;
 }
 
 // Static class strings so Tailwind can see them.
@@ -28,19 +29,25 @@ function YearLabel({ label, small }: { label: string; small?: boolean }) {
   );
 }
 
-export default function PathTable({ locale, path, text, projectTitles }: PathTableProps) {
+export default function PathTable({ locale, path, text, projectTitles, projectThumbnails }: PathTableProps) {
   const t = useTranslations("path");
-  const all = path.nodes.flatMap((n) => [n, ...n.children]);
-  const withPhotos = all.some((n) => n.photos.length > 0);
-  const grid = withPhotos ? GRID_PHOTO : GRID_PLAIN;
+  // A row's images: its own photos, else the thumbnails of the projects it links to.
+  // Rows with neither get no image cell at all (never a placeholder box).
+  const photosOf = (node: PathNode | PathChild): string[] =>
+    node.photos.length > 0
+      ? node.photos
+      : node.projects.map((slug) => projectThumbnails[slug]).filter((src): src is string => Boolean(src));
+  const gridOf = (node: PathNode | PathChild) => (photosOf(node).length > 0 ? GRID_PHOTO : GRID_PLAIN);
+  // The header follows the top-level rows; sub-rows are indented and need not line up with it.
+  const grid = path.nodes.some((n) => photosOf(n).length > 0) ? GRID_PHOTO : GRID_PLAIN;
+  const headerHasPhotos = grid === GRID_PHOTO;
 
   function Photos({ node }: { node: PathNode | PathChild }) {
-    if (!withPhotos) return null;
-    // Keep the cell for alignment, but never draw a placeholder box.
-    if (node.photos.length === 0) return <div aria-hidden="true" className="hidden md:block" />;
+    const photos = photosOf(node);
+    if (photos.length === 0) return null;
     return (
-      <div className={`grid gap-1.5 ${node.photos.length > 1 ? "grid-cols-3" : ""}`}>
-        {node.photos.map((src) => (
+      <div className={`grid gap-1.5 ${photos.length > 1 ? "grid-cols-3" : ""}`}>
+        {photos.map((src) => (
           <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-placeholder">
             <ResponsiveImage src={src} alt="" className="absolute inset-0 h-full w-full object-cover object-top" sizes="200px" />
           </div>
@@ -76,7 +83,7 @@ export default function PathTable({ locale, path, text, projectTitles }: PathTab
 
       <div aria-hidden="true" className={`hidden gap-6 px-6 pb-3 text-xs text-text-muted md:grid ${grid}`}>
         <span>{t("colYear")}</span>
-        {withPhotos && <span>{t("colPhoto")}</span>}
+        {headerHasPhotos && <span>{t("colPhoto")}</span>}
         <span>{t("colDoing")}</span>
         <span>{t("colThought")}</span>
         <span>{t("colNext")}</span>
@@ -89,7 +96,7 @@ export default function PathTable({ locale, path, text, projectTitles }: PathTab
             <li key={node.id}>
               <div
                 id={`path-${node.id}`}
-                className={`grid scroll-mt-4 items-start gap-3 rounded-[20px] bg-surface p-5 md:gap-6 md:p-6 ${grid} ${
+                className={`grid scroll-mt-4 items-start gap-3 rounded-[20px] bg-surface p-5 md:gap-6 md:p-6 ${gridOf(node)} ${
                   node.current ? "ring-2 ring-accent" : ""
                 }`}
               >
@@ -120,7 +127,7 @@ export default function PathTable({ locale, path, text, projectTitles }: PathTab
                       <li
                         key={child.id}
                         id={`path-${child.id}`}
-                        className={`ml-6 grid scroll-mt-4 items-center gap-2 rounded-2xl bg-surface-sub px-5 py-4 md:ml-10 md:gap-6 md:px-6 ${grid}`}
+                        className={`ml-6 grid scroll-mt-4 items-center gap-2 rounded-2xl bg-surface-sub px-5 py-4 md:ml-10 md:gap-6 md:px-6 ${gridOf(child)}`}
                       >
                         <YearLabel label={c.label} small />
                         <Photos node={child} />

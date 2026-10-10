@@ -20,14 +20,14 @@ export default async function LocalePage({ params }: { params: Promise<{ locale:
   const locale = assertLocale(rawLocale);
   setRequestLocale(locale);
 
-  const projectTitles = Object.fromEntries(
-    listProjectSlugPaths().map((s) => [s.join("/"), loadProject(s, locale).title]),
-  );
+  const projects = listProjectSlugPaths().map((s) => loadProject(s, locale));
+  const projectTitles = Object.fromEntries(projects.map((p) => [p.slugPath.join("/"), p.title]));
+  const projectThumbnails = Object.fromEntries(projects.map((p) => [p.slugPath.join("/"), p.meta.thumbnail]));
 
   return (
     <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8">
       <NowSection locale={locale} now={loadNow()} text={loadNowText(locale)} />
-      <PathTable locale={locale} path={loadPath()} text={loadPathText(locale)} projectTitles={projectTitles} />
+      <PathTable locale={locale} path={loadPath()} text={loadPathText(locale)} projectTitles={projectTitles} projectThumbnails={projectThumbnails} />
     </div>
   );
 }
