@@ -6,6 +6,7 @@ import { ContentError } from "./read";
 import { listProjectSlugPaths, loadProjectMeta, loadProjectText } from "./projects";
 import { splitH2 } from "./sections";
 import { isKnownImage } from "./images";
+import fontCharset from "./font-charset.json";
 import { loadNow, loadNowText, loadPath, loadPathText } from "./profile";
 
 const ALLOWED_MD = new Set(LOCALES.map((l) => `${l}.md`));
@@ -28,6 +29,25 @@ function checkImage(errors: string[], ref: string | null | undefined, where: str
 }
 
 const MD_IMAGE = /!\[[^\]]*\]\(([^)\s]+)[^)]*\)/g;
+
+const FONT_JA = new Set([...fontCharset.ja]);
+const FONT_KO = new Set([...fontCharset.ko]);
+const isHangul = (c: number) =>
+  (c >= 0xac00 && c <= 0xd7a3) || (c >= 0x1100 && c <= 0x11ff) || (c >= 0x3130 && c <= 0x318f);
+
+// The fonts are subset to the site's characters (npm run fonts). New text with a character
+// outside the subset would render in a fallback font, so it fails the check instead.
+function checkGlyphs(errors: string[], where: string, text: string) {
+  const missing = new Set<string>();
+  for (const ch of text) {
+    const c = ch.codePointAt(0)!;
+    if (c < 32 || ch === "\n") continue;
+    if (isHangul(c) ? !FONT_KO.has(ch) : !FONT_JA.has(ch)) missing.add(ch);
+  }
+  if (missing.size > 0) {
+    errors.push(`${where}: characters not in the font subset (run npm run fonts): ${[...missing].join("")}`);
+  }
+}
 
 // Draft markers like 【본인 확인: …】 must never reach the site.
 function checkNoDraftMarkers(errors: string[], where: string, text: string) {
@@ -77,6 +97,7 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
         const { preamble, parts } = splitH2(body);
         const where = `projects/${slug}/${locale}.md`;
         checkNoDraftMarkers(errors, where, [title, summary, role ?? "", body].join("\n"));
+        checkGlyphs(errors, where, [title, summary, role ?? "", body].join("\n"));
         for (const match of body.matchAll(MD_IMAGE)) {
           const src = match[1];
           if (!src.startsWith("/images/")) errors.push(`${where}: image must be a local /images/ path: ${src}`);
@@ -112,6 +133,7 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
       attempt(errors, () => {
         const text = loadNowText(locale, root);
         checkNoDraftMarkers(errors, `now.${locale}.yaml`, JSON.stringify(text));
+        checkGlyphs(errors, `now.${locale}.yaml`, JSON.stringify(text));
         compareIds(errors, `now.${locale}.yaml cards`, cardIds, Object.keys(text.cards));
         compareIds(errors, `now.${locale}.yaml oneLiners`, lineIds, Object.keys(text.oneLiners));
       });
@@ -139,6 +161,7 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
       attempt(errors, () => {
         const text = loadPathText(locale, root);
         checkNoDraftMarkers(errors, `path.${locale}.yaml`, JSON.stringify(text));
+        checkGlyphs(errors, `path.${locale}.yaml`, JSON.stringify(text));
         compareIds(errors, `path.${locale}.yaml nodes`, ids, Object.keys(text.nodes));
         // "next" is required on top-level rows (the hand-off between periods); sub-rows may omit it.
         for (const id of data.nodes.map((n) => n.id)) {

@@ -24,7 +24,7 @@ function YearLabel({ label, small }: { label: string; small?: boolean }) {
   return (
     <p className="text-[28px] leading-tight font-bold">
       {year}
-      {rest.length > 0 && <span className="block text-sm font-medium">{rest.join(" ")}</span>}
+      {rest.length > 0 && <span className="block text-sm font-bold">{rest.join(" ")}</span>}
     </p>
   );
 }

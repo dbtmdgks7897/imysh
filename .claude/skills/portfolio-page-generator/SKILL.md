@@ -72,7 +72,7 @@ Images: put the original in `images-src/`, add it to `images-src/images.json`, r
 8. **Verify** (all must pass):
 
    ```bash
-   npm run check:content
+   npm run check:content      # if it reports characters outside the font subset: npm run fonts
    npm run typecheck          # next typegen && tsc -p tsconfig.json --noEmit
    npm run lint
    npm run build

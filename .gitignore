@@ -45,3 +45,6 @@ docs/screenshots/
 
 # generated Open Graph cards (npm run og, runs before build)
 /public/og/
+
+# full font sources for npm run fonts (downloaded on demand, OFL)
+/fonts-src/

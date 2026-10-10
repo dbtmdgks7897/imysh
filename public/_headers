@@ -1,0 +1,8 @@
+# Cloudflare Pages response headers.
+# Hashed build assets never change; images and OG cards keep their names, so cache them shorter.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+/images/*
+  Cache-Control: public, max-age=604800
+/og/*
+  Cache-Control: public, max-age=86400

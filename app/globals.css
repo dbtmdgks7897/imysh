@@ -14,11 +14,12 @@
   --color-accent-tint: #f6ddd2;
   --color-placeholder: #efe7de;
 
-  /* Self-hosted fonts (see app/[locale]/layout.tsx). Each stack falls back to the other
+  /* Self-hosted subset fonts (app/fonts.css, npm run fonts). Each stack falls back to the other
      script's font so Hangul on ja pages and kana on ko pages still render well. */
-  --font-ja: "Zen Maru Gothic", "Pretendard Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-ko: "Pretendard Variable", "Zen Maru Gothic", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "Courier New", monospace;
+  --font-ja: "Zen Maru Gothic", "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  --font-ko: "Pretendard", "Zen Maru Gothic", ui-sans-serif, system-ui, sans-serif;
+  /* System monospace: code appears on one page only, not worth a web font. */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --shadow-card: 0 2px 14px rgb(90 70 50 / 0.07);
   --shadow-card-hover: 0 6px 24px rgb(90 70 50 / 0.12);

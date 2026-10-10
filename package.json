@@ -12,10 +12,10 @@
     "images": "node scripts/images.mjs",
     "og": "tsx scripts/og.ts",
     "prebuild": "npm run og",
-    "check:meta": "tsx scripts/check-meta.ts"
+    "check:meta": "tsx scripts/check-meta.ts",
+    "fonts": "tsx scripts/fonts.ts"
   },
   "dependencies": {
-    "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/zen-maru-gothic": "^5.3.0",
     "gray-matter": "^4.0.3",
     "hast-util-to-jsx-runtime": "^2.3.6",
@@ -44,6 +44,7 @@
     "eslint-config-next": "16.1.6",
     "satori": "^0.47.1",
     "sharp": "^0.34.5",
+    "subset-font": "^2.9.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"

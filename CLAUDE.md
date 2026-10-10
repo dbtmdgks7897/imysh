@@ -28,6 +28,9 @@ npm run lint           # ESLint
 npm run typecheck      # next typegen && tsc -p tsconfig.json --noEmit
 npm run check:content  # content/ 전체 검증 (두 로케일, slug·이미지 참조, enum, 【 금지)
 npm run images         # images-src/ → public/images/ (webp 640 + 1280) + lib/content/image-manifest.json
+npm run fonts          # 폰트 서브셋 재생성 (새 글자가 생겼을 때)
+npm run og             # OG 카드 public/og/ (build 전에 자동 실행)
+npm run check:meta     # build 후 out/*.html 의 title·OG·canonical·hreflang 검사
 ```
 
 ## 디렉토리 구조
@@ -68,15 +71,17 @@ public/_redirects                         / → /ja, /en* → /ja*
 
 색 이름 토큰(snow, sage 등)은 쓰지 않는다. `accent-text` 를 `accent-tint` 위의 작은 글자에 쓰지 않는다 (4.09).
 
-### 폰트 — 전부 npm 에서 self-host
+### 폰트 — 사이트 전용 서브셋 (self-host)
 
-| 언어 | 폰트 | 패키지 |
+| 언어 | 폰트 | 원본 |
 |---|---|---|
-| JA | Zen Maru Gothic 400/500/700 | `@fontsource/zen-maru-gothic` |
-| KO | Pretendard Variable | `pretendard` |
-| 코드 | JetBrains Mono | `@fontsource/jetbrains-mono` |
+| JA (+ 모든 가나·한자) | Zen Maru Gothic 400/700 | `fonts-src/*.ttf` (없으면 `npm run fonts`가 내려받음, gitignore, OFL) |
+| KO (한글·라틴) | Pretendard 400/700 | `node_modules/pretendard` OTF |
+| 코드 | 시스템 monospace | — |
 
-`next/font/google` 금지: Google 이 CJK 폰트를 `/l/font?kit=` URL 로 주면 빌드가 깨진다 (fe46a84).
+`npm run fonts` 가 사이트에 쓰인 글자만 남겨 `app/fonts/*.woff2` 와 `lib/content/font-charset.json` 을 만든다
+(페이지당 폰트 2–4개). 새 글자가 들어가면 check:content 가 실패하니 `npm run fonts` 후 커밋.
+`next/font/google` 금지 (fe46a84). OG 카드(`npm run og`)는 satori용으로 `@fontsource/zen-maru-gothic` woff 슬라이스를 쓴다.
 제목은 700, 900 금지. 한국어 `word-break: keep-all`, 일본어 `line-break: strict` (keep-all 금지).
 
 ### 레이아웃·접근성

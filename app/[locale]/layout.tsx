@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
-// All fonts are self-hosted from npm. Never use next/font/google here: Google sometimes
-// serves CJK fonts as /l/font?kit=...&skey=... URLs that the build cannot resolve (fe46a84).
-import "@fontsource/zen-maru-gothic/400.css";
-import "@fontsource/zen-maru-gothic/500.css";
-import "@fontsource/zen-maru-gothic/700.css";
-import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
-import "@fontsource/jetbrains-mono/400.css";
+// Fonts: site-specific subsets in app/fonts/ (npm run fonts), declared in app/fonts.css.
+import "../fonts.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/layout/Navigation";
