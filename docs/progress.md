@@ -2,25 +2,49 @@
 
 ## Where things stand (2026-10-10)
 
-**Phase 4 (pre-launch) is pushed (`b19304a`), CI is green, and the preview at
-<https://redesign.imysh.pages.dev> works.** Verified on the preview by the
-command post: `/` → 302 `/ja`, `/en/*` → 301, immutable cache on
-`/_next/static`, absolute og:image, and 4 images on `/ja`. A follow-up commit
-on top (not pushed) points the kigaru repository links at the public
-snapshot <https://github.com/dbtmdgks7897/kigaru-matsuri>, and a second one adds
-the owner's images: four clean everyai stills, used as the hero, the 02
-figures and the 2023-b path thumbnail, plus a pre-blurred Second Brain graph
-used as the hero and the 2026-d thumbnail. A third commit adds the owner's
-life photos: a factory photo in path row 2024, a working-holiday photo in
-row 2025 (the only place it is used), and the hub portrait, a mirror selfie
-cropped 4:5. The hub now has 9 images. A further local commit adds two
-more owner photos: the online clothing shop to row 2024 and Olive Young to
-row 2025. Each of those rows shows two photos in timeline order, side by
-side at every width (owner correction). The path table now starts at
-1280px with a 320px photo column; below 1280 every row stacks into one
-column. The hub has 11 images. Source
-files and crops are recorded in `images-src/images.json`. `main` (imysh.pages.dev) still
-serves the March site; it gets merged after the owner's phone check.
+**Live:** `main` = `9b4e9ce` at <https://imysh.pages.dev/ja>.
+
+**On `redesign`, local and not pushed:** four commits on top of `9b4e9ce`. Nothing is deployed;
+pushing or merging is the command post's call.
+- `d6c568b`: a new `paused` status (ko 「중지」 / ja 「休止」), and `hero`/`thumbnail` may now be
+  one path or a per-locale `{ ja, ko }` map.
+- `4ef32bc`: Phase 5 content.
+  - Under 2026 後半: sub-row 2026-e (Second Brain → the daemon) and 2026-f (the command post /
+    司令塔). The 2026-d hand-off now points to the daemon.
+  - A new `/projects/daemon` page (status paused, sections why/what/tech/thought).
+  - Its three-layer diagram, one per locale, outlined by `scripts/daemon-diagram.mjs` and shown
+    uncropped with `heroFit: contain`.
+  - A 「→ デーモン」 link at the end of Second Brain.
+  - Font subsets regenerated. Copy: `docs/phase5-drafts-{ko,ja}.md`, owner-approved.
+- `5df0eab`: the hub interaction, concept A2 (`components/home/HubThread.tsx`, `lib/hub/`).
+  - **The thread:** it starts under the sentence and runs down the outer left margin. It crosses
+    02's top line with a knot, ties a knot at every row (with a detour through the sub-rows) and
+    ends in a hook that points back up to いま. It is drawn as far as the reader has scrolled.
+    Rows fade in when the thread reaches them.
+  - **Routing:** checked at 390, 768, 1280 and 1440, in ja and ko. No point of the thread is
+    inside a content box. The sharpest turn is 12–25°. The only horizontal run is the underline.
+  - **The sentence:** it gathers character by character, and the cursor or a tap scatters it.
+  - **Settle into 02:** only when scrolling down.
+  - **Reduced motion:** the thread is static, drawn in full, and the sentence does not split.
+  - **Keyboard:** all 16 focusable links in 02 stay visible and on top.
+- `e15feec`: `fetchpriority=high` on the LCP image, and the 640w portrait on phones.
+
+**Lighthouse 13.5 mobile** (local gzip static server of `out/`, simulated throttling, 2–3 runs):
+
+| Page | Perf | A11y / BP / SEO | LCP | TBT | CLS |
+|---|---|---|---|---|---|
+| `/ja` with thread | 84–86 | 100 / 100 / 100 | 3.9–4.2 s | 0 ms | 0.002 |
+| `/ja` without thread (A/B build) | 85–87 | 100 / 100 / 100 | 3.8–4.0 s | 0 ms | 0.002 |
+| `/ko` | 93 | 100 / 100 / 100 | 3.2 s | 0–20 ms | 0 |
+| `/ja/projects/daemon` | 90–92 | 100 / 100 / 100 | 3.0–3.3 s | 0 ms | 0.001 |
+
+The thread costs at most about 2 points. `/ja` was already below 90 before it (the A/B build):
+- the LCP is the portrait;
+- the Japanese font subsets (2 × ~120 KB) share the simulated slow-4G bandwidth with it;
+- `/ko`, with 2 × 64 KB of Pretendard, scores 93.
+
+Fixing `/ja` is a separate piece of work. Options: one Japanese weight, or a smaller first-screen
+subset.
 
 The site is the "who I am" redesign: ja default + ko, maker identity, visual
 C3. Spec: [`docs/superpowers/specs/2026-10-10-imysh-redesign-design.md`](superpowers/specs/2026-10-10-imysh-redesign-design.md).
@@ -60,6 +84,55 @@ scored 61–62 on mobile, so the font change matters on the real host too.
 Re-measure on the preview after pushing.
 
 ## Next
+
+### Phase 5 — 2026 後半 content (Korean draft, pending the owner)
+
+- [x] Korean draft: rows 2026-e (daemon) and 2026-f (command post), 2026-d `next`, daemon page body, sources table (`docs/phase5-drafts-ko.md`).
+- [x] Diagram draft (ja/ko SVG, scratchpad `imysh-daemon/`).
+- [x] Owner answered the 6 questions; Korean final (`docs/phase5-drafts-ko.md`).
+- [x] Code (not committed): new status `paused` (ko 「중지」, ja 「休止」) and per-locale `hero`/`thumbnail` (`{ ja, ko }` or one path) in schema, loader, validation, badge, messages, skill doc. typecheck, lint, check:content, build, check:meta pass; fixture test covers paused, per-locale paths, missing-locale and bad-status errors.
+- [x] Japanese translation side by side (`docs/phase5-drafts-ja.md`).
+- [ ] Owner reviews the Japanese (3 questions: 司令塔/休止 wording, わたし vs 自分 in the diagram, the daemon's quote tone).
+- [x] Applied: `4ef32bc` (content, diagram per locale, fonts). Japanese approved with 司令塔 / 休止 / 自分 / 「でっち上げたのは自分だ」.
+- [x] (was) Then `content/path*.yaml`, `content/projects/daemon/` (meta, ko.md, ja.md), diagram outlined to paths → `images-src` → `npm run images`, `npm run fonts` if new glyphs, check:content, build.
+
+### Hub interaction (concept A2, implemented locally)
+
+- [x] Round 1 (rejected as too plain), Round 2 concepts, owner chose A + B's sentence effect; route fix prototyped (`a2-line.html`, scratchpad).
+- [x] Implemented: `5df0eab` (+ `e15feec` LCP tweak). Defaults kept: rows faded until the thread reaches them; thread on the hub only.
+- [ ] **Owner — real iPhone (Safari)** on the preview after a push:
+  - the sentence gathers smoothly, with no flash of the static text before it splits;
+  - a tap scatters the characters;
+  - momentum scrolling from 01 settles once on 02's top line and never pulls going up;
+  - tapping the thread plucks it, and scrolling still works when the tap starts on the line;
+  - rows below the reading line are faded but readable once reached;
+  - Settings → Accessibility → Motion → Reduce Motion gives the static page with the full line;
+  - VoiceOver reads the heading as one sentence;
+  - the daemon page: the diagram is readable at phone width (labels are small).
+- [ ] Decide whether to work on `/ja` mobile performance (84–86; see the table above).
+- [ ] Push `redesign`, check the preview, merge to `main` (command post).
+
+### Phase 5 — 2026 後半 content (Korean draft, pending the owner)
+
+- [x] Korean draft: rows 2026-e (daemon) and 2026-f (command post), 2026-d `next`, daemon page body, sources table (`docs/phase5-drafts-ko.md`).
+- [x] Diagram draft (ja/ko SVG, scratchpad `imysh-daemon/`).
+- [x] Owner answered the 6 questions; Korean final (`docs/phase5-drafts-ko.md`).
+- [x] Code (not committed): new status `paused` (ko 「중지」, ja 「休止」) and per-locale `hero`/`thumbnail` (`{ ja, ko }` or one path) in schema, loader, validation, badge, messages, skill doc. typecheck, lint, check:content, build, check:meta pass; fixture test covers paused, per-locale paths, missing-locale and bad-status errors.
+- [x] Japanese translation side by side (`docs/phase5-drafts-ja.md`).
+- [ ] Owner reviews the Japanese (3 questions: 司令塔/休止 wording, わたし vs 自分 in the diagram, the daemon's quote tone).
+- [x] Applied: `4ef32bc` (content, diagram per locale, fonts). Japanese approved with 司令塔 / 休止 / 自分 / 「でっち上げたのは自分だ」.
+- [x] (was) Then `content/path*.yaml`, `content/projects/daemon/` (meta, ko.md, ja.md), diagram outlined to paths → `images-src` → `npm run images`, `npm run fonts` if new glyphs, check:content, build.
+
+### Hub interaction (pending the owner's choice, Round 2)
+
+Options and recommendations: `docs/superpowers/specs/2026-10-10-imysh-interaction-options.md` (Round 2 section).
+
+- [x] Round 1 options and prototypes (rejected by the owner as too plain; kept as baseline).
+- [x] Round 2: three whole-page concepts A/B/C with prototypes, measured (settle, keyboard, overflow, load/scroll cost).
+- [x] Owner picked A + B's sentence effect; route fix prototyped in `a2-line.html`.
+- [ ] Owner reviews `a2-line.html`; Round 2 questions 2 and 4 still open (faded rows until reached; hub only — current behaviour kept).
+- [ ] Implement the chosen concept (for A: `Thread.tsx`, `HubMotion.tsx`, edits to `PathTable`, `NowSection`, `page.tsx`, `globals.css`; about 450 lines, no dependencies).
+- [ ] Verify: lint, typecheck, build, check:meta; Lighthouse mobile ≥ 90 and CLS 0 on `/ja` and `/ko`; reduced-motion static version; thread geometry at 390/768/1024/1280/1440 in ja and ko; keyboard pass through 02; owner's iPhone Safari check.
 
 ### Before merging `redesign` into `main` (merge checklist)
 
@@ -404,6 +477,12 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **Phase 5 content and concept A2 implemented, four local commits (`d6c568b`, `4ef32bc`, `5df0eab`, `e15feec`), not pushed.** Verified at 390/768/1280/1440 in ja and ko: no console errors, no horizontal scroll, thread path 0 points inside content boxes, turns ≤25°, reduced motion static, keyboard 16/16 visible, settle down-only. lint, typecheck, check:content, build, check:meta (18 pages) pass. Lighthouse mobile: /ja 84–86 (85–87 without the thread; the font payload is the gap), /ko 93, /ja/projects/daemon 90–92.
+- 2026-10-10: **Phase 5: owner answers applied, Japanese drafted, schema extended (uncommitted).** Korean final in `docs/phase5-drafts-ko.md` (daemon→command-post link reworded truthfully, owner's harness sentence, tech section in, Second Brain → daemon line). Japanese side by side in `docs/phase5-drafts-ja.md` (デーモン, 司令塔, 休止; about 50 new glyphs need `npm run fonts` at apply time). Code: `paused` status and per-locale hero/thumbnail (`lib/content/schema.ts`, `projects.ts`, `validate.ts`, `StatusBadge`, messages, skill doc); all checks and build pass; no content changed.
+- 2026-10-10: **Concept A chosen (+ B's sentence effect); prototype `a2-line.html` (scratchpad, no repo code).** The thread is re-routed with a collision-aware router: underline right→left, down the outer left margin, across 02's top line on the same side (edge knot), S-curves only where there is room, knots entered and left heading down. Checked at 390/768/1280/1440: 0 path points inside any card/text box, sharpest turn 11–25°, the only horizontal run is the underline. Sentence splits into characters after load (aria-label on the h1, pieces aria-hidden), exhales and gathers, scatters on cursor/tap; the thread starts after the gather. Reduced motion: no split, static full line. Keyboard: 14/14 links visible at both sizes.
+- 2026-10-10: **Phase 5 Korean draft (2026 後半).** Wrote `docs/phase5-drafts-ko.md` from the SecondBrain vault notes (read only): rows 2026-e (daemon, new `daemon` page) and 2026-f (command post), the revised 2026-d hand-off, the daemon page body, a claim-by-claim source table, (추정) marks and 6 owner questions. Public-scope cuts: costs, tokens, plan names, other people, family, security settings, third-party names except OpenClaw. Drew the daemon three-layer diagram as ja/ko SVG in the scratchpad. No change to `content/`.
+- 2026-10-10: **Interaction Round 2 (plan only, no site code changed).** The owner found Round 1 too plain. Added a Round 2 section to the interaction options doc with three whole-page concepts (A 一本の線, B それぞれの方向, C 索引カード), a comparison, a recommendation (A) and an implementation sketch; Round 1 is kept as the rejected baseline. Built three prototypes plus an index in the session scratchpad (`imysh-interaction-r2/`), using the real ja copy and the site's processed 640px photos. Verified in Chrome at 390 and 1440: no console errors, no horizontal scroll, the settle works only when scrolling down, and all focused links in 02 stay visible. Fixes found by testing: C now shows a plain column during keyboard focus, B's GSAP snap no longer uses inertia, and A's static line shows under reduced motion.
+- 2026-10-10: **Interaction options for the hub (plan only, no site code changed).** Wrote `docs/superpowers/specs/2026-10-10-imysh-interaction-options.md` (snap, background, 02 row focus: 2–3 options each, trade-offs, sizes, implementation and verification plans) and 9 clickable prototypes plus an index in the session scratchpad (`imysh-interaction/`). Measured in Chrome: CSS proximity snap also pulls back down when scrolling up, so the JS settle (downward only) is recommended; a `:target` snap safeguard was unnecessary and caused an 84px jump at 390px.
 - 2026-10-10: **Two-photo path rows now show their photos side by side on desktop too (owner correction, local commit).**
   - Column widths at 1440/1280 (year / photo / doing / thought / next):
     - before: 110 / 200 / 218 / 327 / 218 px
