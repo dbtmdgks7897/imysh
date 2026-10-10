@@ -20,6 +20,21 @@ export default function NowSection({ locale, now, text }: NowSectionProps) {
     <section id="now" aria-labelledby="now-heading" className="scroll-mt-4 border-t border-border pt-10 pb-16 md:pt-14 md:pb-24">
       <p className="mb-6 text-sm text-text-muted">
         {t("label")} / {now.asOf}
+        {/* Who this is, quietly: name and origin only (owner, 2026-10-10). The sentence stays the introduction. */}
+        <span className="mt-1 block text-text-soft">
+          {/* Hangul in the Japanese name is marked as Korean: right language for screen readers, and
+              the Korean font stack, so the Japanese catch-all font file is not fetched for it. */}
+          {text.name.split(/([\uAC00-\uD7A3]+)/).map((part, i) =>
+            /[\uAC00-\uD7A3]/.test(part) && locale !== "ko" ? (
+              <span key={i} lang="ko" className="font-ko">
+                {part}
+              </span>
+            ) : (
+              part
+            ),
+          )}{" "}
+          · {text.origin}
+        </span>
       </p>
 
       <div className={now.portrait ? "grid items-end gap-10 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]" : ""}>

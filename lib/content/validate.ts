@@ -170,10 +170,12 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
             errors.push(`path.${locale}.yaml "${n.id}": ${n.photos.length} photos but ${alts.length} photoAlts`);
           }
         }
-        // "next" is required on top-level rows (the hand-off between periods); sub-rows may omit it.
-        for (const id of data.nodes.map((n) => n.id)) {
+        // "next" is required on top-level rows without sub-rows (the hand-off between periods). A row
+        // with sub-rows may leave it to its last sub-row, so the hand-off reads after them.
+        for (const n of data.nodes) {
+          const id = n.id;
           const t = text.nodes[id];
-          if (t && id !== currentId && !t.next) {
+          if (t && id !== currentId && n.children.length === 0 && !t.next) {
             errors.push(`path.${locale}.yaml "${id}": "next" (why I moved on) is required`);
           }
         }

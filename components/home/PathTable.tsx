@@ -35,6 +35,29 @@ function Sentences({ text }: { text: string }) {
   );
 }
 
+// "そのとき" cell: the thought (bold) and its note, with a small label.
+function Thought({ label, thought, note, big }: { label: string; thought: string; note?: string; big?: boolean }) {
+  return (
+    <div>
+      <p className="mb-1 text-xs text-text-muted">{label}</p>
+      <p className={`path-thought font-bold ${big ? "text-xl leading-normal md:text-[22px]" : ""}`}>
+        <Sentences text={thought} />
+        {note && <span className="path-note mt-1 block text-[15px] font-normal">{note}</span>}
+      </p>
+    </div>
+  );
+}
+
+// "だから次へ" cell: why I moved on.
+function Next({ label, text }: { label: string; text: string }) {
+  return (
+    <div>
+      <p className="mb-1 text-xs text-text-muted">{label}</p>
+      <p className="path-next text-sm leading-[1.8] text-text-soft">{text}</p>
+    </div>
+  );
+}
+
 // "2026 前半" → big "2026" + small "前半".
 function YearLabel({ label, small }: { label: string; small?: boolean }) {
   if (small) return <p className="path-year text-sm text-accent-text">{label}</p>;
@@ -58,12 +81,9 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
           .map((slug) => projectThumbnails[slug])
           .filter((src): src is string => Boolean(src))
           .map((src) => ({ src, alt: "", own: false }));
-  // Top-level rows share one grid so their columns line up with the header; a top row without
-  // an image keeps an empty (never grey) cell on desktop. Sub-rows are indented and pick their own.
-  const topGrid = path.nodes.some((n) => photosOf(n).length > 0) ? GRID_PHOTO : GRID_PLAIN;
-  const grid = topGrid;
-  const headerHasPhotos = topGrid === GRID_PHOTO;
-  const gridOfChild = (node: PathChild) => (photosOf(node).length > 0 ? GRID_PHOTO : GRID_PLAIN);
+  // Each row picks its own grid: a row without images gets no photo column, so its text is wider.
+  // There is no column header; each cell carries its own small label (そのとき / だから次へ).
+  const gridOf = (node: PathNode | PathChild) => (photosOf(node).length > 0 ? GRID_PHOTO : GRID_PLAIN);
 
   // Below xl: two photos up to 448px, one up to 320px. At xl: own photos fill the 320px column;
   // project thumbnails keep their earlier 200px size so sub-rows do not grow.
@@ -72,11 +92,11 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
       ? "grid-cols-2 max-w-md xl:max-w-none"
       : photos[0]?.own
         ? "max-w-xs xl:max-w-none"
-        : "max-w-xs xl:max-w-[200px]";
+        : "max-w-[180px] md:max-w-xs xl:max-w-[200px]"; // project thumbnails: small on phones
 
-  function Photos({ node, top }: { node: PathNode | PathChild; top?: boolean }) {
+  function Photos({ node }: { node: PathNode | PathChild }) {
     const photos = photosOf(node);
-    if (photos.length === 0) return top && headerHasPhotos ? <div aria-hidden="true" className="hidden xl:block" /> : null;
+    if (photos.length === 0) return null;
     return (
       // Several photos: side by side at every width, in timeline order.
       <div className={`path-photos grid gap-1.5 ${sizeOf(photos)}`}>
@@ -120,14 +140,6 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
       </h2>
 
       {/* The left lane (30px / 72px) is where the hub thread runs and ties its knots. */}
-      <div aria-hidden="true" data-avoid className={`hidden gap-6 px-6 pb-3 text-xs text-text-muted xl:ml-[72px] xl:grid ${grid}`}>
-        <span>{t("colYear")}</span>
-        {headerHasPhotos && <span>{t("colPhoto")}</span>}
-        <span>{t("colDoing")}</span>
-        <span>{t("colThought")}</span>
-        <span>{t("colNext")}</span>
-      </div>
-
       <ol className="flex flex-col gap-3 pl-[30px] md:pl-[72px]">
         {path.nodes.map((node) => {
           const copy = text.nodes[node.id];
@@ -136,58 +148,61 @@ export default function PathTable({ locale, path, text, projectTitles, projectTh
               <div
                 id={`path-${node.id}`}
                 data-path-row
-                className={`grid scroll-mt-4 items-start gap-3 rounded-[20px] bg-surface p-5 md:p-6 xl:gap-6 ${topGrid} ${
+                className={`grid scroll-mt-4 items-start gap-3 rounded-[20px] bg-surface p-5 md:p-6 xl:gap-6 ${gridOf(node)} ${
                   node.current ? "ring-2 ring-accent" : ""
                 }`}
               >
                 <YearLabel label={copy.label} />
-                <Photos node={node} top />
+                <Photos node={node} />
                 <Doing node={node} />
-                <p className="path-thought text-xl leading-normal font-bold md:text-[22px]">
-                  <Sentences text={copy.thought} />
-                  {copy.thoughtNote && <span className="path-note mt-1 block text-[15px] font-normal">{copy.thoughtNote}</span>}
-                </p>
-                {node.current ? (
-                  <Link
-                    href={`/${locale}#now`}
-                    className="path-next flex min-h-11 items-center self-start text-sm text-accent-text underline decoration-accent decoration-2 underline-offset-4 hover:text-text"
-                  >
-                    {t("backToNow")}
-                  </Link>
-                ) : (
-                  <p className="path-next text-sm leading-[1.8] text-text-soft">{copy.next}</p>
-                )}
+                <Thought label={t("labelThought")} thought={copy.thought} note={copy.thoughtNote} big />
+                {copy.next && <Next label={t("labelNext")} text={copy.next} />}
               </div>
 
               {node.children.length > 0 && (
-                <ol className="mt-6 flex flex-col gap-2">
-                  {node.children.map((child) => {
-                    const c = text.nodes[child.id];
-                    return (
-                      <li
-                        key={child.id}
-                        id={`path-${child.id}`}
-                        data-path-row
-                        data-sub
-                        className={`ml-6 grid scroll-mt-4 items-center gap-2 rounded-2xl bg-surface-sub px-5 py-4 md:ml-10 md:px-6 xl:gap-6 ${gridOfChild(child)}`}
-                      >
-                        <YearLabel label={c.label} small />
-                        <Photos node={child} />
-                        <Doing node={child} />
-                        <p className="path-thought font-bold">
-                          <Sentences text={c.thought} />
-                          {c.thoughtNote && <span className="path-note mt-1 block text-[15px] font-normal">{c.thoughtNote}</span>}
-                        </p>
-                        <p className="path-next text-sm leading-[1.8] text-text-soft">{c.next}</p>
-                      </li>
-                    );
-                  })}
-                </ol>
+                <>
+                  <p data-avoid className="mt-6 mb-2 ml-6 text-xs text-text-muted md:ml-10">
+                    {t("childrenLabel")}
+                  </p>
+                  <ol className="flex flex-col gap-2">
+                    {node.children.map((child) => {
+                      const c = text.nodes[child.id];
+                      return (
+                        <li
+                          key={child.id}
+                          id={`path-${child.id}`}
+                          data-path-row
+                          data-sub
+                          className={`ml-6 grid scroll-mt-4 items-start gap-2 rounded-2xl bg-surface-sub px-5 py-4 md:ml-10 md:px-6 xl:gap-6 ${gridOf(child)}`}
+                        >
+                          <YearLabel label={c.label} small />
+                          <Photos node={child} />
+                          <Doing node={child} />
+                          <Thought label={t("labelThought")} thought={c.thought} note={c.thoughtNote} />
+                          {c.next && <Next label={t("labelNext")} text={c.next} />}
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </>
               )}
             </li>
           );
         })}
       </ol>
+
+      {/* The end of 02 returns to 01 in 01's own words; the hub thread ends here. */}
+      <div className="mt-20 pl-[30px] md:pl-[72px]">
+        <div data-avoid data-thread-end className="max-w-[40em]">
+          <p className="text-xl leading-normal font-bold md:text-[22px]">{text.closing}</p>
+          <Link
+            href={`/${locale}#now`}
+            className="mt-2 flex min-h-11 items-center self-start text-sm text-accent-text underline decoration-accent decoration-2 underline-offset-4 hover:text-text"
+          >
+            {t("backToNow")}
+          </Link>
+        </div>
+      </div>
     </section>
   );
 }

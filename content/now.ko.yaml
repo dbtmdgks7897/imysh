@@ -1,4 +1,6 @@
 # Owner-reviewed Korean (2026-10-10, docs/phase3-drafts-ko.md).
+name: "유승한"
+origin: "한국 출신"
 statement:
   before: "누구나 스스로 진정으로 원하는 가치를 위해 "
   accent: "살아갈 수 있도록."
@@ -10,7 +12,7 @@ cards:
   second-brain:
     label: "PROJECT"
     title: "Second Brain"
-    text: "있는 그대로의 나로 살기 위해 만드는 조수. 나와 같은 가치를 갖고, 내가 약한 곳은 다른 기질로 채워 준다."
+    text: "기록을 모아 두고 AI와 함께 다시 읽는 시스템. 있는 그대로의 나로 살기 위한 조수로, 내가 약한 곳을 채워 주도록 키우고 있다."
   youtube:
     label: "YOUTUBE"
     title: "面白そうだから"   # channel name, kept in Japanese

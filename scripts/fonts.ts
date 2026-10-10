@@ -10,7 +10,7 @@
 // Zen Maru Gothic is split by page per weight (2026-10-10, /ja mobile Lighthouse), using unicode-range:
 //   hub     — characters of the hub's text (now/path/messages/project titles, both locales) + base punctuation
 //   <slug>  — characters only that project's page uses
-//   shared  — everything else (characters several project pages share), the catch-all
+//   shared  — everything else (characters several project pages share)
 // The browser fetches a file only when the page shows one of its characters, so the hub loads about
 // half the Japanese bytes it did with one file, and a project page loads hub + shared + its own file.
 import fs from "fs";
@@ -135,6 +135,9 @@ async function main() {
     // Order matters: for a character the last matching rule wins. The shared file comes first without
     // a range (catch-all); each project file and the hub file claim only their own ranges.
     jobs.push([`zen-maru-gothic-${w}-shared.woff2`, zen[w], shared]);
+    // The shared file is the catch-all (no range, keeps the render-blocking CSS small). Hangul inside
+    // Japanese text must therefore be marked lang="ko" with the Korean font stack (see NowSection),
+    // or the browser fetches this file only to find no glyph.
     faces.push(face("Zen Maru Gothic", w, `zen-maru-gothic-${w}-shared.woff2`));
     for (const [slug, chars] of [...own].sort()) {
       jobs.push([`zen-maru-gothic-${w}-${slug}.woff2`, zen[w], chars]);
@@ -143,9 +146,21 @@ async function main() {
     jobs.push([`zen-maru-gothic-${w}-hub.woff2`, zen[w], jaHub]);
     faces.push(face("Zen Maru Gothic", w, `zen-maru-gothic-${w}-hub.woff2`, unicodeRange(jaHub)));
   }
-  jobs.push(["pretendard-400.woff2", fs.readFileSync(path.join(pretendard, "Pretendard-Regular.otf")), ko]);
-  jobs.push(["pretendard-700.woff2", fs.readFileSync(path.join(pretendard, "Pretendard-Bold.otf")), ko]);
-  faces.push(face("Pretendard", 400, "pretendard-400.woff2"), face("Pretendard", 700, "pretendard-700.woff2"));
+  // Hangul that Japanese pages show (e.g. the name 「ユ・スンハン（유승한）」): a tiny Pretendard file
+  // with its own range, declared after the full one, so /ja never downloads the whole Korean subset.
+  const jaText = ["now.ja.yaml", "path.ja.yaml"].map((f) => fs.readFileSync(path.join(ROOT, "content", f), "utf8")).join("")
+    + fs.readFileSync(path.join(ROOT, "messages", "ja.json"), "utf8")
+    + walk(path.join(ROOT, "content", "projects"), ["ja.md"]).map((f) => fs.readFileSync(f, "utf8")).join("");
+  const jaHangul = [...new Set([...jaText].filter((c) => isHangul(c.codePointAt(0)!)))].sort().join("");
+  for (const w of [400, 700] as const) {
+    const otf = fs.readFileSync(path.join(pretendard, w === 400 ? "Pretendard-Regular.otf" : "Pretendard-Bold.otf"));
+    jobs.push([`pretendard-${w}.woff2`, otf, ko]);
+    faces.push(face("Pretendard", w, `pretendard-${w}.woff2`));
+    if (jaHangul) {
+      jobs.push([`pretendard-${w}-ja.woff2`, otf, jaHangul]);
+      faces.push(face("Pretendard", w, `pretendard-${w}-ja.woff2`, unicodeRange(jaHangul)));
+    }
+  }
 
   fs.mkdirSync(OUT, { recursive: true });
   for (const f of fs.readdirSync(OUT)) if (f.endsWith(".woff2")) fs.rmSync(path.join(OUT, f)); // no stale files

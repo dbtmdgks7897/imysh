@@ -13,7 +13,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale: rawLocale } = await params;
   const locale = assertLocale(rawLocale);
   const t = await getTranslations({ locale, namespace: "meta" });
-  return pageMetadata({ locale, subpath: "", title: SITE_NAME, description: t("siteDescription") });
+  // The hub's title carries the owner's name, e.g. 「ユ・スンハン | imysh」.
+  // Only the name as written in the page's language: 「ユ・スンハン（유승한）」 → 「ユ・スンハン」.
+  const name = loadNowText(locale).name.split(/[（(]/)[0].trim();
+  return pageMetadata({ locale, subpath: "", title: `${name} | ${SITE_NAME}`, description: t("siteDescription") });
 }
 
 export default async function LocalePage({ params }: { params: Promise<{ locale: string }> }) {

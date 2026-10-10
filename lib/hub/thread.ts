@@ -161,12 +161,19 @@ export function startThread(o: ThreadOptions): () => void {
       knots.push({ el, idx, x: lx - r, y, sub, bottom: b.b, frac: 0, leave: 0, k: null as unknown as SVGCircleElement });
       last = b;
     }
-    // ending: past the last row, a hook that turns back up toward 「いま」
-    const hx = P[P.length - 1][0], hookY = last.b + 34, R = 20, cx = hx + R;
-    P.push(...route(P[P.length - 1], [hx, hookY], 0));
-    for (let a = 170; a >= 0; a -= 10) P.push([cx + Math.cos((a * Math.PI) / 180) * R, hookY + Math.sin((a * Math.PI) / 180) * R]);
-    const end = P[P.length - 1];
-    P.push(...bez(end, [cx + R, hookY - 8], [cx + R, hookY - 14], [cx + R, hookY - 20]));
+    // ending: down the lane to the closing line of 02 (「そして、いま。」 + the link to 01) and stop there;
+    // without one, a hook past the last row that turns back up toward 「いま」
+    const endEl = root.querySelector("[data-thread-end]");
+    if (endEl) {
+      const e = box(endEl);
+      P.push(...route(P[P.length - 1], [laneX, e.t + 16], 8));
+    } else {
+      const hx = P[P.length - 1][0], hookY = last.b + 34, R = 20, cx = hx + R;
+      P.push(...route(P[P.length - 1], [hx, hookY], 0));
+      for (let a = 170; a >= 0; a -= 10) P.push([cx + Math.cos((a * Math.PI) / 180) * R, hookY + Math.sin((a * Math.PI) / 180) * R]);
+      const end = P[P.length - 1];
+      P.push(...bez(end, [cx + R, hookY - 8], [cx + R, hookY - 14], [cx + R, hookY - 20]));
+    }
 
     L = [0];
     MY = [P[0][1]];

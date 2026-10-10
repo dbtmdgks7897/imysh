@@ -140,7 +140,8 @@ async function main() {
   for (const locale of LOCALES) {
     const now = loadNowText(locale);
     const statement = `${now.statement.before}${now.statement.accent}${now.statement.after}`.replace(/\s+/g, " ").trim();
-    await render(path.join(OUT, `${locale}.png`), locale, "", statement, now.thinking[now.thinking.length - 1]);
+    // the hub card names its owner in the kicker line (name · origin)
+    await render(path.join(OUT, `${locale}.png`), locale, `${now.name} · ${now.origin}`, statement, now.thinking[now.thinking.length - 1]);
     count++;
     for (const slugPath of listProjectSlugPaths()) {
       const project = loadProject(slugPath, locale);

@@ -1,16 +1,18 @@
 # Japanese translation of now.ko.yaml (2026-10-10), unified to です・ます (owner decision). Choices: docs/phase3-translation-notes.md
+name: "ユ・スンハン（유승한）"
+origin: "韓国出身"
 statement:
   before: "誰もが、自分が本当に望む価値のために"
   accent: "生きられるように。"
   after: "それを手伝いたいです。"
 thinking:
   - "手伝う方法は、見せることだと思っています。自分の価値を追いかけて楽しく生きている姿を見て、誰かが一度でも「自分は何がしたいんだろう」と自分に問いかけるきっかけになれたら、うれしいです。"
-  - "自分が見つけた答えは「楽しく」です。"
+  - "自分が見つけた答えは、「楽しく生きること」です。"
 cards:
   second-brain:
     label: "PROJECT"
     title: "Second Brain"
-    text: "ありのままの自分で生きるためにつくっている相棒です。同じ価値観を持ちながら、自分の弱いところは違う気質で補ってくれます。"
+    text: "記録をためて、AIといっしょに読み返す仕組みです。ありのままの自分で生きるための相棒として、自分の弱いところを補ってくれるように育てています。"
   youtube:
     label: "YOUTUBE"
     title: "面白そうだから"

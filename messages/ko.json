@@ -25,7 +25,10 @@
     "colThought": "그때의 생각",
     "colNext": "다음으로 간 이유",
     "backToNow": "→ 01 지금 으로",
-    "projectLink": "{title} →"
+    "projectLink": "{title} →",
+    "labelThought": "그때",
+    "labelNext": "그래서 다음으로",
+    "childrenLabel": "이 무렵의 일"
   },
   "detail": {
     "backToPath": "← 02 여기까지 · {label}",

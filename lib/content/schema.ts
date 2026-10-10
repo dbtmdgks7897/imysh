@@ -92,6 +92,8 @@ export const nowSchema = z.strictObject({
 export type Now = z.infer<typeof nowSchema>;
 
 export const nowTextSchema = z.strictObject({
+  name: z.string().min(1), // shown small on the first screen and in the hub's <title>
+  origin: z.string().min(1),
   statement: z.strictObject({
     before: z.string().min(1),
     accent: z.string().min(1), // the one accented phrase
@@ -130,6 +132,7 @@ export type PathData = z.infer<typeof pathSchema>;
 
 export const pathTextSchema = z.strictObject({
   heading: z.string().min(1),
+  closing: z.string().min(1), // the last line of 02, before the link back to 01
   nodes: z.record(
     z.string(),
     z.strictObject({

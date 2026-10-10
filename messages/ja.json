@@ -25,7 +25,10 @@
     "colThought": "そのときの考え",
     "colNext": "次へ行った理由",
     "backToNow": "→ 01 いま へ",
-    "projectLink": "{title} →"
+    "projectLink": "{title} →",
+    "labelThought": "そのとき",
+    "labelNext": "だから次へ",
+    "childrenLabel": "このころのこと"
   },
   "detail": {
     "backToPath": "← 02 ここまで · {label}",

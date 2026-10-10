@@ -512,6 +512,27 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **Hub revision from the fresh-eyes review (items 2–5) and the name line (local).**
+  - 2026 now reads in time order: the "answer was people" line moved to 2026-d; 2026 前半 has no
+    hand-off of its own.
+  - The Second Brain restart is told once (2026-e).
+  - 02 ends with a closing line in 01's words and the link back to 01; the thread now ends there.
+  - The sub-rows sit under a small heading.
+  - Each cell has a small label (そのとき / だから次へ) and the desktop header is gone. Rows without
+    photos lose the photo column. Phone thumbnails are max 180px.
+  - Rows are always fully visible: the reveal is only the knot and the year colour.
+  - The sentence no longer gathers on load.
+  - First-mention glosses: Second Brain, デーモン, 司令塔, バイブコーディング, kigaru.
+  - Factual lines replace the daemon aphorisms, and the flagged translated-sounding lines were fixed.
+  - The name and origin sit under the 01 label, and the hub title is 「ユ・スンハン | imysh」.
+  - Fonts:
+    - Hangul in the Japanese name is lang="ko" with the Korean stack, plus a tiny Pretendard file for
+      Hangul on ja pages, so /ja does not fetch the full Korean subset.
+  - Before/after with ★ read-aloud marks: `docs/hub-revision-2026-10-10.md`.
+  - Checks: lint, typecheck, check:content, check:meta and build pass. Playwright: thread overlaps
+    0 at 4 widths in ja/ko, no errors, no horizontal scroll, reduced motion static, settle down-only.
+  - Lighthouse mobile median: /ja 91, /ko 91 (was 93/93). FCP 1.7 → 2.0 s, from about 12 KB more
+    critical bytes: longer copy in the HTML and a larger hub font subset.
 - 2026-10-10: **Path (02) copy revised (owner).** New thought / note / why-I-moved-on lines for 2023, 2024, 2025, 2026 前半, 2026-c (next) and 2026 後半, ko as written by the owner and ja translated; before/after in `docs/path-revision-2026-10-10.md`. The taller rows exposed a routing gap at 390px (the thread clipped the corners of parent rows with sub-rows); fixed by adding short S-curve windows in `lib/hub/thread.ts`. Hub thread: 0 overlaps at 4 widths in ja and ko. Fonts re-split. Lighthouse /ja mobile 91–93.
 - 2026-10-10: **「손과 기억」 (owner request, applied).** The command post page now says its long-term memory is Second Brain: the command post reads decisions, next actions and the owner's notes from it and writes back only approved decisions ("the command post is the hand, Second Brain is the memory"). The diagram's lower-right box is now Second Brain (solid line = reads, dotted = writes only after approval). Cross links in both directions, ko and ja. Fonts re-split; checks, build and a Playwright pass are clean (hub thread 0 overlaps, diagram object-fit contain).
 - 2026-10-10: **Phase 6 applied (`f9632b9`, `41cf2cc`, local).** Japanese written side by side (`docs/phase6-drafts-ja.md`), the command-post page and its diagram added, row 2026-f linked, the diagram helpers shared (daemon SVGs regenerate identically), fonts re-split. lint, typecheck, check:content, check:meta (20 pages) and build pass. Hub thread: 0 overlaps at 4 widths in ja and ko; reduced motion is static. Lighthouse mobile median: /ja 93, /ja/projects/command-post 93, /ko/projects/command-post 95.
