@@ -14,7 +14,7 @@
 
   /* 폰트 — next/font CSS 변수 참조 (--next-* 는 layout.tsx에서 주입) */
   --font-pretendard: "Pretendard Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-noto-sans-jp: var(--next-noto-jp), ui-sans-serif, system-ui, sans-serif;
+  --font-noto-sans-jp: "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--next-jetbrains-mono), ui-monospace, "Courier New", monospace;
 }
 

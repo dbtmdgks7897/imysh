@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
+// Noto Sans JP is self-hosted from npm instead of next/font/google: Google sometimes serves
+// CJK fonts as /l/font?kit=...&skey=... URLs, which next/font/google cannot resolve
+// (seen on GitHub Actions runners; build fails with "queries have exactly one entry").
+import "@fontsource/noto-sans-jp/400.css";
+import "@fontsource/noto-sans-jp/500.css";
+import "@fontsource/noto-sans-jp/700.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/layout/Navigation";
@@ -8,13 +14,6 @@ import { LOCALES, assertLocale, type Locale } from "@/lib/locales";
 import { assertContentValid } from "@/lib/content/validate";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "../globals.css";
-
-const notoSansJP = Noto_Sans_JP({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--next-noto-jp",
-  display: "swap",
-});
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -66,7 +65,7 @@ export default async function LocaleLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css"
         />
       </head>
-      <body className={`${notoSansJP.variable} ${jetbrainsMono.variable}`}>
+      <body className={jetbrainsMono.variable}>
         <NextIntlClientProvider messages={messages}>
           <div className={`flex min-h-screen flex-col ${fontClass}`}>
             <Navigation locale={locale} />
