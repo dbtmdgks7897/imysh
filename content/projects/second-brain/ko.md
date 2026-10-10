@@ -2,6 +2,7 @@
 title: "Second Brain"
 summary: "있는 그대로의 나로 살기 위해 만드는 조수."
 role: "혼자 설계·개발, 첫 사용자"
+heroAlt: "내 노트를 이은 Obsidian 그래프. 노트 제목은 일부러 흐리게 처리했다."
 ---
 
 ## 왜 시작했나

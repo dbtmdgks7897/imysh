@@ -58,5 +58,30 @@
     "width": 1280,
     "height": 800,
     "srcSet": "/images/projects/imysh/hub-ja-640.webp 640w, /images/projects/imysh/hub-ja.webp 1280w"
+  },
+  "/images/projects/everyai/main.webp": {
+    "width": 790,
+    "height": 1012,
+    "srcSet": "/images/projects/everyai/main-640.webp 640w, /images/projects/everyai/main.webp 790w"
+  },
+  "/images/projects/everyai/service-detail.webp": {
+    "width": 775,
+    "height": 1000,
+    "srcSet": "/images/projects/everyai/service-detail-640.webp 640w, /images/projects/everyai/service-detail.webp 775w"
+  },
+  "/images/projects/everyai/payment-message.webp": {
+    "width": 762,
+    "height": 767,
+    "srcSet": "/images/projects/everyai/payment-message-640.webp 640w, /images/projects/everyai/payment-message.webp 762w"
+  },
+  "/images/projects/everyai/admin-banners.webp": {
+    "width": 1280,
+    "height": 482,
+    "srcSet": "/images/projects/everyai/admin-banners-640.webp 640w, /images/projects/everyai/admin-banners.webp 1280w"
+  },
+  "/images/projects/second-brain/graph.webp": {
+    "width": 1280,
+    "height": 1233,
+    "srcSet": "/images/projects/second-brain/graph-640.webp 640w, /images/projects/second-brain/graph.webp 1280w"
   }
 }

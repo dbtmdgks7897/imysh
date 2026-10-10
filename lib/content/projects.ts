@@ -12,6 +12,7 @@ export interface Project {
   title: string;
   summary: string;
   role?: string;
+  heroAlt?: string;
   body: string;
 }
 
@@ -51,13 +52,19 @@ export function loadProjectText(
   slugPath: string[],
   locale: Locale,
   root: string = CONTENT_ROOT,
-): Pick<Project, "title" | "summary" | "role" | "body"> {
+): Pick<Project, "title" | "summary" | "role" | "heroAlt" | "body"> {
   const file = path.join(projectsDir(root), ...slugPath, `${locale}.md`);
   // No fallback to another locale: a missing translation is an error.
   if (!fs.existsSync(file)) throw new ContentError(`missing file: ${rel(file)}`);
   const { data, content } = matter(fs.readFileSync(file, "utf8"));
   const frontmatter = parseWith(projectFrontmatterSchema, data, file);
-  return { title: frontmatter.title, summary: frontmatter.summary, role: frontmatter.role, body: content };
+  return {
+    title: frontmatter.title,
+    summary: frontmatter.summary,
+    role: frontmatter.role,
+    heroAlt: frontmatter.heroAlt,
+    body: content,
+  };
 }
 
 export function loadProject(slugPath: string[], locale: Locale, root: string = CONTENT_ROOT): Project {

@@ -45,6 +45,7 @@ export const projectFrontmatterSchema = z.strictObject({
   title: z.string().min(1),
   summary: z.string().min(1),
   role: z.string().min(1).optional(), // 立場 — only when the sources state it
+  heroAlt: z.string().min(1).optional(), // alt text for meta.yaml `hero` when the image carries meaning
 });
 
 // ---- now (spec §3.1, §5) ----

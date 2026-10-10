@@ -28,7 +28,7 @@ export default function ProjectHero({ project, backLinks }: { project: Project; 
       </div>
       {hero && (
         <div className="relative min-h-[240px] flex-[1.4_1_480px] bg-placeholder md:min-h-[360px]">
-          <ResponsiveImage src={hero} alt="" priority className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 60vw, 100vw" />
+          <ResponsiveImage src={hero} alt={project.heroAlt ?? ""} priority className="absolute inset-0 h-full w-full object-cover object-top" sizes="(min-width: 768px) 60vw, 100vw" />
         </div>
       )}
     </div>

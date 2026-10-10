@@ -3,4 +3,7 @@ period: "2026.03 –"          # designed in March, restarted in September
 stack: ["Obsidian", "obsidian-git", "Dataview", "Python", "Telegram Bot API", "Claude", "Claude Code", "MCP", "Whisper", "Google Calendar API", "launchd"]
 status: in-progress
 order: 5
+# Owner-supplied graph view with labels blurred on purpose (private note titles).
+hero: /images/projects/second-brain/graph.webp
+thumbnail: /images/projects/second-brain/graph.webp
 sections: [why, what, tech, thought]

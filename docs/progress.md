@@ -7,7 +7,11 @@
 command post: `/` → 302 `/ja`, `/en/*` → 301, immutable cache on
 `/_next/static`, absolute og:image, and 4 images on `/ja`. A follow-up commit
 on top (not pushed) points the kigaru repository links at the public
-snapshot <https://github.com/dbtmdgks7897/kigaru-matsuri>. `main` (imysh.pages.dev) still
+snapshot <https://github.com/dbtmdgks7897/kigaru-matsuri>, and a second one adds
+the owner's images: four clean everyai stills, used as the hero, the 02
+figures and the 2023-b path thumbnail, plus a pre-blurred Second Brain graph
+used as the hero and the 2026-d thumbnail. The hub now has 6 images. Source
+files and crops are recorded in `images-src/images.json`. `main` (imysh.pages.dev) still
 serves the March site; it gets merged after the owner's phone check.
 
 The site is the "who I am" redesign: ja default + ko, maker identity, visual
@@ -125,8 +129,8 @@ Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
 - [ ] Second Brain 02 says capture is "from the phone via Telegram". The bot README says the bot has been dormant since 2026-10-02 and capture moved to the Claude app. Owner to confirm or correct this line.
 - [ ] **Owner:** review the Japanese, using `docs/phase3-translation-notes.md`.
 - [x] ki-garu.com live links added to kigaru, 韓国式AI顔占い and AI自販機 (owner approved; all three URLs checked and return 200).
-- [ ] **Owner:** portrait, path-row life photos, Second Brain screens;
-  everyai 3–4 static screenshots (the app must be re-run) [4, 8].
+- [x] everyai 3–4 static stills from the owner's Notion export, with no watermark, devtools or personal data [4, 8]. Second Brain graph (blurred, owner-supplied).
+- [ ] **Owner:** portrait and path-row life photos.
 - [ ] README [20].
 
 ### Phase 4 — Pre-launch (done locally; phone check and merge remain)
@@ -390,6 +394,16 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **Added the owner's images (local commit).**
+  - everyai: 4 stills cropped from the owner's Notion export.
+    - main page: `로그인(JWT).gif` frame 94
+    - service detail: `부트페이_1.gif` frame 0
+    - payment message: `안전_결제_2.gif` frame 132, right window only
+    - admin banners: `광고_배너_리스트.png`
+    - Every crop is limited to the app area, so the Bandisoft watermark, devtools, browser chrome, taskbar and the company footer are left out. Only test data is visible.
+  - Second Brain: the owner's pre-blurred graph as hero and 2026-d thumbnail. The unblurred original was not used.
+  - Added an optional `heroAlt` frontmatter for both pages and re-ran `npm run fonts` for the new characters.
+  - Checks and Playwright pass.
 - 2026-10-10: Pointed the kigaru, 韓国式AI顔占い and AI自販機 repository links at the public snapshot `kigaru-matsuri` (200), replacing the GitHub profile root. No copy change. Checks and Playwright pass.
 - 2026-10-10: **Phase 4 pre-launch, 5 local commits on `redesign` (not pushed).**
   - Second Brain copy now says capture goes through the Claude app; Fly.io dropped from its stack.

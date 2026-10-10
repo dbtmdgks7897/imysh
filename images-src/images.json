@@ -1,15 +1,80 @@
 {
   "_comment": "Source images → public/images/<key>.webp (max 1280px wide) + <key>-640.webp. Run `npm run images` after editing. crop = [top, height] in source pixels, full width.",
-  "projects/my-asset-manager/portfolio-detail": { "src": "projects/my-asset-manager/portfolio-detail.webp" },
-  "projects/my-asset-manager/analyze": { "src": "projects/my-asset-manager/analyze.webp" },
-  "projects/my-asset-manager/bitcoin-detail": { "src": "projects/my-asset-manager/bitcoin-detail.webp" },
-  "projects/my-asset-manager/board-detail": { "src": "projects/my-asset-manager/board-detail.webp" },
-  "projects/my-asset-manager/mockup": { "src": "projects/my-asset-manager/mockup.png" },
-  "projects/my-asset-manager/db-v3": { "src": "projects/my-asset-manager/db-v3.png" },
-  "projects/kigaru/landing": { "src": "projects/kigaru/landing.webp", "crop": [0, 2000] },
-  "projects/kigaru/kaouranai-top": { "src": "projects/kigaru/kaouranai-top.webp", "crop": [0, 1800] },
-  "projects/kigaru/code-top": { "src": "projects/kigaru/code-top.webp", "crop": [0, 1400] },
-  "projects/kigaru/code-memory-game": { "src": "projects/kigaru/code-memory-game.webp", "crop": [0, 950] },
-  "projects/kigaru/code-janken": { "src": "projects/kigaru/code-janken.webp", "crop": [0, 870] },
-  "projects/imysh/hub-ja": { "src": "projects/imysh/hub-ja.png", "crop": [0, 900] }
+  "projects/my-asset-manager/portfolio-detail": {
+    "src": "projects/my-asset-manager/portfolio-detail.webp"
+  },
+  "projects/my-asset-manager/analyze": {
+    "src": "projects/my-asset-manager/analyze.webp"
+  },
+  "projects/my-asset-manager/bitcoin-detail": {
+    "src": "projects/my-asset-manager/bitcoin-detail.webp"
+  },
+  "projects/my-asset-manager/board-detail": {
+    "src": "projects/my-asset-manager/board-detail.webp"
+  },
+  "projects/my-asset-manager/mockup": {
+    "src": "projects/my-asset-manager/mockup.png"
+  },
+  "projects/my-asset-manager/db-v3": {
+    "src": "projects/my-asset-manager/db-v3.png"
+  },
+  "projects/kigaru/landing": {
+    "src": "projects/kigaru/landing.webp",
+    "crop": [
+      0,
+      2000
+    ]
+  },
+  "projects/kigaru/kaouranai-top": {
+    "src": "projects/kigaru/kaouranai-top.webp",
+    "crop": [
+      0,
+      1800
+    ]
+  },
+  "projects/kigaru/code-top": {
+    "src": "projects/kigaru/code-top.webp",
+    "crop": [
+      0,
+      1400
+    ]
+  },
+  "projects/kigaru/code-memory-game": {
+    "src": "projects/kigaru/code-memory-game.webp",
+    "crop": [
+      0,
+      950
+    ]
+  },
+  "projects/kigaru/code-janken": {
+    "src": "projects/kigaru/code-janken.webp",
+    "crop": [
+      0,
+      870
+    ]
+  },
+  "projects/imysh/hub-ja": {
+    "src": "projects/imysh/hub-ja.png",
+    "crop": [
+      0,
+      900
+    ]
+  },
+  "_everyai_sources": "Owner's Notion export, 2026-10-10 (read-only, crops in source pixels): main.png = 로그인(JWT).gif frame 94, x270 y0 790x1012 (app column only: no Bandisoft watermark, no devtools); service-detail.png = 부트페이_1.gif frame 0, x565 y0 775x1000 (app column, watermark and grey margins excluded); payment-message.png = 안전_결제_2.gif frame 132, x1048 y140 762x767 (right browser window's chat area only: no browser chrome, taskbar, URL or watermark); admin-banners.png = 광고_배너_리스트.png, x0 y40 1700x640 (close button and empty area removed).",
+  "_second_brain_source": "graph.webp = owner-supplied pre-blurred Obsidian graph (labels blurred on purpose; never replace with the unblurred original).",
+  "projects/everyai/main": {
+    "src": "projects/everyai/main.png"
+  },
+  "projects/everyai/service-detail": {
+    "src": "projects/everyai/service-detail.png"
+  },
+  "projects/everyai/payment-message": {
+    "src": "projects/everyai/payment-message.png"
+  },
+  "projects/everyai/admin-banners": {
+    "src": "projects/everyai/admin-banners.png"
+  },
+  "projects/second-brain/graph": {
+    "src": "projects/second-brain/graph.webp"
+  }
 }

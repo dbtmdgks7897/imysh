@@ -93,11 +93,11 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
     });
     for (const locale of LOCALES) {
       attempt(errors, () => {
-        const { title, summary, role, body } = loadProjectText(slugPath, locale, root);
+        const { title, summary, role, heroAlt, body } = loadProjectText(slugPath, locale, root);
         const { preamble, parts } = splitH2(body);
         const where = `projects/${slug}/${locale}.md`;
-        checkNoDraftMarkers(errors, where, [title, summary, role ?? "", body].join("\n"));
-        checkGlyphs(errors, where, [title, summary, role ?? "", body].join("\n"));
+        checkNoDraftMarkers(errors, where, [title, summary, role ?? "", heroAlt ?? "", body].join("\n"));
+        checkGlyphs(errors, where, [title, summary, role ?? "", heroAlt ?? "", body].join("\n"));
         for (const match of body.matchAll(MD_IMAGE)) {
           const src = match[1];
           if (!src.startsWith("/images/")) errors.push(`${where}: image must be a local /images/ path: ${src}`);

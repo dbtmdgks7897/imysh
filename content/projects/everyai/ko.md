@@ -2,6 +2,7 @@
 title: "EveryAI - AI 작품·서비스 거래 플랫폼"
 summary: "생성 AI로 만든 작품과 서비스를 거래할 수 있는 플랫폼. 6주 실무 프로젝트."
 role: "백엔드 인턴 — 백엔드 전체 담당"
+heroAlt: "everyai 메인 화면: 카테고리, 배너, 추천 서비스 목록"
 ---
 
 ## 1. 배경 — WHY
@@ -30,9 +31,13 @@ AI 기술로 만든 다양한 작품과 서비스를 거래할 수 있는 플랫
 
 AI 서비스/프로젝트의 등록·수정·삭제 CRUD. 이미지 업로드 포함.
 
+![서비스 상세 화면 (테스트 데이터)](/images/projects/everyai/service-detail.webp)
+
 ### 결제 (BootPay)
 
 부트페이 연동으로 안전 결제 구현. 메시지 방 내에서 결제 요청 → 결제 처리 → 성공 메시지 전송까지의 전체 플로우.
+
+![메시지 방 안에서 안전 결제를 마친 화면](/images/projects/everyai/payment-message.webp)
 
 ### 실시간 메시징
 
@@ -45,6 +50,8 @@ AI 서비스/프로젝트의 등록·수정·삭제 CRUD. 이미지 업로드 �
 ### 관리자 기능
 
 유저 관리(제한/해제), 서비스 승인/반려, 전문가 등급 관리, 광고 배너 관리.
+
+![관리자 페이지 — 광고 배너 관리](/images/projects/everyai/admin-banners.webp)
 
 ## 3. 기술 판단
 
