@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Local verification screenshots (kept out of the repo)
 docs/screenshots/
+
+# generated Open Graph cards (npm run og, runs before build)
+/public/og/

@@ -19,4 +19,6 @@ jobs:
       # typecheck runs `next typegen` first so .next/types exists on a fresh checkout
       - run: npm run typecheck
       - run: npm run check:content
+      # prebuild renders the Open Graph cards (scripts/og.ts)
       - run: npm run build
+      - run: npm run check:meta
