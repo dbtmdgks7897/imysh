@@ -2,103 +2,70 @@
 
 ## Where things stand (2026-10-10)
 
-**The site's purpose changed, and a redesign is approved.** imysh is no longer
-a recruiter portfolio. It is a site that says **what kind of person I am**, for
-people in **Japan** who meet me (e.g. the Japanese study group I lead). The
-identity is **a maker**, not a job title. Locales become **`ja` (default) +
-`ko`**; `en` is dropped (no current audience; next-intl stays, so re-adding it
-is cheap). The page leads with "now" (いま), then the path that formed it
-(ここまで), with projects as evidence.
+**Phase 4 (pre-launch) is done locally on `redesign` (5 commits, not
+pushed). Phases 1–3 are pushed (`9623c42`), CI is green, and the preview at
+<https://redesign.imysh.pages.dev> works.** `main` (imysh.pages.dev) still
+serves the March site; it gets merged after the owner's phone check.
 
-- Design spec (approved): [`docs/superpowers/specs/2026-10-10-imysh-redesign-design.md`](superpowers/specs/2026-10-10-imysh-redesign-design.md)
-- Visual direction: **C3 · やわらかい索引** (soft index — table-structured path,
-  photos per row, rounded gothic, warm neutral ground, one terracotta accent).
-  Artboard in https://claude.ai/artifact/Tr3MugFgFgucQyGEor13pb.
-- **Phase 3 (Content) is applied on `redesign`, uncommitted.** The owner
-  reviewed `docs/phase3-drafts-ko.md`. Every public-scope recommendation
-  was accepted except #13 (kigaru: "shown only to a few close friends"). The
-  central sentence is the softened 「…살아갈 수 있도록 / 生きられるように」, and the
-  slug is `jihanki`. Korean and Japanese copy are now in `content/` for now,
-  the path (2023 split into My Asset Manager → everyai) and seven project
-  pages. New pages: my-asset-manager, kigaru/jihanki, second-brain, imysh.
-  Translation choices are in `docs/phase3-translation-notes.md`. The owner
-  answered the 9 open questions, and all of them are applied in ko and ja:
-  the professor's special lecture → the recommended internship; vibe coding
-  from March 2026; why kigaru and imysh stopped ("to learn through real
-  conversations"); EP01 still 準備中; everyai shown as サービス終了 / 서비스 종료;
-  kaouranai shown as 韓国式AI顔占い. The 6 small confirmations are applied
-  too:
-  - My Asset Manager shows as `closed`; it was deployed at the end of the
-    project and is down now.
-  - The vending-machine motive is in the owner's words.
-  - Second Brain lists its stack as technology names only, and says it is
-    used daily.
-  - The whole ja site is unified on です・ます.
-  The ki-garu.com live links are in (owner approved). The only open link
-  decision is the kigaru repo, whose link still points at the GitHub profile. check:content rejects any 【 marker.
-- Images: `npm run images` (sharp) turns `images-src/` into two webp widths
-  under `public/images/` plus `lib/content/image-manifest.json`. Markup sets
-  width, height, srcset and lazy loading. The everyai GIFs are dropped
-  (everyai is text-only), and R2 is gone from the codebase: images must be
-  local `/images/….webp`. Added `finished` (完了/완료) and `closed`
-  (サービス終了/서비스 종료) statuses and an optional `role` frontmatter (立場/역할). Verified: lint, typecheck,
-  check:content, build, and Playwright at ja/ko × 1440/375 on 10 pages, with
-  no overflow, no target under 44px and no 【 in `out/`. Screenshots are in
-  `docs/screenshots/phase3/` (6.3 MB; decide whether to commit them).
-- Phase 2 (Visual, C3) is committed (`dfac518`), pushed, and CI is green.
-- Phase 1 (Foundation) is committed and pushed (`26f2a4c`, CI font fix
-  `fe46a84`, progress `b53d606`); CI is green and the preview at
-  <https://redesign.imysh.pages.dev> works.
-- **Detail-page template B** (built in Phase 2): big hero image, left
-  info card (period, role, stack, mini timeline of neighbouring path nodes),
-  right column 01 why / 02 what / 03 what I thought, tech details in
-  `<details>`, prev/next at the bottom. Recorded in spec §3.
+The site is the "who I am" redesign: ja default + ko, maker identity, visual
+C3. Spec: [`docs/superpowers/specs/2026-10-10-imysh-redesign-design.md`](superpowers/specs/2026-10-10-imysh-redesign-design.md).
+Content is owner-reviewed (`docs/phase3-drafts-ko.md`, translation notes in
+`docs/phase3-translation-notes.md`).
 
-The live site is unchanged: <https://imysh.pages.dev>, auto-deployed from
-`github.com/dbtmdgks7897/imysh` `main`. Local `main` is 1 commit ahead of
-`origin/main` (the audit commit `52b8859`, unpushed). The Cloudflare Pages
-build Node version is still unchecked (CI pins 22).
+Phase 4 commits:
+- `634e08e` Second Brain copy: capture now goes through the Claude app (the
+  Telegram bot has been dormant since 10-02). Fly.io dropped from the stack.
+- `ccb6843` Hub: path rows that are projects show the project thumbnail
+  (2023-a, 2026-a/b/c). Job/life rows and everyai/Second Brain have no
+  image cell. The hub now has 4 images, up from 0.
+- `aa8cc89` OG: `scripts/og.ts` renders a 1200×630 C3 card per page before
+  every build (satori + sharp, npm fonts, no network). Metadata carries
+  og:image and `twitter:card=summary_large_image`. `npm run check:meta`
+  parses all 16 pages in `out/` and runs in CI. The C3 SVG icon and
+  apple-touch-icon replace the default favicon.
+- `7be1d36` Performance: fonts are subset to the site's characters
+  (`npm run fonts`, two files per locale). Before, each page loaded four
+  render-blocking font stylesheets and 47–58 font slices. Also dropped
+  weight 500 and JetBrains Mono, added `public/_headers` cache rules, and
+  check:content now fails on glyphs outside the subset.
+- `b51f3e4` README.
 
-Verified against the code while planning (these correct the spec; full list
-in the plan's "Where the spec disagrees with the code"):
+### Lighthouse 13.5 (local static server of `out/`, simulated throttling)
 
-- There is no next-intl routing config or middleware. "Default locale" is only
-  the `?? "ko"` fallback in `lib/i18n.ts` and the client redirect in
-  `app/page.tsx`; the locale list is hard-coded in four files.
-- `tsc -p tsconfig.json --noEmit` needs `next typegen` first on a fresh CI
-  checkout (tsconfig includes `.next/types`).
-- The spec's path rows reference slugs that do not exist yet
-  (my-asset-manager, kigaru/jihanki, imysh, second-brain), so Phase 1
-  placeholders link only everyai and kigaru/kaouranai.
-- All images are still remote R2 URLs; "every referenced image exists" can only
-  be enforced for local `/images/...` paths until Phase 3.
-- `/en/*` URLs are live; the plan adds 301s to `/ja/*` in `public/_redirects`.
-- The Noto Sans JP `subsets: ["latin"]` diagnosis is unverified (`subsets`
-  controls preloading); moot once Phase 2 switches ja to Zen Maru Gothic.
+| Page | Mobile before | Mobile after | Desktop before | Desktop after |
+|---|---|---|---|---|
+| `/ja` | 59 / 100 / 100 / 100 | 91–92 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
+| `/ja/projects/everyai` | 65–80 / 100 / 100 / 100 | 92–93 / 100 / 100 / 100 | 96 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
+| `/ko/projects/kigaru/kaouranai` | 68–84 / 100 / 100 / 100 | 96–98 / 100 / 100 / 100 | 98 / 100 / 100 / 100 | 99 / 100 / 100 / 100 |
 
-### Content state (text unchanged; en files deleted, structure moved to meta.yaml)
-
-| Project | Content | Notes |
-|---|---|---|
-| `kigaru` (order 1) | 48-line ko.md + ja.md | Thin. No screenshots, no live URL, `links.github` is the profile root. Tables now render (on `redesign`). |
-| `kigaru/kaouranai` (sub) | 24-line ko.md + ja.md | Thinnest page. No images, no links. |
-| `everyai` (order 2) | 94-line ko.md + ja.md | The one complete case study; 12 watermarked R2 GIFs (3.1 MB). |
-
-### Known gaps (unchanged)
-
-- Every image is an external Cloudflare R2 URL; `public/images/projects/` holds
-  only `.gitkeep`. The spec decides to commit images to the repo (Phase 3).
-- No test runner (explicitly not planned, spec §2.11). CI exists on `redesign`
-  but has never run (not pushed).
-- No `README.md`. No environment variables anywhere.
+The columns are Performance / Accessibility / Best Practices / SEO; ranges
+come from two runs. Mobile LCP after the change is 2.3–3.2 s (was 3.7–8.0 s).
+On the live preview (HTTP/3, before this change), `/ja/projects/everyai`
+scored 61–62 on mobile, so the font change matters on the real host too.
+Re-measure on the preview after pushing.
 
 ## Next
 
-Four phases (spec §7). Work happens on branch `redesign`; Cloudflare Pages
-preview URLs are used for review; `main` is merged once, after Phase 3. Owner
-split: code by a subagent in this repo; copy, photos, everyai screenshots and
-publication-scope calls by the user. Numbers in brackets refer to the audit
-items below.
+### Before merging `redesign` into `main` (merge checklist)
+
+- [ ] Push `redesign`; CI green (it now includes `check:meta`).
+- [ ] Preview `https://redesign.imysh.pages.dev`: `/` → 302 `/ja`, `/en/projects/kigaru` → 301; `curl -I` on `/_next/static/...` shows the `_headers` cache rule.
+- [ ] Re-run Lighthouse mobile on the preview for `/ja`, `/ja/projects/everyai` and `/ko/projects/kigaru/kaouranai` (target ≥90).
+- [ ] OG preview: paste a page URL into a link-preview tool or a chat app (LINE, X, Slack). The card must show the C3 image, title and description.
+- [ ] **Owner — real phone (iPhone Safari, and Android Chrome if available)**, ja and ko:
+  - `/ja` and `/ko`:
+    - the first screen reads at a glance and the accented phrase wraps cleanly;
+    - path rows stack and the sub-row indent stays;
+    - project thumbnails in 2023-a and 2026-a/b/c are sharp;
+    - the JA/KO switch keeps you on the same page;
+    - the nav, language buttons and contact icons are easy to tap.
+  - `/ja/projects/my-asset-manager`: hero screenshot crop, the info card, the mini timeline links back to the right path row, and the 「技術の話をもっと見る」 toggle opens and closes.
+  - `/ja/projects/kigaru/jihanki` and `/ko/projects/kigaru/kaouranai`: the tall phone screenshots are cropped sensibly, and 「サイトを見る」 opens ki-garu.com.
+  - `/ja/projects/everyai`: text-only page, nothing looks missing.
+  - `/ko/projects/second-brain`: Korean line breaks (no mid-word breaks) and the stack chips wrap.
+  - Fonts: Japanese is rounded (Zen Maru Gothic) and Korean is Pretendard; no box glyphs anywhere.
+  - Share a link to yourself in LINE: the preview card shows.
+- [ ] Merge `redesign` → `main` (imysh.pages.dev deploys), then spot-check the live URLs.
 
 ### Phase 1 — Foundation (done: `26f2a4c`, `fe46a84`, pushed, CI green)
 
@@ -158,9 +125,10 @@ Plan: `docs/superpowers/plans/2026-10-10-imysh-phase1-foundation.md`.
   everyai 3–4 static screenshots (the app must be re-run) [4, 8].
 - [ ] README [20].
 
-### Phase 4 — Pre-launch
+### Phase 4 — Pre-launch (done locally; phone check and merge remain)
 
-- [ ] Real phone, OG previews, Lighthouse; then merge `redesign` into `main`.
+- [x] Hub thumbnails, OG cards + icons, Lighthouse ≥90 (local), README, Second Brain copy fix.
+- [ ] Merge checklist at the top of `## Next` (push, preview checks, owner's phone check, merge).
 
 ### Audit items (reference, 2026-10-10)
 
@@ -418,6 +386,13 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **Phase 4 pre-launch, 5 local commits on `redesign` (not pushed).**
+  - Second Brain copy now says capture goes through the Claude app; Fly.io dropped from its stack.
+  - Hub path rows that are projects show the project thumbnail.
+  - Per-page OG cards and the C3 icons; `check:meta` runs in CI.
+  - Font subsetting takes mobile Lighthouse from 59–84 to 91–98 (desktop 99–100; A11y/BP/SEO 100).
+  - README added.
+  - Lint, typecheck, check:content, build and check:meta pass from a clean `npm ci`; Playwright ja/ko × 1440/375 is clean.
 - 2026-10-10: Added ki-garu.com live links to kigaru (`/`), 韓国式AI顔占い (`/kaouranai/`) and AI自販機 (`/code/`); each URL returned 200. Removed the TODO.
 - 2026-10-10: **Applied the owner's 6 small Phase 3 confirmations and unified the Japanese on です・ます (uncommitted).** My Asset Manager is now `closed` (deployed, now down). Added the jihanki motive in the owner's words. Second Brain gets a tech-names-only stack and "used daily". Flagged that its Telegram-capture line may be stale, because the bot README says capture moved to the Claude app. Checks pass and Playwright is clean on 20 shots.
 - 2026-10-10: **Applied the owner's answers to the 9 Phase 3 questions in ko and ja.** Added a `closed` status for everyai, renamed kaouranai to 韓国式AI顔占い, and filled the path hand-offs for 2023-a and 2026-c. Checks pass, Playwright is clean on 20 shots, and `out/` has no 【 and no old kaouranai name.
