@@ -29,22 +29,33 @@ pushing or merging is the command post's call.
   - **Keyboard:** all 16 focusable links in 02 stay visible and on top.
 - `e15feec`: `fetchpriority=high` on the LCP image, and the 640w portrait on phones.
 
-**Lighthouse 13.5 mobile** (local gzip static server of `out/`, simulated throttling, 2–3 runs):
+**Pushed for preview:** the command post pushed `redesign` at `800b168`.
 
-| Page | Perf | A11y / BP / SEO | LCP | TBT | CLS |
-|---|---|---|---|---|---|
-| `/ja` with thread | 84–86 | 100 / 100 / 100 | 3.9–4.2 s | 0 ms | 0.002 |
-| `/ja` without thread (A/B build) | 85–87 | 100 / 100 / 100 | 3.8–4.0 s | 0 ms | 0.002 |
-| `/ko` | 93 | 100 / 100 / 100 | 3.2 s | 0–20 ms | 0 |
-| `/ja/projects/daemon` | 90–92 | 100 / 100 / 100 | 3.0–3.3 s | 0 ms | 0.001 |
+**/ja performance round:** `d8c8eb8`, local. The Zen Maru Gothic subset is now split by page with
+`unicode-range`.
+- **Before:** one ~118 KB file per weight, so every Japanese page downloaded about 240 KB of fonts.
+- **Now:** per weight, `npm run fonts` writes a hub file, one small file per project and a shared
+  catch-all, and generates `app/fonts.css`.
+- **What each page fetches:** the hub fetches 2 files (128 KB). A project page fetches hub + shared
+  + its own file.
+- **Unchanged:** `font-display: swap` (no CLS change), self-hosting, no `next/font/google`.
 
-The thread costs at most about 2 points. `/ja` was already below 90 before it (the A/B build):
-- the LCP is the portrait;
-- the Japanese font subsets (2 × ~120 KB) share the simulated slow-4G bandwidth with it;
-- `/ko`, with 2 × 64 KB of Pretendard, scores 93.
+Lighthouse 13.5 mobile (local gzip static server of `out/`, simulated throttling). Runs are listed,
+then the median of 3:
 
-Fixing `/ja` is a separate piece of work. Options: one Japanese weight, or a smaller first-screen
-subset.
+| Page | Before (`800b168`) | After (`d8c8eb8`) | LCP before → after | CLS |
+|---|---|---|---|---|
+| `/ja` | 86, 84, 86 → **86** | 93, 93, 93 → **93** | 3.9 → 3.1 s | 0.002 → 0.002 |
+| `/ko` | 93, 93, 92 → **93** | 93, 93, 92 → **93** | 3.2 → 3.1 s | 0 → 0 |
+| `/ja/projects/daemon` | 90, 90, 92 → **90** | 93, 93, 93 → **93** | 3.3 → 3.0 s | 0.001 → 0.001 |
+| `/ko/projects/daemon` | 95, 80, 80 → **80** | 96, 87, 87 → **87** | 4.2 → 3.6 s | 0 → 0 |
+| `/ja/projects/everyai` | 87, 87, 87 → **87** | 91, 95, 89 → **91** | 3.7 → 3.2 s | 0.001 → 0.001 |
+| `/ko/projects/everyai` | 94, 93, 93 → **93** | 93, 94, 93 → **93** | 3.1 → 3.1 s | 0 → 0 |
+| `/ja/projects/kigaru` | 87, 87, 87 → **87** | 88, 88, 88 → **88** | 3.8 → 3.5 s | 0.001 → 0.001 |
+
+- Accessibility, best practices and SEO are 100 on every page. TBT is 0–15 ms.
+- The thread itself costs at most about 2 points, measured with an A/B build without it. So the
+  hub does not need its start deferred to idle.
 
 The site is the "who I am" redesign: ja default + ko, maker identity, visual
 C3. Spec: [`docs/superpowers/specs/2026-10-10-imysh-redesign-design.md`](superpowers/specs/2026-10-10-imysh-redesign-design.md).
@@ -109,7 +120,8 @@ Re-measure on the preview after pushing.
   - Settings → Accessibility → Motion → Reduce Motion gives the static page with the full line;
   - VoiceOver reads the heading as one sentence;
   - the daemon page: the diagram is readable at phone width (labels are small).
-- [ ] Decide whether to work on `/ja` mobile performance (84–86; see the table above).
+- [x] `/ja` mobile performance: 86 → 93 (`d8c8eb8`, font split by page).
+- [ ] Re-measure Lighthouse on the Pages preview after the next push (local numbers above).
 - [ ] Push `redesign`, check the preview, merge to `main` (command post).
 
 ### Phase 5 — 2026 後半 content (Korean draft, pending the owner)
@@ -477,6 +489,7 @@ five pre-content fixes are the translations, the table rendering, Korean word
 breaking, the GIFs, and secondary-text contrast.
 
 ## Log
+- 2026-10-10: **/ja mobile performance round (`d8c8eb8`, local).** The Zen Maru Gothic subset is split by page with unicode-range (hub / per project / shared; `app/fonts.css` is now generated). Lighthouse mobile median of 3: /ja 86 → 93, /ja/projects/daemon 90 → 93, /ko/projects/daemon 80 → 87, /ko unchanged at 93, CLS unchanged. Measured and not needed: deferring the thread (TBT 0; A/B shows ≤2 points). An intermediate two-file split (hub + rest) gave /ja 93 but dropped the daemon page to 88, so the per-project split was kept. Full suite re-run: lint, tsc, check:content, check:meta, build, Playwright at 4 widths in ja/ko (thread overlaps 0, no errors, no horizontal scroll), reduced motion static.
 - 2026-10-10: **Phase 5 content and concept A2 implemented, four local commits (`d6c568b`, `4ef32bc`, `5df0eab`, `e15feec`), not pushed.** Verified at 390/768/1280/1440 in ja and ko: no console errors, no horizontal scroll, thread path 0 points inside content boxes, turns ≤25°, reduced motion static, keyboard 16/16 visible, settle down-only. lint, typecheck, check:content, build, check:meta (18 pages) pass. Lighthouse mobile: /ja 84–86 (85–87 without the thread; the font payload is the gap), /ko 93, /ja/projects/daemon 90–92.
 - 2026-10-10: **Phase 5: owner answers applied, Japanese drafted, schema extended (uncommitted).** Korean final in `docs/phase5-drafts-ko.md` (daemon→command-post link reworded truthfully, owner's harness sentence, tech section in, Second Brain → daemon line). Japanese side by side in `docs/phase5-drafts-ja.md` (デーモン, 司令塔, 休止; about 50 new glyphs need `npm run fonts` at apply time). Code: `paused` status and per-locale hero/thumbnail (`lib/content/schema.ts`, `projects.ts`, `validate.ts`, `StatusBadge`, messages, skill doc); all checks and build pass; no content changed.
 - 2026-10-10: **Concept A chosen (+ B's sentence effect); prototype `a2-line.html` (scratchpad, no repo code).** The thread is re-routed with a collision-aware router: underline right→left, down the outer left margin, across 02's top line on the same side (edge knot), S-curves only where there is room, knots entered and left heading down. Checked at 390/768/1280/1440: 0 path points inside any card/text box, sharpest turn 11–25°, the only horizontal run is the underline. Sentence splits into characters after load (aria-label on the h1, pieces aria-hidden), exhales and gathers, scatters on cursor/tap; the thread starts after the gather. Reduced motion: no split, static full line. Keyboard: 14/14 links visible at both sizes.
