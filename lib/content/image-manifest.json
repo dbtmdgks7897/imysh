@@ -118,5 +118,15 @@
     "width": 1200,
     "height": 750,
     "srcSet": "/images/projects/daemon/layers-ko-640.webp 640w, /images/projects/daemon/layers-ko.webp 1200w"
+  },
+  "/images/projects/command-post/flow-ja.webp": {
+    "width": 1200,
+    "height": 690,
+    "srcSet": "/images/projects/command-post/flow-ja-640.webp 640w, /images/projects/command-post/flow-ja.webp 1200w"
+  },
+  "/images/projects/command-post/flow-ko.webp": {
+    "width": 1200,
+    "height": 690,
+    "srcSet": "/images/projects/command-post/flow-ko-640.webp 640w, /images/projects/command-post/flow-ko.webp 1200w"
   }
 }

@@ -1,0 +1,12 @@
+# The command post (司令塔): one session that runs every project through subagents (2026-09-24 –).
+# Sources: SecondBrain vault 03-Resources (command post, AI tool history), the harness note, ~/dev/CLAUDE.md.
+# Drafts: docs/phase6-drafts-{ko,ja}.md (owner-approved 2026-10-10).
+period: "2026.09 –"
+stack: ["Claude Code"]
+status: in-progress
+order: 7
+# A diagram, not a photo: labels are in the page's language.
+hero: { ja: /images/projects/command-post/flow-ja.webp, ko: /images/projects/command-post/flow-ko.webp }
+thumbnail: { ja: /images/projects/command-post/flow-ja.webp, ko: /images/projects/command-post/flow-ko.webp }
+heroFit: contain   # keep the whole diagram visible
+sections: [why, what, tech, thought]

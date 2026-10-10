@@ -115,5 +115,11 @@
   },
   "projects/daemon/layers-ko": {
     "src": "projects/daemon/layers-ko.svg"
+  },
+  "projects/command-post/flow-ja": {
+    "src": "projects/command-post/flow-ja.svg"
+  },
+  "projects/command-post/flow-ko": {
+    "src": "projects/command-post/flow-ko.svg"
   }
 }
