@@ -53,7 +53,8 @@
     "inProgress": "개발 중",
     "finished": "완료",
     "closed": "서비스 종료",
-    "planned": "예정"
+    "planned": "예정",
+    "paused": "중지"
   },
   "footer": {
     "copyright": "© 2026 imysh"

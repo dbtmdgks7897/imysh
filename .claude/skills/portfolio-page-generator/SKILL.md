@@ -26,10 +26,11 @@ headers and prev/next links are all derived from these files.
 ```yaml
 period: "2026.03~"                 # required, free text
 stack: ["Next.js", "FastAPI"]      # required
-status: in-progress                # required: deployed | in-progress | finished | planned
+status: in-progress                # required: deployed | in-progress | finished | closed | planned | paused
 order: 3                           # optional, sorts siblings (lower first)
 thumbnail: /images/projects/<slug>/thumbnail.webp   # optional; local file must exist under public/
 hero: /images/projects/<slug>/hero.webp             # optional; large image at the top of the detail page
+# thumbnail/hero may also be per-locale, every locale required: { ja: /images/....webp, ko: /images/....webp }
 sections: [why, what, tech, thought]               # required: one key per "## " in the md, in order
 links:                             # optional
   github: https://github.com/<user>/<repo>          # a repo, not the profile root
@@ -45,7 +46,8 @@ Images: put the original in `images-src/`, add it to `images-src/images.json`, r
 1. **Parse the input.** From a portfolio-*.md: slug from the first h1
    (`# <slug> — 프로젝트 포트폴리오`), metadata from the header table, body from the
    first `## N.` section onward. Map status: 운영중/배포됨/deployed/live → `deployed`;
-   개발중/진행중/in-progress → `in-progress`; 기획중/예정/planned → `planned`.
+   개발중/진행중/in-progress → `in-progress`; 기획중/예정/planned → `planned`;
+   서비스 종료/closed → `closed`; 중지/접어 둠/paused → `paused`.
    A `상위 프로젝트` row makes it a sub-project at `content/projects/<parent>/<slug>/`
    (the parent directory must already exist). Ask if the slug is unclear.
 2. **Sections.** Detail pages have fixed sections: `why` (01 なぜ始めたか),

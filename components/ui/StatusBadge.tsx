@@ -1,12 +1,13 @@
 import { useTranslations } from "next-intl";
 import type { ProjectStatus } from "@/lib/content/schema";
 
-const KEY: Record<ProjectStatus, "deployed" | "inProgress" | "finished" | "closed" | "planned"> = {
+const KEY: Record<ProjectStatus, "deployed" | "inProgress" | "finished" | "closed" | "planned" | "paused"> = {
   deployed: "deployed",
   "in-progress": "inProgress",
   finished: "finished",
   closed: "closed",
   planned: "planned",
+  paused: "paused",
 };
 
 // Text stays in the `text` color; the tint only marks the pill (4.5:1 holds).

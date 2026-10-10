@@ -6,6 +6,7 @@ import { ContentError } from "./read";
 import { listProjectSlugPaths, loadProjectMeta, loadProjectText } from "./projects";
 import { splitH2 } from "./sections";
 import { isKnownImage } from "./images";
+import { imageRefs } from "./schema";
 import fontCharset from "./font-charset.json";
 import { loadNow, loadNowText, loadPath, loadPathText } from "./profile";
 
@@ -87,8 +88,8 @@ export function collectContentErrors(root: string = CONTENT_ROOT, publicRoot: st
     let sectionCount: number | null = null;
     attempt(errors, () => {
       const meta = loadProjectMeta(slugPath, root);
-      checkImage(errors, meta.thumbnail, `projects/${slug}/meta.yaml thumbnail`, publicRoot);
-      checkImage(errors, meta.hero, `projects/${slug}/meta.yaml hero`, publicRoot);
+      imageRefs(meta.thumbnail).forEach((ref) => checkImage(errors, ref, `projects/${slug}/meta.yaml thumbnail`, publicRoot));
+      imageRefs(meta.hero).forEach((ref) => checkImage(errors, ref, `projects/${slug}/meta.yaml hero`, publicRoot));
       sectionCount = meta.sections.length;
     });
     for (const locale of LOCALES) {

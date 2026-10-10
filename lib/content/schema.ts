@@ -1,8 +1,10 @@
 import { z } from "zod";
+import { LOCALES, type Locale } from "@/lib/locales";
 
 // Closed enum: a typo in meta.yaml fails the build instead of shipping an unstyled badge.
-// finished = the project ended and never ran publicly; closed = it ran publicly and has been shut down.
-export const PROJECT_STATUSES = ["deployed", "in-progress", "finished", "closed", "planned"] as const;
+// finished = the project ended and never ran publicly; closed = it ran publicly and has been shut down;
+// paused = stopped on purpose with everything kept, to be reopened only when a real need appears.
+export const PROJECT_STATUSES = ["deployed", "in-progress", "finished", "closed", "planned", "paused"] as const;
 export const projectStatusSchema = z.enum(PROJECT_STATUSES);
 export type ProjectStatus = z.infer<typeof projectStatusSchema>;
 
@@ -10,6 +12,25 @@ export type ProjectStatus = z.infer<typeof projectStatusSchema>;
 export const imageRefSchema = z
   .string()
   .regex(/^\/images\/[a-z0-9\-/]+\.webp$/, 'image must be a generated "/images/....webp" path');
+
+// One image for every locale, or one per locale (e.g. a diagram whose labels are in the page's language).
+// A per-locale map must name every locale: no silent fallback, same rule as the text.
+export const localizedImageSchema = z.union([
+  imageRefSchema,
+  z.strictObject(Object.fromEntries(LOCALES.map((l) => [l, imageRefSchema])) as Record<Locale, typeof imageRefSchema>),
+]);
+export type LocalizedImage = z.infer<typeof localizedImageSchema>;
+
+export function imageForLocale(image: LocalizedImage | undefined, locale: Locale): string | undefined {
+  if (image === undefined || typeof image === "string") return image;
+  return image[locale];
+}
+
+/** Every file a localized image refers to (for validation). */
+export function imageRefs(image: LocalizedImage | undefined): string[] {
+  if (image === undefined) return [];
+  return typeof image === "string" ? [image] : LOCALES.map((l) => image[l]);
+}
 
 export const idSchema = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "id must be kebab-case");
 export const slugPathSchema = z
@@ -26,8 +47,8 @@ export const projectMetaSchema = z.strictObject({
   stack: z.array(z.string().min(1)),
   status: projectStatusSchema,
   order: z.number().int().optional(),
-  thumbnail: imageRefSchema.optional(),
-  hero: imageRefSchema.optional(), // large image at the top of the detail page
+  thumbnail: localizedImageSchema.optional(),
+  hero: localizedImageSchema.optional(), // large image at the top of the detail page
   // One entry per h2 in {ja,ko}.md, in order: maps the markdown onto the fixed sections
   // without rewriting its words. Several h2s may share a key.
   sections: z.array(sectionKeySchema).min(1),
@@ -38,7 +59,10 @@ export const projectMetaSchema = z.strictObject({
     })
     .default({}),
 });
-export type ProjectMeta = z.infer<typeof projectMetaSchema>;
+/** meta.yaml as written: images may be per-locale maps. */
+export type ProjectMetaSource = z.infer<typeof projectMetaSchema>;
+/** meta.yaml resolved for one locale: images are plain paths. */
+export type ProjectMeta = Omit<ProjectMetaSource, "thumbnail" | "hero"> & { thumbnail?: string; hero?: string };
 
 // Per-locale frontmatter carries sentences only; everything structural is in meta.yaml.
 export const projectFrontmatterSchema = z.strictObject({

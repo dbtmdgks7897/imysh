@@ -4,7 +4,7 @@ import matter from "gray-matter";
 import type { Locale } from "@/lib/locales";
 import { CONTENT_ROOT } from "./paths";
 import { ContentError, parseWith, readYamlFile, rel } from "./read";
-import { projectFrontmatterSchema, projectMetaSchema, type ProjectMeta } from "./schema";
+import { imageForLocale, projectFrontmatterSchema, projectMetaSchema, type ProjectMeta, type ProjectMetaSource } from "./schema";
 
 export interface Project {
   slugPath: string[];
@@ -42,7 +42,7 @@ export function listProjectSlugPaths(root: string = CONTENT_ROOT): string[][] {
   return found;
 }
 
-export function loadProjectMeta(slugPath: string[], root: string = CONTENT_ROOT): ProjectMeta {
+export function loadProjectMeta(slugPath: string[], root: string = CONTENT_ROOT): ProjectMetaSource {
   const file = path.join(projectsDir(root), ...slugPath, "meta.yaml");
   return parseWith(projectMetaSchema, readYamlFile(file), file);
 }
@@ -67,8 +67,13 @@ export function loadProjectText(
   };
 }
 
+// Pick this locale's images so components only ever see plain paths.
+export function resolveProjectMeta(meta: ProjectMetaSource, locale: Locale): ProjectMeta {
+  return { ...meta, thumbnail: imageForLocale(meta.thumbnail, locale), hero: imageForLocale(meta.hero, locale) };
+}
+
 export function loadProject(slugPath: string[], locale: Locale, root: string = CONTENT_ROOT): Project {
-  return { slugPath, meta: loadProjectMeta(slugPath, root), ...loadProjectText(slugPath, locale, root) };
+  return { slugPath, meta: resolveProjectMeta(loadProjectMeta(slugPath, root), locale), ...loadProjectText(slugPath, locale, root) };
 }
 
 const byOrder = (a: Project, b: Project) => (a.meta.order ?? 99) - (b.meta.order ?? 99);
